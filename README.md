@@ -1,4 +1,4 @@
--- Attack on Titan Revolution - Homeless Menu
+ -- Attack on Titan Revolution - Homeless Menu
 -- Đẹp - Có nút Fix Lag + Join Discord
 
 local player = game.Players.LocalPlayer
