@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byteviet Discord Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%); min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="text-slate-100 p-4 sm:p-8 flex justify-center">
+
+    <div class="w-full max-w-4xl space-y-6">
+        <div class="text-center space-y-2">
+            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400">
+                <i class="fa-brands fa-discord mr-2"></i>Byteviet Dashboard
+            </h1>
+            <p class="text-slate-400 text-sm">Điều khiển Treo RPC & Voice từ xa qua Termux</p>
+        </div>
+
+        <!-- Cấu hình Termux & Token -->
+        <div class="glass rounded-2xl p-6 space-y-4">
+            <h2 class="text-md font-semibold text-indigo-300"><i class="fa-solid fa-server mr-2"></i>Cấu hình Kết nối Termux & Token</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input type="text" id="apiUrl" placeholder="Link Cloudflare (VD: https://xxxx.trycloudflare.com)" class="bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+                <input type="password" id="discordToken" placeholder="Nhập Discord User Token..." class="bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+            </div>
+            <button onclick="login()" class="w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl font-medium transition text-sm">
+                Xác nhận Đăng nhập
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Treo RPC -->
+            <div class="glass rounded-2xl p-6 space-y-3">
+                <h2 class="text-md font-semibold text-purple-300"><i class="fa-solid fa-gamepad mr-2"></i>Treo Custom RPC</h2>
+                <input type="text" id="rpcName" placeholder="Tên App (VD: VS Code)" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl p-2.5 text-sm">
+                <input type="text" id="rpcDetails" placeholder="Chi tiết (Details)" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl p-2.5 text-sm">
+                <input type="text" id="rpcState" placeholder="Trạng thái (State)" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl p-2.5 text-sm">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="rpcLargeImage" placeholder="Link Ảnh Lớn" class="bg-slate-900/60 border border-slate-700 rounded-xl p-2.5 text-sm">
+                    <input type="text" id="rpcSmallImage" placeholder="Link Ảnh Nhỏ" class="bg-slate-900/60 border border-slate-700 rounded-xl p-2.5 text-sm">
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button onclick="sendApi('/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value, smallImage: rpcSmallImage.value})" class="flex-1 bg-purple-600 hover:bg-purple-500 py-2 rounded-xl text-sm font-medium">Bật RPC</button>
+                    <button onclick="sendApi('/api/stop-rpc', {})" class="bg-rose-600 hover:bg-rose-500 px-4 py-2 rounded-xl text-sm font-medium">Tắt</button>
+                </div>
+            </div>
+
+            <!-- Treo Voice -->
+            <div class="glass rounded-2xl p-6 space-y-3 flex flex-col justify-between">
+                <div class="space-y-3">
+                    <h2 class="text-md font-semibold text-pink-300"><i class="fa-solid fa-microphone-slash mr-2"></i>Treo Voice Room</h2>
+                    <input type="text" id="guildId" placeholder="Server / Guild ID" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl p-2.5 text-sm">
+                    <input type="text" id="channelId" placeholder="Voice Channel ID" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl p-2.5 text-sm">
+                    <div class="flex gap-4 text-sm text-slate-300 pt-1">
+                        <label class="cursor-pointer"><input type="checkbox" id="selfMute" checked> Tắt Mic</label>
+                        <label class="cursor-pointer"><input type="checkbox" id="selfDeaf" checked> Tắt Tai Nghe</label>
+                    </div>
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button onclick="sendApi('/api/voice', {guildId: guildId.value, channelId: channelId.value, selfMute: selfMute.checked, selfDeaf: selfDeaf.checked})" class="flex-1 bg-pink-600 hover:bg-pink-500 py-2 rounded-xl text-sm font-medium">Vào Voice</button>
+                    <button onclick="sendApi('/api/stop-voice', {guildId: guildId.value})" class="bg-rose-600 hover:bg-rose-500 px-4 py-2 rounded-xl text-sm font-medium">Rời</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass rounded-xl p-3 text-xs font-mono text-slate-400" id="status">
+            Trạng thái: Đang chờ lệnh...
+        </div>
+    </div>
+
+    <script>
+        function getBaseUrl() {
+            let url = document.getElementById('apiUrl').value.trim();
+            if (url.endsWith('/')) url = url.slice(0, -1);
+            return url;
+        }
+
+        async function login() {
+            const token = document.getElementById('discordToken').value;
+            const baseUrl = getBaseUrl();
+            if(!baseUrl || !token) return alert('Vui lòng điền đủ Link Termux và Token!');
+
+            document.getElementById('status').innerText = 'Trạng thái: Đang kết nối Token đến Termux...';
+            try {
+                const res = await fetch(`${baseUrl}/api/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    document.getElementById('status').innerText = `Trạng thái: Đã đăng nhập tài khoản ${data.user}`;
+                } else {
+                    document.getElementById('status').innerText = `Lỗi: ${data.error}`;
+                }
+            } catch(e) {
+                document.getElementById('status').innerText = `Lỗi kết nối Termux: ${e.message}`;
+            }
+        }
+
+        async function sendApi(path, body) {
+            const baseUrl = getBaseUrl();
+            if(!baseUrl) return alert('Chưa nhập Link Termux!');
+            try {
+                const res = await fetch(`${baseUrl}${path}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                document.getElementById('status').innerText = `Kết quả: ${data.message || data.error}`;
+            } catch(e) {
+                document.getElementById('status').innerText = `Lỗi gửi lệnh: ${e.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
