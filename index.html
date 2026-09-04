@@ -10,7 +10,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byteviet Discord Control v2.5</title>
+    <title>Byteviet Discord Dashboard v3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,7 +25,6 @@
         .glass { 
             background: rgba(15, 23, 42, 0.65); 
             backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08); 
         }
         .glass-card {
@@ -33,291 +32,243 @@
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .btn-action {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
-        }
-        .btn-action:active {
-            transform: translateY(0) scale(0.98);
-        }
-        .tab-btn.active {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-            border-color: #6366f1;
-        }
+        .btn-action { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4); }
+        .tab-btn.active { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border-color: #6366f1; }
     </style>
 </head>
 <body class="text-slate-100 p-4 sm:p-8 flex justify-center items-center selection:bg-indigo-500 selection:text-white">
 
-    <div class="w-full max-w-5xl space-y-6">
+    <!-- FORM HỆ THỐNG ĐĂNG NHẬP / ĐĂNG KÝ WEB -->
+    <div id="authContainer" class="w-full max-w-md glass p-8 rounded-3xl shadow-2xl space-y-6">
+        <div class="text-center space-y-2">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-pink-500 mx-auto flex items-center justify-center text-3xl text-white shadow-lg shadow-indigo-500/30">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white" id="authTitle">Đăng Nhập System</h1>
+            <p class="text-xs text-slate-400" id="authSubtitle">Nhập Tên đăng nhập & Mật khẩu để tiếp tục</p>
+        </div>
+
+        <!-- Form Đăng Nhập -->
+        <form id="loginForm" onsubmit="handleWebLogin(event)" class="space-y-4">
+            <div>
+                <label class="text-xs text-slate-300 font-semibold mb-1 block">Tên đăng nhập</label>
+                <input type="text" id="loginUser" required placeholder="Nhập tên đăng nhập..." class="w-full bg-slate-900/90 border border-slate-700/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+                <label class="text-xs text-slate-300 font-semibold mb-1 block">Mật khẩu</label>
+                <input type="password" id="loginPass" required placeholder="Nhập mật khẩu..." class="w-full bg-slate-900/90 border border-slate-700/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            </div>
+            <button type="submit" class="btn-action w-full bg-indigo-600 hover:bg-indigo-500 py-3 rounded-xl text-sm font-bold shadow-lg">Đăng Nhập</button>
+            <p class="text-xs text-center text-slate-400">Chưa có tài khoản? <a href="#" onclick="toggleAuth(true)" class="text-indigo-400 underline font-semibold">Đăng ký ngay</a></p>
+        </form>
+
+        <!-- Form Đăng Ký -->
+        <form id="registerForm" onsubmit="handleWebRegister(event)" class="space-y-4 hidden">
+            <div>
+                <label class="text-xs text-slate-300 font-semibold mb-1 block">Địa chỉ Gmail</label>
+                <input type="email" id="regEmail" required placeholder="example@gmail.com" class="w-full bg-slate-900/90 border border-slate-700/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+                <label class="text-xs text-slate-300 font-semibold mb-1 block">Tên đăng nhập</label>
+                <input type="text" id="regUser" required placeholder="Tạo tên đăng nhập..." class="w-full bg-slate-900/90 border border-slate-700/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+                <label class="text-xs text-slate-300 font-semibold mb-1 block">Mật khẩu</label>
+                <input type="password" id="regPass" required placeholder="Tạo mật khẩu..." class="w-full bg-slate-900/90 border border-slate-700/60 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            </div>
+            <button type="submit" class="btn-action w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl text-sm font-bold shadow-lg">Tạo Tài Khoản</button>
+            <p class="text-xs text-center text-slate-400">Đã có tài khoản? <a href="#" onclick="toggleAuth(false)" class="text-indigo-400 underline font-semibold">Quay lại đăng nhập</a></p>
+        </form>
+    </div>
+
+    <!-- MAIN DASHBOARD SYSTEM -->
+    <div id="mainDashboard" class="w-full max-w-5xl space-y-6 hidden">
         <!-- Header -->
         <div class="flex flex-col md:flex-row items-center justify-between gap-4 glass p-6 rounded-3xl shadow-2xl">
-            <div class="flex items-center gap-4 text-center md:text-left">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-2xl text-white shadow-lg shadow-indigo-500/30">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-pink-500 flex items-center justify-center text-2xl text-white">
                     <i class="fa-brands fa-discord"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">
-                        Byteviet Dashboard
-                    </h1>
-                    <p class="text-slate-400 text-xs sm:text-sm">Hệ thống Điều Khiển Selfbot & Quét Nitro SOCKS4 v2.5</p>
+                    <h1 class="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-pink-300">Byteviet Control Panel</h1>
+                    <p class="text-slate-400 text-xs">Xin chào, <span id="webUsernameDisplay" class="text-indigo-400 font-bold">User</span> | System Online</p>
                 </div>
             </div>
-            
-            <a href="https://discord.com/oauth2/authorize?client_id=1545382570785640458&permissions=0&integration_type=0&scope=bot" target="_blank" onclick="playClickSound(); triggerHaptic();" class="btn-action glass-card px-5 py-3 rounded-2xl flex items-center gap-3 border border-indigo-500/30 hover:border-indigo-400 text-xs font-semibold text-indigo-300 hover:text-white transition group">
-                <i class="fa-solid fa-robot text-lg text-indigo-400 group-hover:rotate-12 transition"></i>
-                <span>Mời Bot Về Server</span>
-                <i class="fa-solid fa-arrow-up-right-from-square text-slate-500"></i>
-            </a>
+            <button onclick="logoutWeb()" class="px-4 py-2 bg-rose-900/40 text-rose-300 border border-rose-500/30 rounded-xl text-xs font-semibold hover:bg-rose-800/50 transition">
+                <i class="fa-solid fa-power-off mr-1"></i> Đăng Xuất
+            </button>
         </div>
 
-        <!-- Token Input Section -->
+        <!-- Token Discord Section -->
         <div class="glass rounded-3xl p-6 shadow-xl space-y-4">
             <div class="flex items-center justify-between">
-                <h2 class="text-sm font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved"></i> Xác thực tài khoản Discord
+                <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-key"></i> Nạp Discord Token Selfbot
                 </h2>
-                <span id="userBadge" class="text-xs px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Chưa đăng nhập</span>
+                <span id="discordBadge" class="text-xs px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Chưa nạp Token</span>
             </div>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <div class="relative flex-1">
-                    <i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-                    <input type="password" id="discordToken" placeholder="Nhập Discord Account Token..." class="w-full bg-slate-900/90 border border-slate-700/60 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-200">
-                </div>
-                <button onclick="login(this)" class="btn-action bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-6 py-3 rounded-2xl font-semibold text-sm shadow-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
-                </button>
+            <div class="flex gap-3">
+                <input type="password" id="discordToken" placeholder="Dán Discord Account Token vào đây..." class="flex-1 bg-slate-900/90 border border-slate-700/60 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                <button onclick="loginDiscord(this)" class="btn-action bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-2xl font-semibold text-sm shadow-lg">Kết Nối Bot</button>
             </div>
         </div>
 
-        <!-- Mode Select Tabs -->
+        <!-- Tabs Chức Năng -->
         <div class="flex gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
-            <button onclick="switchTab('nitro')" id="tab-nitro" class="tab-btn active px-4 py-2 rounded-xl text-xs font-semibold border border-transparent transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-bolt text-amber-400"></i> Quét Nitro SOCKS4 (Python)
+            <button onclick="switchTab('nitro')" id="tab-nitro" class="tab-btn active px-4 py-2 rounded-xl text-xs font-semibold border border-transparent transition flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-amber-400"></i> Nitro SOCKS4 Checker
             </button>
-            <button onclick="switchTab('rpc')" id="tab-rpc" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-gamepad"></i> Rich Presence
+            <button onclick="switchTab('stream')" id="tab-stream" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-tv text-emerald-400"></i> Treo Live Stream
             </button>
-            <button onclick="switchTab('voice')" id="tab-voice" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-microphone-slash"></i> Treo Voice Room
+            <button onclick="switchTab('rpc')" id="tab-rpc" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-gamepad text-purple-400"></i> Custom RPC
             </button>
-            <button onclick="switchTab('stream')" id="tab-stream" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-tv"></i> Treo Streaming / Lofi
-            </button>
-            <button onclick="switchTab('status-mode')" id="tab-status-mode" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-circle-dot"></i> Trạng Thái Online
+            <button onclick="switchTab('voice')" id="tab-voice" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2">
+                <i class="fa-solid fa-microphone-slash text-pink-400"></i> Treo Voice Room
             </button>
         </div>
 
-        <!-- Tab Mới: Quét Nitro Python -->
-        <div id="section-nitro" class="tab-content glass rounded-3xl p-6 space-y-4 shadow-xl">
-            <div class="flex items-center justify-between">
-                <h2 class="text-md font-bold text-amber-300 flex items-center gap-2">
-                    <i class="fa-solid fa-crown text-amber-400"></i> Nitro Checker SOCKS4 VIP
-                </h2>
-                <span class="text-xs text-slate-400">Chạy trực tiếp file Python trên Termux</span>
-            </div>
-            
-            <div class="p-4 glass-card rounded-2xl border border-amber-500/20 space-y-3">
-                <p class="text-xs text-slate-300 leading-relaxed">
-                    Tính năng này sẽ tự động chạy script Python <code class="text-amber-400 font-mono">checker.py</code> trên Termux: <strong>Tự cào Proxy SOCKS4 -> Tự sinh mã Nitro -> Kiểm tra API Discord siêu tốc.</strong>
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-xs text-slate-400 mb-1 block">Chế độ chạy</label>
-                        <select id="nitroMode" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl p-2.5 text-xs focus:outline-none focus:border-amber-500">
-                            <option value="3">Auto All-In-One (Tạo mã -> Cào Proxy -> Quét)</option>
-                            <option value="2">VIP Checking Only (Dùng kho mã có sẵn)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs text-slate-400 mb-1 block">Số lượng mã muốn tạo (Nếu chọn Auto)</label>
-                        <input type="number" id="nitroCodeCount" value="1000" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl p-2.5 text-xs focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-            </div>
-
+        <!-- Tab 1: Nitro Python -->
+        <div id="section-nitro" class="tab-content glass rounded-3xl p-6 space-y-4">
+            <h2 class="text-md font-bold text-amber-300 flex items-center gap-2"><i class="fa-solid fa-crown"></i> Quét Nitro SOCKS4 Tự Động</h2>
+            <p class="text-xs text-slate-300">Hệ thống sẽ tự động bypass mật khẩu VIP, cào proxy SOCKS4 và quét mã Nitro trực tiếp từ Termux.</p>
             <div class="flex gap-3 pt-2">
-                <button onclick="startNitroChecker(this)" class="btn-action flex-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 py-3 rounded-2xl text-sm font-semibold shadow-lg flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-play"></i> Bắt Đầu Quét Nitro
-                </button>
-                <button onclick="stopNitroChecker(this)" class="btn-action bg-slate-800 hover:bg-rose-900/50 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-stop"></i> Dừng Script
-                </button>
+                <button onclick="startNitro(this)" class="btn-action flex-1 bg-gradient-to-r from-amber-600 to-orange-600 py-3 rounded-2xl text-sm font-semibold shadow-lg">Bắt Đầu Quét Nitro</button>
+                <button onclick="stopNitro(this)" class="btn-action bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold">Dừng Quét</button>
             </div>
         </div>
 
-        <!-- Tab 1: Custom RPC -->
-        <div id="section-rpc" class="tab-content hidden glass rounded-3xl p-6 space-y-4 shadow-xl">
-            <h2 class="text-md font-bold text-purple-300 flex items-center gap-2">
-                <i class="fa-solid fa-sliders"></i> Tùy Chỉnh Rich Presence (RPC)
-            </h2>
+        <!-- Tab 2: Stream -->
+        <div id="section-stream" class="tab-content hidden glass rounded-3xl p-6 space-y-4">
+            <h2 class="text-md font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-broadcast-tower"></i> Treo Trạng Thái Live Streaming</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="rpcName" placeholder="Tên Game / App (VD: Visual Studio Code)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
-                <input type="text" id="rpcDetails" placeholder="Chi tiết (Details)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
-                <input type="text" id="rpcState" placeholder="Trạng thái (State)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
-                <input type="text" id="rpcLargeImage" placeholder="Link Ảnh Lớn (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
-                <input type="text" id="rpcSmallImage" placeholder="Link Ảnh Nhỏ (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
-                <input type="text" id="rpcButtonText" placeholder="Nút Bấm (Tùy chọn - VD: Join Server)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
+                <input type="text" id="streamTitle" placeholder="Tiêu đề Stream (VD: Lofi Radio 24/7)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
+                <input type="text" id="streamUrl" placeholder="Link Twitch Stream (VD: https://www.twitch.tv/discord)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
             </div>
-            <div class="flex gap-3 pt-2">
-                <button onclick="sendApi(this, '/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value, smallImage: rpcSmallImage.value, buttonText: rpcButtonText.value})" class="btn-action flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 py-3 rounded-2xl text-sm font-semibold shadow-lg flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-play"></i> Bật Custom RPC
-                </button>
-                <button onclick="sendApi(this, '/api/stop-rpc', {})" class="btn-action bg-slate-800 hover:bg-rose-900/50 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-stop"></i> Tắt
-                </button>
+            <div class="flex gap-3">
+                <button onclick="sendApi(this, '/api/stream', {title: streamTitle.value, url: streamUrl.value})" class="btn-action flex-1 bg-emerald-600 py-3 rounded-2xl text-sm font-semibold">Bật Live Stream</button>
+                <button onclick="sendApi(this, '/api/stop-rpc', {})" class="btn-action bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold">Tắt</button>
             </div>
         </div>
 
-        <!-- Tab 2: Voice Room -->
-        <div id="section-voice" class="tab-content hidden glass rounded-3xl p-6 space-y-4 shadow-xl">
-            <h2 class="text-md font-bold text-pink-300 flex items-center gap-2">
-                <i class="fa-solid fa-headset"></i> Treo Voice Room 24/7
-            </h2>
+        <!-- Tab 3: RPC -->
+        <div id="section-rpc" class="tab-content hidden glass rounded-3xl p-6 space-y-4">
+            <h2 class="text-md font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Treo Custom Rich Presence</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="guildId" placeholder="Server ID (Guild ID)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-pink-500 transition">
-                <input type="text" id="channelId" placeholder="Voice Channel ID" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-pink-500 transition">
+                <input type="text" id="rpcName" placeholder="Tên Game / App" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
+                <input type="text" id="rpcDetails" placeholder="Chi tiết (Details)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
+                <input type="text" id="rpcState" placeholder="Trạng thái (State)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
+                <input type="text" id="rpcLargeImage" placeholder="Link Ảnh Lớn (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
             </div>
-            <div class="flex gap-6 text-sm text-slate-300 py-2">
-                <label class="cursor-pointer flex items-center gap-3 select-none">
-                    <input type="checkbox" id="selfMute" checked class="w-4 h-4 accent-pink-500 rounded"> Tắt Micro (Self Mute)
-                </label>
-                <label class="cursor-pointer flex items-center gap-3 select-none">
-                    <input type="checkbox" id="selfDeaf" checked class="w-4 h-4 accent-pink-500 rounded"> Tắt Tai Nghe (Self Deaf)
-                </label>
-            </div>
-            <div class="flex gap-3 pt-2">
-                <button onclick="sendApi(this, '/api/voice', {guildId: guildId.value, channelId: channelId.value, selfMute: selfMute.checked, selfDeaf: selfDeaf.checked})" class="btn-action flex-1 bg-gradient-to-r from-pink-600 to-rose-600 py-3 rounded-2xl text-sm font-semibold shadow-lg flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> Treo Vào Voice
-                </button>
-                <button onclick="sendApi(this, '/api/stop-voice', {guildId: guildId.value})" class="btn-action bg-slate-800 hover:bg-rose-900/50 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-right-from-bracket"></i> Rời Voice
-                </button>
+            <div class="flex gap-3">
+                <button onclick="sendApi(this, '/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value})" class="btn-action flex-1 bg-purple-600 py-3 rounded-2xl text-sm font-semibold">Bật RPC</button>
+                <button onclick="sendApi(this, '/api/stop-rpc', {})" class="btn-action bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold">Tắt</button>
             </div>
         </div>
 
-        <!-- Tab 3: Streaming Mode -->
-        <div id="section-stream" class="tab-content hidden glass rounded-3xl p-6 space-y-4 shadow-xl">
-            <h2 class="text-md font-bold text-emerald-300 flex items-center gap-2">
-                <i class="fa-solid fa-play"></i> Treo Trạng Thái Live Streaming
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="streamTitle" placeholder="Tiêu đề Stream (VD: Lofi Hip Hop Radio 24/7)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-emerald-500 transition">
-                <input type="text" id="streamUrl" placeholder="Link Twitch/YouTube Stream" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-emerald-500 transition">
-            </div>
-            <div class="flex gap-3 pt-2">
-                <button onclick="sendApi(this, '/api/stream', {title: streamTitle.value, url: streamUrl.value})" class="btn-action flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 py-3 rounded-2xl text-sm font-semibold shadow-lg flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-broadcast-tower"></i> Bật Streaming Mode
-                </button>
+        <!-- Tab 4: Voice -->
+        <div id="section-voice" class="tab-content hidden glass rounded-3xl p-6 space-y-4">
+            <h2 class="text-md font-bold text-pink-300 flex items-center gap-2"><i class="fa-solid fa-headset"></i> Treo Voice Room 24/7</h2>
+            <input type="text" id="channelId" placeholder="Voice Channel ID..." class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
+            <div class="flex gap-3">
+                <button onclick="sendApi(this, '/api/voice', {channelId: channelId.value})" class="btn-action flex-1 bg-pink-600 py-3 rounded-2xl text-sm font-semibold">Vào Phòng Voice</button>
+                <button onclick="sendApi(this, '/api/stop-voice', {})" class="btn-action bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold">Rời Phòng</button>
             </div>
         </div>
 
-        <!-- Tab 4: Status Selector -->
-        <div id="section-status-mode" class="tab-content hidden glass rounded-3xl p-6 space-y-4 shadow-xl">
-            <h2 class="text-md font-bold text-amber-300 flex items-center gap-2">
-                <i class="fa-solid fa-user-clock"></i> Chỉnh Trạng Thái Hoạt Động
-            </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button onclick="setStatus('online')" class="glass-card hover:bg-emerald-500/20 border-emerald-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-emerald-500"></span>
-                    <span class="text-xs font-bold text-emerald-300">Trực Tuyến</span>
-                </button>
-                <button onclick="setStatus('idle')" class="glass-card hover:bg-amber-500/20 border-amber-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-amber-500"></span>
-                    <span class="text-xs font-bold text-amber-300">Chờ (Idle)</span>
-                </button>
-                <button onclick="setStatus('dnd')" class="glass-card hover:bg-rose-500/20 border-rose-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-rose-500"></span>
-                    <span class="text-xs font-bold text-rose-300">Đừng Làm Phiền</span>
-                </button>
-                <button onclick="setStatus('invisible')" class="glass-card hover:bg-slate-500/20 border-slate-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-slate-500"></span>
-                    <span class="text-xs font-bold text-slate-300">Ẩn Trạng Thái</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Status Panel -->
-        <div class="glass rounded-2xl p-4 text-xs font-mono text-slate-300 flex items-center gap-3 shadow-inner" id="statusContainer">
-            <span class="relative flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" id="statusPing"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500" id="statusDot"></span>
-            </span>
+        <!-- Panel Trạng thái -->
+        <div class="glass rounded-2xl p-4 text-xs font-mono text-slate-300 flex items-center gap-3" id="statusContainer">
+            <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500" id="statusDot"></span></span>
             <span id="status">Trạng thái: Đang chờ lệnh...</span>
         </div>
     </div>
 
     <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playClickSound() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.05);
-        }
-
-        function triggerHaptic() {
-            if (navigator.vibrate) navigator.vibrate(20);
-        }
-
-        function switchTab(tabName) {
-            playClickSound();
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(`section-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-        }
-
-        function setButtonLoading(btn, isLoading) {
-            if (isLoading) {
-                btn.dataset.originalContent = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Xử lý...`;
-                btn.style.pointerEvents = 'none';
-                btn.style.opacity = '0.7';
-            } else {
-                btn.innerHTML = btn.dataset.originalContent || btn.innerHTML;
-                btn.style.pointerEvents = 'auto';
-                btn.style.opacity = '1';
-            }
-        }
-
         function getBaseUrl() {
             let url = FIXED_API_URL.trim();
             if (url.endsWith('/')) url = url.slice(0, -1);
             return url;
         }
 
+        // CHUYỂN ĐỔI TAB AUTH (ĐĂNG KÝ / ĐĂNG NHẬP)
+        function toggleAuth(isRegister) {
+            document.getElementById('loginForm').classList.toggle('hidden', isRegister);
+            document.getElementById('registerForm').classList.toggle('hidden', !isRegister);
+            document.getElementById('authTitle').innerText = isRegister ? 'Đăng Ký Tài Khoản' : 'Đăng Nhập System';
+            document.getElementById('authSubtitle').innerText = isRegister ? 'Điền Gmail, Tên đăng nhập & Mật khẩu' : 'Nhập Tên đăng nhập & Mật khẩu để tiếp tục';
+        }
+
+        // XỬ LÝ ĐĂNG KÝ TÀI KHOẢN WEB
+        async function handleWebRegister(e) {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const username = document.getElementById('regUser').value;
+            const password = document.getElementById('regPass').value;
+
+            try {
+                const res = await fetch(`${getBaseUrl()}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email, username, password })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert('Đăng ký thành công! Hãy đăng nhập ngay.');
+                    toggleAuth(false);
+                } else alert(data.error);
+            } catch(err) { alert('Lỗi kết nối Server: ' + err.message); }
+        }
+
+        // XỬ LÝ ĐĂNG NHẬP TÀI KHOẢN WEB
+        async function handleWebLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUser').value;
+            const password = document.getElementById('loginPass').value;
+
+            try {
+                const res = await fetch(`${getBaseUrl()}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    localStorage.setItem('webUser', data.username);
+                    showDashboard(data.username);
+                } else alert(data.error);
+            } catch(err) { alert('Lỗi kết nối Server: ' + err.message); }
+        }
+
+        function showDashboard(username) {
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+            document.getElementById('webUsernameDisplay').innerText = username;
+        }
+
+        function logoutWeb() {
+            localStorage.removeItem('webUser');
+            location.reload();
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
-            const fields = ['discordToken', 'guildId', 'channelId', 'rpcName', 'rpcDetails', 'rpcState', 'rpcLargeImage', 'rpcSmallImage'];
-            fields.forEach(id => {
-                const saved = localStorage.getItem(id);
-                if (saved) document.getElementById(id).value = saved;
-                document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
-            });
+            const savedUser = localStorage.getItem('webUser');
+            if(savedUser) showDashboard(savedUser);
         });
 
-        async function login(btn) {
-            playClickSound(); triggerHaptic();
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        async function loginDiscord(btn) {
             const token = document.getElementById('discordToken').value;
-            if(!token) return alert('Vui lòng nhập Discord Token!');
-
-            setButtonLoading(btn, true);
-            updateStatus('Đang xác thực Token...', 'blue');
-
+            if(!token) return alert('Vui lòng nhập Token Discord!');
+            updateStatus('Đang xác thực Token Discord...', 'blue');
+            
             try {
                 const res = await fetch(`${getBaseUrl()}/api/login`, {
                     method: 'POST',
@@ -326,24 +277,15 @@
                 });
                 const data = await res.json();
                 if(data.success) {
-                    updateStatus(`Đã đăng nhập: ${data.user}`, 'emerald');
-                    document.getElementById('userBadge').innerText = data.user;
-                    document.getElementById('userBadge').className = 'text-xs px-3 py-1 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400';
-                } else {
-                    updateStatus(`Lỗi: ${data.error}`, 'rose');
-                }
-            } catch(e) {
-                updateStatus(`Lỗi kết nối Termux: ${e.message}`, 'rose');
-            } finally {
-                setButtonLoading(btn, false);
-            }
+                    updateStatus(`Đã kết nối Discord: ${data.user}`, 'emerald');
+                    document.getElementById('discordBadge').innerText = data.user;
+                    document.getElementById('discordBadge').className = 'text-xs px-3 py-1 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400';
+                } else updateStatus(`Lỗi: ${data.error}`, 'rose');
+            } catch(e) { updateStatus(`Lỗi: ${e.message}`, 'rose'); }
         }
 
         async function sendApi(btn, path, body) {
-            playClickSound(); triggerHaptic();
-            setButtonLoading(btn, true);
-            updateStatus('Đang gửi lệnh tới Termux...', 'blue');
-
+            updateStatus('Đang gửi lệnh...', 'blue');
             try {
                 const res = await fetch(`${getBaseUrl()}${path}`, {
                     method: 'POST',
@@ -351,88 +293,22 @@
                     body: JSON.stringify(body)
                 });
                 const data = await res.json();
-                updateStatus(`Kết quả: ${data.message || data.error}`, data.success ? 'emerald' : 'rose');
-            } catch(e) {
-                updateStatus(`Lỗi gửi lệnh: ${e.message}`, 'rose');
-            } finally {
-                setButtonLoading(btn, false);
-            }
-        }
-
-        async function setStatus(statusType) {
-            playClickSound(); triggerHaptic();
-            updateStatus(`Đổi trạng thái sang ${statusType}...`, 'blue');
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/status`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ status: statusType })
-                });
-                const data = await res.json();
-                updateStatus(`Đã cập nhật trạng thái: ${statusType}`, 'emerald');
-            } catch(e) {
-                updateStatus(`Lỗi cài đặt trạng thái: ${e.message}`, 'rose');
-            }
-        }
-
-        async function startNitroChecker(btn) {
-            playClickSound(); triggerHaptic();
-            const mode = document.getElementById('nitroMode').value;
-            const count = document.getElementById('nitroCodeCount').value;
-
-            setButtonLoading(btn, true);
-            updateStatus('Đang kích hoạt Python Nitro Checker trên Termux...', 'amber');
-
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/nitro/start`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ mode, count })
-                });
-                const data = await res.json();
                 updateStatus(data.message || data.error, data.success ? 'emerald' : 'rose');
-            } catch(e) {
-                updateStatus(`Lỗi bật Nitro Checker: ${e.message}`, 'rose');
-            } finally {
-                setButtonLoading(btn, false);
-            }
+            } catch(e) { updateStatus(`Lỗi: ${e.message}`, 'rose'); }
         }
 
-        async function stopNitroChecker(btn) {
-            playClickSound(); triggerHaptic();
-            setButtonLoading(btn, true);
-            updateStatus('Đang dừng tiến trình Python...', 'amber');
+        async function startNitro(btn) {
+            updateStatus('Đang khởi chạy Nitro Checker trên Termux...', 'amber');
+            sendApi(btn, '/api/nitro/start', { mode: '3' });
+        }
 
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/nitro/stop`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'}
-                });
-                const data = await res.json();
-                updateStatus(data.message || data.error, data.success ? 'emerald' : 'rose');
-            } catch(e) {
-                updateStatus(`Lỗi dừng Nitro Checker: ${e.message}`, 'rose');
-            } finally {
-                setButtonLoading(btn, false);
-            }
+        async function stopNitro(btn) {
+            updateStatus('Đang dừng Nitro Checker...', 'amber');
+            sendApi(btn, '/api/nitro/stop', {});
         }
 
         function updateStatus(message, color) {
-            const statusText = document.getElementById('status');
-            const statusDot = document.getElementById('statusDot');
-            const statusPing = document.getElementById('statusPing');
-
-            statusText.innerText = `Trạng thái: ${message}`;
-            
-            const colorMap = {
-                emerald: 'bg-emerald-500',
-                rose: 'bg-rose-500',
-                blue: 'bg-blue-500',
-                amber: 'bg-amber-500'
-            };
-
-            statusDot.className = `relative inline-flex rounded-full h-3 w-3 ${colorMap[color] || 'bg-slate-500'}`;
-            statusPing.className = `animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${colorMap[color] || 'bg-slate-500'}`;
+            document.getElementById('status').innerText = `Trạng thái: ${message}`;
         }
     </script>
 </body>
