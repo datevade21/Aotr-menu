@@ -21,16 +21,15 @@
             <p class="text-slate-400 text-sm">Điều khiển Treo RPC & Voice từ xa qua Termux</p>
         </div>
 
-        <!-- Cấu hình Termux & Token -->
+        <!-- Cấu hình Token (Đã bỏ ô nhập Cloudflare) -->
         <div class="glass rounded-2xl p-6 space-y-4">
-            <h2 class="text-md font-semibold text-indigo-300"><i class="fa-solid fa-server mr-2"></i>Cấu hình Kết nối Termux & Token</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input type="text" id="apiUrl" placeholder="Link Cloudflare (VD: https://xxxx.trycloudflare.com)" class="bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
-                <input type="password" id="discordToken" placeholder="Nhập Discord User Token..." class="bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+            <h2 class="text-md font-semibold text-indigo-300"><i class="fa-solid fa-key mr-2"></i>Đăng nhập Discord Token</h2>
+            <div class="flex gap-3">
+                <input type="password" id="discordToken" placeholder="Nhập Discord User Token..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none">
+                <button onclick="login()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-2.5 rounded-xl font-medium transition text-sm whitespace-nowrap">
+                    Đăng nhập
+                </button>
             </div>
-            <button onclick="login()" class="w-full bg-indigo-600 hover:bg-indigo-500 py-2.5 rounded-xl font-medium transition text-sm">
-                Xác nhận Đăng nhập
-            </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,8 +73,11 @@
     </div>
 
     <script>
+        // CỐ ĐỊNH LINK CLOUDFLARE TẠI ĐÂY (Thay đổi link tại dòng dưới nếu tunnel đổi)
+        const FIXED_API_URL = "https://xxxx.trycloudflare.com";
+
         function getBaseUrl() {
-            let url = document.getElementById('apiUrl').value.trim();
+            let url = FIXED_API_URL.trim();
             if (url.endsWith('/')) url = url.slice(0, -1);
             return url;
         }
@@ -83,7 +85,7 @@
         async function login() {
             const token = document.getElementById('discordToken').value;
             const baseUrl = getBaseUrl();
-            if(!baseUrl || !token) return alert('Vui lòng điền đủ Link Termux và Token!');
+            if(!token) return alert('Vui lòng nhập Discord Token!');
 
             document.getElementById('status').innerText = 'Trạng thái: Đang kết nối Token đến Termux...';
             try {
@@ -105,7 +107,6 @@
 
         async function sendApi(path, body) {
             const baseUrl = getBaseUrl();
-            if(!baseUrl) return alert('Chưa nhập Link Termux!');
             try {
                 const res = await fetch(`${baseUrl}${path}`, {
                     method: 'POST',
