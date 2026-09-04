@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+    <script>
+        // ========================================================
+        // 1. THAY LINK CLOUDFLARE CỦA BẠN VÀO GIỮA 2 DẤU "https://luis-alert-cooperative-netscape.trycloudflare.com" DƯỚI ĐÂY:
+        // ========================================================
+        const FIXED_API_URL = "https://xxxx.trycloudflare.com";
+        // ========================================================
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Byteviet Discord Control</title>
@@ -21,7 +28,7 @@
             <p class="text-slate-400 text-sm">Điều khiển Treo RPC & Voice từ xa qua Termux</p>
         </div>
 
-        <!-- Cấu hình Token (Đã bỏ ô nhập Cloudflare) -->
+        <!-- Cấu hình Token -->
         <div class="glass rounded-2xl p-6 space-y-4">
             <h2 class="text-md font-semibold text-indigo-300"><i class="fa-solid fa-key mr-2"></i>Đăng nhập Discord Token</h2>
             <div class="flex gap-3">
@@ -73,9 +80,6 @@
     </div>
 
     <script>
-        // CỐ ĐỊNH LINK CLOUDFLARE TẠI ĐÂY (Thay đổi link tại dòng dưới nếu tunnel đổi)
-        const FIXED_API_URL = "https://xxxx.trycloudflare.com";
-
         function getBaseUrl() {
             let url = FIXED_API_URL.trim();
             if (url.endsWith('/')) url = url.slice(0, -1);
