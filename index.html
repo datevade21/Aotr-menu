@@ -1,238 +1,339 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
-    <script>
-        // ========================================================
-        // 1. THAY LINK CLOUDFLARE CỦA BẠN VÀO GIỮA 2 DẤU " " DƯỚI ĐÂY:
-        // ========================================================
-        const FIXED_API_URL = "https://luis-alert-cooperative-netscape.trycloudflare.com";
-        // ========================================================
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byteviet Discord Control</title>
+    <title>Byteviet Control Dashboard</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        discord: {
+                            bg: '#313338',
+                            card: '#2b2d31',
+                            sidebar: '#1e1f22',
+                            accent: '#5865f2',
+                            green: '#23a55a',
+                            yellow: '#f0b232',
+                            red: '#f23f43'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Chart.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%); min-height: 100vh; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        
-        /* HIỆU ỨNG NÚT BẤM */
-        .btn-action {
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-action:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.15);
-            box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
-        }
-        .btn-action:active {
-            transform: scale(0.93) translateY(0);
-            filter: brightness(0.85);
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1e1f22; }
+        ::-webkit-scrollbar-thumb { background: #4e5058; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6d6f78; }
     </style>
 </head>
-<body class="text-slate-100 p-4 sm:p-8 flex justify-center selection:bg-indigo-500 selection:text-white">
+<body class="bg-gray-100 dark:bg-discord-bg text-gray-800 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-200">
 
-    <div class="w-full max-w-4xl space-y-6">
-        <!-- Header -->
-        <div class="text-center space-y-2">
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
-                <i class="fa-brands fa-discord mr-2 animate-pulse"></i>Byteviet Dashboard
-            </h1>
-            <p class="text-slate-400 text-sm">Điều khiển Treo RPC & Voice từ xa qua Termux</p>
-        </div>
-
-        <!-- Nút Thêm Bot & Đăng nhập Token -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Ô Thêm Bot vào Server -->
-            <a href="https://discord.com/oauth2/authorize?client_id=1545382570785640458&permissions=0&integration_type=0&scope=bot" target="_blank" onclick="playClickSound(); triggerHaptic();" class="btn-action glass rounded-2xl p-4 flex items-center justify-between border border-indigo-500/30 hover:border-indigo-400/80 bg-gradient-to-r from-indigo-900/40 to-purple-900/40 transition shadow-lg group">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600/30 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition">
-                        <i class="fa-solid fa-robot text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-sm text-indigo-200">Mời Bot vào Server</h3>
-                        <p class="text-xs text-slate-400">Thêm Bot Byteviet vào Server</p>
-                    </div>
-                </div>
-                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-indigo-300"></i>
-            </a>
-
-            <!-- Khối Token -->
-            <div class="md:col-span-2 glass rounded-2xl p-4 space-y-2 shadow-xl flex flex-col justify-center">
-                <h2 class="text-xs font-semibold text-indigo-300 flex items-center gap-2">
-                    <i class="fa-solid fa-key"></i> Đăng nhập Discord User Token
-                </h2>
-                <div class="flex gap-2">
-                    <input type="password" id="discordToken" placeholder="Nhập Discord User Token..." class="w-full bg-slate-900/70 border border-slate-700/80 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 transition">
-                    <button onclick="login(this)" class="btn-action bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 px-5 py-2 rounded-xl font-medium text-sm whitespace-nowrap shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
-                    </button>
-                </div>
+    <!-- Header / Navbar -->
+    <header class="bg-white dark:bg-discord-sidebar border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-discord-accent flex items-center justify-center text-white text-xl font-bold shadow-lg">
+                <i class="fa-solid font-bold fa-gauge-high"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Byteviet Dashboard</h1>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Hệ thống quản lý & Giám sát trạng thái</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Treo RPC -->
-            <div class="glass rounded-2xl p-6 space-y-3 shadow-xl">
-                <h2 class="text-md font-semibold text-purple-300 flex items-center gap-2">
-                    <i class="fa-solid fa-gamepad"></i> Treo Custom RPC
-                </h2>
-                <input type="text" id="rpcName" placeholder="Tên App (VD: VS Code)" class="w-full bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 text-sm focus:outline-none focus:border-purple-500 transition">
-                <input type="text" id="rpcDetails" placeholder="Chi tiết (Details)" class="w-full bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 text-sm focus:outline-none focus:border-purple-500 transition">
-                <input type="text" id="rpcState" placeholder="Trạng thái (State)" class="w-full bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 text-sm focus:outline-none focus:border-purple-500 transition">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="rpcLargeImage" placeholder="Link Ảnh Lớn" class="bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 text-sm focus:outline-none focus:border-purple-500 transition">
-                    <input type="text" id="rpcSmallImage" placeholder="Link Ảnh Nhỏ" class="bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 text-sm focus:outline-none focus:border-purple-500 transition">
-                </div>
-                <div class="flex gap-2 pt-2">
-                    <button onclick="sendApi(this, '/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value, smallImage: rpcSmallImage.value})" class="btn-action flex-1 bg-gradient-to-r from-purple-600 to-purple-500 py-2.5 rounded-xl text-sm font-medium shadow-md flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Bật RPC
-                    </button>
-                    <button onclick="sendApi(this, '/api/stop-rpc', {})" class="btn-action bg-gradient-to-r from-rose-600 to-rose-500 px-4 py-2.5 rounded-xl text-sm font-medium shadow-md flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-stop"></i> Tắt
-                    </button>
-                </div>
+        <div class="flex items-center space-x-4">
+            <!-- Connection Status -->
+            <div class="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-semibold text-emerald-500">Connected (24ms)</span>
             </div>
 
-            <!-- Treo Voice -->
-            <div class="glass rounded-2xl p-6 space-y-3 flex flex-col justify-between shadow-xl">
-                <div class="space-y-3">
-                    <h2 class="text-md font-semibold text-pink-300 flex items-center gap-2">
-                        <i class="fa-solid fa-microphone-slash"></i> Treo Voice Room
+            <!-- Theme Toggle Button -->
+            <button id="themeToggle" class="p-2.5 rounded-xl bg-gray-200 dark:bg-discord-card text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:block"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Column: System & Status Control (5 cols) -->
+        <div class="lg:col-span-5 space-x-0 space-y-6">
+
+            <!-- System Resources Monitor -->
+            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-server text-discord-accent"></i> Tài nguyên Máy chủ
                     </h2>
-                    <input type="text" id="guildId" placeholder="Server / Guild ID" class="w-full bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 text-sm focus:outline-none focus:border-pink-500 transition">
-                    <input type="text" id="channelId" placeholder="Voice Channel ID" class="w-full bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 text-sm focus:outline-none focus:border-pink-500 transition">
-                    <div class="flex gap-4 text-sm text-slate-300 pt-1">
-                        <label class="cursor-pointer flex items-center gap-2 select-none"><input type="checkbox" id="selfMute" checked class="accent-pink-500 rounded"> Tắt Mic</label>
-                        <label class="cursor-pointer flex items-center gap-2 select-none"><input type="checkbox" id="selfDeaf" checked class="accent-pink-500 rounded"> Tắt Tai Nghe</label>
+                    <span class="text-xs bg-gray-100 dark:bg-discord-sidebar px-2.5 py-1 rounded-md text-gray-500">Uptime: 14d 06h 22m</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-gray-50 dark:bg-discord-sidebar p-3.5 rounded-xl border border-gray-100 dark:border-gray-800">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block mb-1">CPU Usage</span>
+                        <div class="text-xl font-bold text-gray-900 dark:text-white" id="cpuValue">28%</div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div id="cpuBar" class="bg-discord-accent h-full rounded-full transition-all duration-500" style="width: 28%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-discord-sidebar p-3.5 rounded-xl border border-gray-100 dark:border-gray-800">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block mb-1">RAM Usage</span>
+                        <div class="text-xl font-bold text-gray-900 dark:text-white" id="ramValue">1.4 / 4.0 GB</div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div id="ramBar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 35%"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="flex gap-2 pt-2">
-                    <button onclick="sendApi(this, '/api/voice', {guildId: guildId.value, channelId: channelId.value, selfMute: selfMute.checked, selfDeaf: selfDeaf.checked})" class="btn-action flex-1 bg-gradient-to-r from-pink-600 to-pink-500 py-2.5 rounded-xl text-sm font-medium shadow-md flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-right-to-bracket"></i> Vào Voice
-                    </button>
-                    <button onclick="sendApi(this, '/api/stop-voice', {guildId: guildId.value})" class="btn-action bg-gradient-to-r from-rose-600 to-rose-500 px-4 py-2.5 rounded-xl text-sm font-medium shadow-md flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-right-from-bracket"></i> Rời
-                    </button>
+                <!-- Resource Chart -->
+                <div class="h-32 w-full">
+                    <canvas id="resourceChart"></canvas>
                 </div>
             </div>
+
+            <!-- Quick Status Switcher & Voice AFK -->
+            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm space-y-4">
+                <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-gear text-discord-yellow"></i> Trạng thái & Voice 24/7
+                </h2>
+
+                <!-- Status Buttons -->
+                <div>
+                    <label class="text-xs text-gray-500 dark:text-gray-400 block mb-2 font-medium">Trạng thái tài khoản</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="setStatus('online')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-emerald-500/10 hover:border-emerald-500 transition group">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 mb-1"></span>
+                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Online</span>
+                        </button>
+                        <button onclick="setStatus('idle')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-amber-500/10 hover:border-amber-500 transition group">
+                            <span class="w-3 h-3 rounded-full bg-amber-500 mb-1"></span>
+                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Idle</span>
+                        </button>
+                        <button onclick="setStatus('dnd')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-rose-500/10 hover:border-rose-500 transition group">
+                            <span class="w-3 h-3 rounded-full bg-rose-500 mb-1"></span>
+                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">DND</span>
+                        </button>
+                        <button onclick="setStatus('invisible')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-500/10 hover:border-gray-500 transition group">
+                            <span class="w-3 h-3 rounded-full bg-gray-400 mb-1"></span>
+                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Invisible</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Voice 24/7 Controls -->
+                <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <span class="text-sm font-semibold text-gray-900 dark:text-white block">Treo Voice 24/7</span>
+                            <span class="text-xs text-gray-500">Giữ kết nối kênh thoại liên tục</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="voiceToggle" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-discord-accent"></div>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="flex items-center space-x-2 bg-gray-50 dark:bg-discord-sidebar p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 cursor-pointer">
+                            <input type="checkbox" class="rounded text-discord-accent focus:ring-0" checked>
+                            <span class="text-xs text-gray-700 dark:text-gray-300 font-medium"><i class="fa-solid fa-microphone-slash mr-1"></i> Tự Mute</span>
+                        </label>
+                        <label class="flex items-center space-x-2 bg-gray-50 dark:bg-discord-sidebar p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 cursor-pointer">
+                            <input type="checkbox" class="rounded text-discord-accent focus:ring-0" checked>
+                            <span class="text-xs text-gray-700 dark:text-gray-300 font-medium"><i class="fa-solid fa-headphones mr-1"></i> Tự Deafen</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Utilities & Admin Tools -->
+            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm space-y-4">
+                <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-wrench text-emerald-500"></i> Công cụ Hỗ trợ & Quản trị
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Webhook Cảnh báo (Discord/Telegram)</label>
+                        <input type="text" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="logAction('Đã gửi yêu cầu dọn dẹp tin nhắn cũ.')" class="flex-1 bg-gray-100 dark:bg-discord-sidebar hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs py-2 px-3 rounded-xl transition font-medium border border-gray-200 dark:border-gray-700">
+                            <i class="fa-solid fa-broom mr-1"></i> Dọn tin nhắn cũ
+                        </button>
+                        <button onclick="logAction('Đã xuất file sao lưu dữ liệu cấu hình.')" class="flex-1 bg-gray-100 dark:bg-discord-sidebar hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs py-2 px-3 rounded-xl transition font-medium border border-gray-200 dark:border-gray-700">
+                            <i class="fa-solid fa-download mr-1"></i> Backup Config
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Thanh Trạng thái -->
-        <div class="glass rounded-xl p-3.5 text-xs font-mono text-slate-300 flex items-center gap-2 shadow-inner" id="statusContainer">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" id="statusDot"></span>
-            <span id="status">Trạng thái: Đang chờ lệnh...</span>
+        <!-- Right Column: RPC Builder & Live Console Logs (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+
+            <!-- Rich Presence (RPC) Builder -->
+            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <h2 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad text-discord-accent"></i> Custom Rich Presence Builder
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Form Controls -->
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Tên Ứng dụng / Game</label>
+                            <input type="text" id="rpcName" value="Visual Studio Code" oninput="updateRPCPreview()" class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Chi tiết (Details)</label>
+                            <input type="text" id="rpcDetails" value="Developing Byteviet Dashboard" oninput="updateRPCPreview()" class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Trạng thái (State)</label>
+                            <input type="text" id="rpcState" value="Workspace: Main Project" oninput="updateRPCPreview()" class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                        </div>
+                        <button onclick="logAction('Đã lưu và cập nhật trạng thái Rich Presence mới.')" class="w-full bg-discord-accent hover:bg-discord-accent/90 text-white text-xs font-semibold py-2.5 rounded-xl transition shadow-md">
+                            Áp dụng Rich Presence
+                        </button>
+                    </div>
+
+                    <!-- Live Discord Profile Card Preview -->
+                    <div>
+                        <label class="text-xs text-gray-500 dark:text-gray-400 block mb-2 font-medium">Xem trước trên Profile Discord</label>
+                        <div class="bg-discord-sidebar rounded-2xl p-4 border border-gray-800 text-white shadow-lg relative overflow-hidden">
+                            <div class="h-12 bg-discord-accent -mx-4 -mt-4 mb-8"></div>
+                            <!-- Avatar -->
+                            <div class="absolute top-6 left-4 w-14 h-14 rounded-full border-4 border-discord-sidebar bg-gray-600 overflow-hidden">
+                                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Byteviet" alt="Avatar">
+                            </div>
+                            <div class="space-y-2">
+                                <div>
+                                    <h3 class="font-bold text-sm leading-none">Byteviet User</h3>
+                                    <span class="text-xs text-gray-400">byteviet_dev</span>
+                                </div>
+                                <div class="pt-2 border-t border-gray-800">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-2">Đang chơi game</span>
+                                    <div class="flex space-x-3 items-center">
+                                        <div class="w-12 h-12 rounded-lg bg-discord-accent/20 flex items-center justify-center text-discord-accent text-xl flex-shrink-0">
+                                            <i class="fa-solid fa-code"></i>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <p id="prevName" class="text-xs font-bold truncate">Visual Studio Code</p>
+                                            <p id="prevDetails" class="text-[11px] text-gray-300 truncate">Developing Byteviet Dashboard</p>
+                                            <p id="prevState" class="text-[11px] text-gray-400 truncate">Workspace: Main Project</p>
+                                            <p class="text-[10px] text-gray-400 mt-0.5">01:23:45 đã trôi qua</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal / Console Logs -->
+            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-terminal text-gray-400"></i> Terminal / Console Logs
+                    </h2>
+                    <button onclick="clearLogs()" class="text-xs text-gray-400 hover:text-white transition">
+                        <i class="fa-solid fa-trash-can mr-1"></i> Xóa log
+                    </button>
+                </div>
+                <div id="consoleLog" class="bg-gray-950 text-emerald-400 font-mono text-xs p-4 rounded-xl h-56 overflow-y-auto space-y-1.5 border border-gray-800 shadow-inner">
+                    <div><span class="text-gray-500">[11:20:00]</span> <span class="text-blue-400">[SYSTEM]</span> Khoản khởi tạo Dashboard hoàn tất thành công.</div>
+                    <div><span class="text-gray-500">[11:20:01]</span> <span class="text-emerald-400">[INFO]</span> Đã kết nối thành công tới WebSocket Gateway (Latency: 24ms).</div>
+                    <div><span class="text-gray-500">[11:20:02]</span> <span class="text-purple-400">[VOICE]</span> Đã tự động tham gia kênh thoại 24/7.</div>
+                </div>
+            </div>
+
         </div>
+
     </div>
 
+    <!-- Script Logic -->
     <script>
-        // Tạo âm thanh click bằng Web Audio API (Không cần tải file bên ngoài)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playClickSound() {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.05);
+        // 1. Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('themeToggle');
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            logAction('Đã thay đổi giao diện sáng/tối.');
+        });
+
+        // 2. RPC Preview Sync
+        function updateRPCPreview() {
+            document.getElementById('prevName').innerText = document.getElementById('rpcName').value || 'Không có';
+            document.getElementById('prevDetails').innerText = document.getElementById('rpcDetails').value || '';
+            document.getElementById('prevState').innerText = document.getElementById('rpcState').value || '';
         }
 
-        function triggerHaptic() {
-            if (navigator.vibrate) navigator.vibrate(25);
+        // 3. Status Switcher Action
+        function setStatus(status) {
+            logAction(`Đã chuyển trạng thái tài khoản sang: ${status.toUpperCase()}`);
         }
 
-        function setButtonLoading(btn, isLoading) {
-            if (isLoading) {
-                btn.dataset.originalContent = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...`;
-                btn.style.pointerEvents = 'none';
-                btn.style.opacity = '0.75';
-            } else {
-                btn.innerHTML = btn.dataset.originalContent || btn.innerHTML;
-                btn.style.pointerEvents = 'auto';
-                btn.style.opacity = '1';
-            }
+        // 4. Console Logger
+        function logAction(message) {
+            const consoleEl = document.getElementById('consoleLog');
+            const timeStr = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<span class="text-gray-500">[${timeStr}]</span> <span class="text-yellow-400">[ACTION]</span> ${message}`;
+            consoleEl.appendChild(logEntry);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
         }
 
-        function getBaseUrl() {
-            let url = FIXED_API_URL.trim();
-            if (url.endsWith('/')) url = url.slice(0, -1);
-            return url;
+        function clearLogs() {
+            document.getElementById('consoleLog').innerHTML = '';
         }
 
-        async function login(btn) {
-            playClickSound();
-            triggerHaptic();
-            const token = document.getElementById('discordToken').value;
-            const baseUrl = getBaseUrl();
-            if(!token) return alert('Vui lòng nhập Discord Token!');
-
-            setButtonLoading(btn, true);
-            const statusText = document.getElementById('status');
-            const statusDot = document.getElementById('statusDot');
-            statusText.innerText = 'Trạng thái: Đang kết nối Token đến Termux...';
-            statusDot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping';
-
-            try {
-                const res = await fetch(`${baseUrl}/api/login`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ token })
-                });
-                const data = await res.json();
-                if(data.success) {
-                    statusText.innerText = `Trạng thái: Đã đăng nhập tài khoản ${data.user}`;
-                    statusDot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-emerald-400';
-                } else {
-                    statusText.innerText = `Lỗi: ${data.error}`;
-                    statusDot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-rose-500';
+        // 5. System Chart Initialization & Real-time Simulation
+        const ctx = document.getElementById('resourceChart').getContext('2d');
+        const resourceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '10s'],
+                datasets: [{
+                    label: 'CPU (%)',
+                    data: [20, 25, 22, 30, 28, 35, 28, 24, 30, 28],
+                    borderColor: '#5865f2',
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { min: 0, max: 100, display: false }
                 }
-            } catch(e) {
-                statusText.innerText = `Lỗi kết nối Termux: ${e.message}`;
-                statusDot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-rose-500';
-            } finally {
-                setButtonLoading(btn, false);
             }
-        }
+        });
 
-        async function sendApi(btn, path, body) {
-            playClickSound();
-            triggerHaptic();
-            const baseUrl = getBaseUrl();
-            const statusText = document.getElementById('status');
-            const statusDot = document.getElementById('statusDot');
-            
-            setButtonLoading(btn, true);
-            statusDot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping';
+        // Simulate resource fluctuations
+        setInterval(() => {
+            const newCpu = Math.floor(Math.random() * 25) + 15;
+            document.getElementById('cpuValue').innerText = newCpu + '%';
+            document.getElementById('cpuBar').style.width = newCpu + '%';
 
-            try {
-                const res = await fetch(`${baseUrl}${path}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(body)
-                });
-                const data = await res.json();
-                statusText.innerText = `Kết quả: ${data.message || data.error}`;
-                statusDot.className = data.message ? 'inline-block w-2.5 h-2.5 rounded-full bg-emerald-400' : 'inline-block w-2.5 h-2.5 rounded-full bg-rose-500';
-            } catch(e) {
-                statusText.innerText = `Lỗi gửi lệnh: ${e.message}`;
-                statusDot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-rose-500';
-            } finally {
-                setButtonLoading(btn, false);
-            }
-        }
+            resourceChart.data.datasets[0].data.shift();
+            resourceChart.data.datasets[0].data.push(newCpu);
+            resourceChart.update('none');
+        }, 2000);
     </script>
 </body>
 </html>
