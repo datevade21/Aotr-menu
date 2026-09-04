@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byteviet Control Dashboard</title>
+    <title>Byteviet VIP Control Center</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -12,15 +12,20 @@
             theme: {
                 extend: {
                     colors: {
-                        discord: {
-                            bg: '#313338',
-                            card: '#2b2d31',
-                            sidebar: '#1e1f22',
-                            accent: '#5865f2',
-                            green: '#23a55a',
-                            yellow: '#f0b232',
-                            red: '#f23f43'
+                        cyber: {
+                            bg: '#0b0f19',
+                            card: '#111827',
+                            border: '#1f2937',
+                            accent: '#6366f1',
+                            neon: '#06b6d4',
+                            success: '#10b981',
+                            warning: '#f59e0b',
+                            danger: '#ef4444'
                         }
+                    },
+                    boxShadow: {
+                        'neon-glow': '0 0 15px rgba(6, 182, 212, 0.3)',
+                        'accent-glow': '0 0 20px rgba(99, 102, 241, 0.25)'
                     }
                 }
             }
@@ -30,210 +35,226 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #1e1f22; }
-        ::-webkit-scrollbar-thumb { background: #4e5058; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6d6f78; }
+        /* Glassmorphism & Cyber Custom Styles */
+        body {
+            background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                              radial-gradient(circle at 0% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #374151; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-discord-bg text-gray-800 dark:text-gray-200 min-h-screen flex flex-col font-sans transition-colors duration-200">
+<body class="bg-cyber-bg text-gray-100 min-h-screen flex flex-col font-sans selection:bg-cyber-neon selection:text-black">
 
-    <!-- Header / Navbar -->
-    <header class="bg-white dark:bg-discord-sidebar border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-discord-accent flex items-center justify-center text-white text-xl font-bold shadow-lg">
-                <i class="fa-solid font-bold fa-gauge-high"></i>
+    <!-- Header / VIP Navbar -->
+    <header class="glass-panel sticky top-0 z-50 border-b border-gray-800/60 px-6 py-3.5 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyber-accent to-cyber-neon flex items-center justify-center text-white text-xl font-bold shadow-accent-glow">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <span class="absolute -bottom-1 -right-1 flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-success opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-cyber-success"></span>
+                </span>
             </div>
             <div>
-                <h1 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Byteviet Dashboard</h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Hệ thống quản lý & Giám sát trạng thái</p>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-base font-extrabold tracking-wide text-white">BYTEVIET VIP SYSTEM</h1>
+                    <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md">PRO V4.2</span>
+                </div>
+                <p class="text-xs text-gray-400">Enterprise Discord Bot & Server Infrastructure</p>
             </div>
         </div>
 
-        <div class="flex items-center space-x-4">
-            <!-- Connection Status -->
-            <div class="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-xs font-semibold text-emerald-500">Connected (24ms)</span>
+        <div class="flex items-center space-x-6">
+            <!-- Global Stats Header -->
+            <div class="hidden md:flex items-center space-x-6 border-r border-gray-800 pr-6">
+                <div>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-wider block">Server Latency</span>
+                    <span class="text-xs font-bold text-cyber-neon"><i class="fa-solid fa-bolt mr-1"></i>18 ms</span>
+                </div>
+                <div>
+                    <span class="text-[10px] text-gray-400 uppercase tracking-wider block">Active Guilds</span>
+                    <span class="text-xs font-bold text-white"><i class="fa-solid fa-server mr-1 text-indigo-400"></i>142 Servers</span>
+                </div>
             </div>
 
-            <!-- Theme Toggle Button -->
-            <button id="themeToggle" class="p-2.5 rounded-xl bg-gray-200 dark:bg-discord-card text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition">
-                <i class="fa-solid fa-moon dark:hidden"></i>
-                <i class="fa-solid fa-sun hidden dark:block"></i>
-            </button>
+            <!-- Profile Badge -->
+            <div class="flex items-center space-x-3 bg-gray-900/80 border border-gray-800 px-3 py-1.5 rounded-xl">
+                <div class="w-7 h-7 rounded-lg bg-cyber-accent/20 border border-cyber-accent/40 flex items-center justify-center text-cyber-accent font-bold text-xs">
+                    VIP
+                </div>
+                <span class="text-xs font-semibold text-gray-200">Administrator</span>
+            </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        <!-- Left Column: System & Status Control (5 cols) -->
-        <div class="lg:col-span-5 space-x-0 space-y-6">
+        <!-- Left Column: Bot Management & System Metrics (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
 
-            <!-- System Resources Monitor -->
-            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <i class="fa-solid fa-server text-discord-accent"></i> Tài nguyên Máy chủ
-                    </h2>
-                    <span class="text-xs bg-gray-100 dark:bg-discord-sidebar px-2.5 py-1 rounded-md text-gray-500">Uptime: 14d 06h 22m</span>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="bg-gray-50 dark:bg-discord-sidebar p-3.5 rounded-xl border border-gray-100 dark:border-gray-800">
-                        <span class="text-xs text-gray-500 dark:text-gray-400 block mb-1">CPU Usage</span>
-                        <div class="text-xl font-bold text-gray-900 dark:text-white" id="cpuValue">28%</div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
-                            <div id="cpuBar" class="bg-discord-accent h-full rounded-full transition-all duration-500" style="width: 28%"></div>
-                        </div>
+            <!-- Bot Application Info Card -->
+            <div class="glass-panel rounded-2xl p-5 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-cyber-accent/10 rounded-full blur-2xl"></div>
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-robot text-cyber-neon"></i> Discord Application Config
+                        </h2>
+                        <p class="text-xs text-gray-400">Cấu hình kết nối Application chính thức</p>
                     </div>
-                    <div class="bg-gray-50 dark:bg-discord-sidebar p-3.5 rounded-xl border border-gray-100 dark:border-gray-800">
-                        <span class="text-xs text-gray-500 dark:text-gray-400 block mb-1">RAM Usage</span>
-                        <div class="text-xl font-bold text-gray-900 dark:text-white" id="ramValue">1.4 / 4.0 GB</div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
-                            <div id="ramBar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 35%"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Resource Chart -->
-                <div class="h-32 w-full">
-                    <canvas id="resourceChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Quick Status Switcher & Voice AFK -->
-            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm space-y-4">
-                <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-user-gear text-discord-yellow"></i> Trạng thái & Voice 24/7
-                </h2>
-
-                <!-- Status Buttons -->
-                <div>
-                    <label class="text-xs text-gray-500 dark:text-gray-400 block mb-2 font-medium">Trạng thái tài khoản</label>
-                    <div class="grid grid-cols-4 gap-2">
-                        <button onclick="setStatus('online')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-emerald-500/10 hover:border-emerald-500 transition group">
-                            <span class="w-3 h-3 rounded-full bg-emerald-500 mb-1"></span>
-                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Online</span>
-                        </button>
-                        <button onclick="setStatus('idle')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-amber-500/10 hover:border-amber-500 transition group">
-                            <span class="w-3 h-3 rounded-full bg-amber-500 mb-1"></span>
-                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Idle</span>
-                        </button>
-                        <button onclick="setStatus('dnd')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-rose-500/10 hover:border-rose-500 transition group">
-                            <span class="w-3 h-3 rounded-full bg-rose-500 mb-1"></span>
-                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">DND</span>
-                        </button>
-                        <button onclick="setStatus('invisible')" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-500/10 hover:border-gray-500 transition group">
-                            <span class="w-3 h-3 rounded-full bg-gray-400 mb-1"></span>
-                            <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Invisible</span>
-                        </button>
-                    </div>
+                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold px-2 py-0.5 rounded-full">Bot Online</span>
                 </div>
 
-                <!-- Voice 24/7 Controls -->
-                <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
-                    <div class="flex items-center justify-between mb-3">
-                        <div>
-                            <span class="text-sm font-semibold text-gray-900 dark:text-white block">Treo Voice 24/7</span>
-                            <span class="text-xs text-gray-500">Giữ kết nối kênh thoại liên tục</span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="voiceToggle" class="sr-only peer" checked>
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-discord-accent"></div>
-                        </label>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <label class="flex items-center space-x-2 bg-gray-50 dark:bg-discord-sidebar p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 cursor-pointer">
-                            <input type="checkbox" class="rounded text-discord-accent focus:ring-0" checked>
-                            <span class="text-xs text-gray-700 dark:text-gray-300 font-medium"><i class="fa-solid fa-microphone-slash mr-1"></i> Tự Mute</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-gray-50 dark:bg-discord-sidebar p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 cursor-pointer">
-                            <input type="checkbox" class="rounded text-discord-accent focus:ring-0" checked>
-                            <span class="text-xs text-gray-700 dark:text-gray-300 font-medium"><i class="fa-solid fa-headphones mr-1"></i> Tự Deafen</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Utilities & Admin Tools -->
-            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm space-y-4">
-                <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-wrench text-emerald-500"></i> Công cụ Hỗ trợ & Quản trị
-                </h2>
                 <div class="space-y-3">
                     <div>
-                        <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Webhook Cảnh báo (Discord/Telegram)</label>
-                        <input type="text" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                        <label class="text-[11px] text-gray-400 font-medium block mb-1">Application Client ID</label>
+                        <div class="relative">
+                            <input type="text" readonly value="1092837465918237465" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs font-mono text-gray-300 focus:outline-none">
+                            <button class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs p-1">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="logAction('Đã gửi yêu cầu dọn dẹp tin nhắn cũ.')" class="flex-1 bg-gray-100 dark:bg-discord-sidebar hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs py-2 px-3 rounded-xl transition font-medium border border-gray-200 dark:border-gray-700">
-                            <i class="fa-solid fa-broom mr-1"></i> Dọn tin nhắn cũ
-                        </button>
-                        <button onclick="logAction('Đã xuất file sao lưu dữ liệu cấu hình.')" class="flex-1 bg-gray-100 dark:bg-discord-sidebar hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs py-2 px-3 rounded-xl transition font-medium border border-gray-200 dark:border-gray-700">
-                            <i class="fa-solid fa-download mr-1"></i> Backup Config
-                        </button>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Public Key</label>
+                            <input type="text" readonly value="a8f9c02b3e4f..." class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs font-mono text-gray-400 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Shard ID</label>
+                            <input type="text" readonly value="Shard #0 (Ready)" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-cyber-neon focus:outline-none font-semibold">
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Hardware Performance & Traffic Monitor -->
+            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-microchip text-cyber-accent"></i> Node Performance
+                    </h2>
+                    <span class="text-xs text-gray-400 font-mono">CPU: Ryzen 9 5900X</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-gray-900/60 p-3 rounded-xl border border-gray-800/80">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-400">CPU Load</span>
+                            <span class="text-cyber-neon font-bold" id="cpuTxt">19%</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                            <div id="cpuBar" class="bg-cyber-neon h-full transition-all duration-500" style="width: 19%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-900/60 p-3 rounded-xl border border-gray-800/80">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-400">RAM Allocated</span>
+                            <span class="text-indigo-400 font-bold" id="ramTxt">1.8 GB</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                            <div id="ramBar" class="bg-indigo-500 h-full transition-all duration-500" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Realtime Latency Chart -->
+                <div class="pt-2">
+                    <span class="text-[11px] text-gray-400 font-medium block mb-2">Realtime Gateway Latency (ms)</span>
+                    <div class="h-28 w-full">
+                        <canvas id="latencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Server Control Tools -->
+            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-3">
+                <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-cyber-warning"></i> Control Actions
+                </h2>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="logAction('Đã khởi động lại Process Node.js thành công.')" class="bg-gray-900/80 hover:bg-gray-800 border border-gray-800 text-gray-200 text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-2 font-medium">
+                        <i class="fa-solid fa-rotate-right text-cyber-warning"></i> Restart Bot Node
+                    </button>
+                    <button onclick="logAction('Đã xóa bộ nhớ đệm Gateway Cache.')" class="bg-gray-900/80 hover:bg-gray-800 border border-gray-800 text-gray-200 text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-2 font-medium">
+                        <i class="fa-solid fa-broom text-cyber-neon"></i> Clear Gateway Cache
+                    </button>
                 </div>
             </div>
 
         </div>
 
-        <!-- Right Column: RPC Builder & Live Console Logs (7 cols) -->
+        <!-- Right Column: Rich Presence Studio & Terminal Console (7 cols) -->
         <div class="lg:col-span-7 space-y-6">
 
-            <!-- Rich Presence (RPC) Builder -->
-            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm">
-                <h2 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-gamepad text-discord-accent"></i> Custom Rich Presence Builder
-                </h2>
+            <!-- Bot Rich Presence Studio -->
+            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-cyber-accent"></i> Bot Rich Presence Studio
+                    </h2>
+                    <span class="text-[10px] text-gray-400">Live Preview Card</span>
+                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Form Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Config Controls -->
                     <div class="space-y-3">
                         <div>
-                            <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Tên Ứng dụng / Game</label>
-                            <input type="text" id="rpcName" value="Visual Studio Code" oninput="updateRPCPreview()" class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Bot Activity Status</label>
+                            <select id="activityType" onchange="updatePreview()" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-cyber-accent">
+                                <option value="Playing">Playing</option>
+                                <option value="Streaming">Streaming</option>
+                                <option value="Listening">Listening to</option>
+                                <option value="Watching">Watching</option>
+                            </select>
                         </div>
                         <div>
-                            <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Chi tiết (Details)</label>
-                            <input type="text" id="rpcDetails" value="Developing Byteviet Dashboard" oninput="updateRPCPreview()" class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Activity Name</label>
+                            <input type="text" id="rpcName" value="Byteviet Music Core v4" oninput="updatePreview()" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-cyber-accent">
                         </div>
                         <div>
-                            <label class="text-xs text-gray-500 dark:text-gray-400 block mb-1">Trạng thái (State)</label>
-                            <input type="text" id="rpcState" value="Workspace: Main Project" oninput="updateRPCPreview()" class="w-full bg-gray-50 dark:bg-discord-sidebar border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-discord-accent transition">
+                            <label class="text-[11px] text-gray-400 font-medium block mb-1">State Details</label>
+                            <input type="text" id="rpcState" value="Serving 142 Discord Servers" oninput="updatePreview()" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-cyber-accent">
                         </div>
-                        <button onclick="logAction('Đã lưu và cập nhật trạng thái Rich Presence mới.')" class="w-full bg-discord-accent hover:bg-discord-accent/90 text-white text-xs font-semibold py-2.5 rounded-xl transition shadow-md">
-                            Áp dụng Rich Presence
+                        <button onclick="logAction('Đã cập nhật trạng thái Rich Presence của Bot lên Discord Gateway.')" class="w-full bg-gradient-to-r from-cyber-accent to-indigo-600 hover:opacity-90 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-accent-glow">
+                            Publish Presence Status
                         </button>
                     </div>
 
-                    <!-- Live Discord Profile Card Preview -->
-                    <div>
-                        <label class="text-xs text-gray-500 dark:text-gray-400 block mb-2 font-medium">Xem trước trên Profile Discord</label>
-                        <div class="bg-discord-sidebar rounded-2xl p-4 border border-gray-800 text-white shadow-lg relative overflow-hidden">
-                            <div class="h-12 bg-discord-accent -mx-4 -mt-4 mb-8"></div>
-                            <!-- Avatar -->
-                            <div class="absolute top-6 left-4 w-14 h-14 rounded-full border-4 border-discord-sidebar bg-gray-600 overflow-hidden">
-                                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Byteviet" alt="Avatar">
-                            </div>
-                            <div class="space-y-2">
-                                <div>
-                                    <h3 class="font-bold text-sm leading-none">Byteviet User</h3>
-                                    <span class="text-xs text-gray-400">byteviet_dev</span>
+                    <!-- Live Profile Preview Card -->
+                    <div class="bg-gray-950 rounded-2xl p-4 border border-gray-800 relative overflow-hidden flex flex-col justify-between">
+                        <div class="h-14 bg-gradient-to-r from-indigo-900 to-purple-900 -mx-4 -mt-4 mb-8"></div>
+                        <div class="absolute top-5 left-4 w-12 h-12 rounded-full border-2 border-gray-950 bg-gray-800 overflow-hidden">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=BytevietBot" alt="Bot Avatar">
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex items-center gap-1.5">
+                                    <h3 class="font-bold text-sm text-white">Byteviet System</h3>
+                                    <span class="bg-cyber-accent text-white text-[9px] font-bold px-1 rounded">BOT</span>
                                 </div>
-                                <div class="pt-2 border-t border-gray-800">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-2">Đang chơi game</span>
-                                    <div class="flex space-x-3 items-center">
-                                        <div class="w-12 h-12 rounded-lg bg-discord-accent/20 flex items-center justify-center text-discord-accent text-xl flex-shrink-0">
-                                            <i class="fa-solid fa-code"></i>
-                                        </div>
-                                        <div class="min-w-0 flex-1">
-                                            <p id="prevName" class="text-xs font-bold truncate">Visual Studio Code</p>
-                                            <p id="prevDetails" class="text-[11px] text-gray-300 truncate">Developing Byteviet Dashboard</p>
-                                            <p id="prevState" class="text-[11px] text-gray-400 truncate">Workspace: Main Project</p>
-                                            <p class="text-[10px] text-gray-400 mt-0.5">01:23:45 đã trôi qua</p>
-                                        </div>
+                                <span class="text-[11px] text-gray-400">#0001</span>
+                            </div>
+                            <div class="pt-2 border-t border-gray-900">
+                                <span id="prevType" class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">Playing</span>
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-lg bg-cyber-accent/20 border border-cyber-accent/30 flex items-center justify-center text-cyber-accent text-lg flex-shrink-0">
+                                        <i class="fa-solid fa-compact-disc animate-spin"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p id="prevName" class="text-xs font-bold text-white truncate">Byteviet Music Core v4</p>
+                                        <p id="prevState" class="text-[11px] text-gray-400 truncate">Serving 142 Discord Servers</p>
                                     </div>
                                 </div>
                             </div>
@@ -242,74 +263,62 @@
                 </div>
             </div>
 
-            <!-- Terminal / Console Logs -->
-            <div class="bg-white dark:bg-discord-card rounded-2xl p-5 border border-gray-200 dark:border-gray-800 shadow-sm">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <i class="fa-solid fa-terminal text-gray-400"></i> Terminal / Console Logs
+            <!-- Terminal Console Logs (Interactive) -->
+            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-3">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-terminal text-cyber-neon"></i> System Terminal Logs
                     </h2>
-                    <button onclick="clearLogs()" class="text-xs text-gray-400 hover:text-white transition">
-                        <i class="fa-solid fa-trash-can mr-1"></i> Xóa log
-                    </button>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="clearConsole()" class="text-[11px] text-gray-400 hover:text-white px-2 py-1 rounded bg-gray-900 border border-gray-800">Clear</button>
+                    </div>
                 </div>
-                <div id="consoleLog" class="bg-gray-950 text-emerald-400 font-mono text-xs p-4 rounded-xl h-56 overflow-y-auto space-y-1.5 border border-gray-800 shadow-inner">
-                    <div><span class="text-gray-500">[11:20:00]</span> <span class="text-blue-400">[SYSTEM]</span> Khoản khởi tạo Dashboard hoàn tất thành công.</div>
-                    <div><span class="text-gray-500">[11:20:01]</span> <span class="text-emerald-400">[INFO]</span> Đã kết nối thành công tới WebSocket Gateway (Latency: 24ms).</div>
-                    <div><span class="text-gray-500">[11:20:02]</span> <span class="text-purple-400">[VOICE]</span> Đã tự động tham gia kênh thoại 24/7.</div>
+
+                <div id="terminal" class="bg-gray-950 font-mono text-xs p-4 rounded-xl h-52 overflow-y-auto space-y-1.5 border border-gray-800/80">
+                    <div><span class="text-gray-500">[11:36:00]</span> <span class="text-cyber-neon">[SYSTEM]</span> Initializing Byteviet VIP Engine v4.2...</div>
+                    <div><span class="text-gray-500">[11:36:02]</span> <span class="text-emerald-400">[GATEWAY]</span> Shard #0 connected successfully. Session ID: e8f9a2...</div>
+                    <div><span class="text-gray-500">[11:36:03]</span> <span class="text-indigo-400">[COMMANDS]</span> Registered 24 Global Slash Commands.</div>
                 </div>
             </div>
 
         </div>
 
-    </div>
+    </main>
 
-    <!-- Script Logic -->
+    <!-- Script Engine -->
     <script>
-        // 1. Theme Toggle Logic
-        const themeToggleBtn = document.getElementById('themeToggle');
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            logAction('Đã thay đổi giao diện sáng/tối.');
-        });
-
-        // 2. RPC Preview Sync
-        function updateRPCPreview() {
-            document.getElementById('prevName').innerText = document.getElementById('rpcName').value || 'Không có';
-            document.getElementById('prevDetails').innerText = document.getElementById('rpcDetails').value || '';
+        // Update Rich Presence Preview
+        function updatePreview() {
+            document.getElementById('prevType').innerText = document.getElementById('activityType').value;
+            document.getElementById('prevName').innerText = document.getElementById('rpcName').value || 'None';
             document.getElementById('prevState').innerText = document.getElementById('rpcState').value || '';
         }
 
-        // 3. Status Switcher Action
-        function setStatus(status) {
-            logAction(`Đã chuyển trạng thái tài khoản sang: ${status.toUpperCase()}`);
+        // Terminal Logging System
+        function logAction(msg) {
+            const term = document.getElementById('terminal');
+            const time = new Date().toLocaleTimeString();
+            const log = document.createElement('div');
+            log.innerHTML = `<span class="text-gray-500">[${time}]</span> <span class="text-cyber-warning">[ACTION]</span> ${msg}`;
+            term.appendChild(log);
+            term.scrollTop = term.scrollHeight;
         }
 
-        // 4. Console Logger
-        function logAction(message) {
-            const consoleEl = document.getElementById('consoleLog');
-            const timeStr = new Date().toLocaleTimeString();
-            const logEntry = document.createElement('div');
-            logEntry.innerHTML = `<span class="text-gray-500">[${timeStr}]</span> <span class="text-yellow-400">[ACTION]</span> ${message}`;
-            consoleEl.appendChild(logEntry);
-            consoleEl.scrollTop = consoleEl.scrollHeight;
+        function clearConsole() {
+            document.getElementById('terminal').innerHTML = '';
         }
 
-        function clearLogs() {
-            document.getElementById('consoleLog').innerHTML = '';
-        }
-
-        // 5. System Chart Initialization & Real-time Simulation
-        const ctx = document.getElementById('resourceChart').getContext('2d');
-        const resourceChart = new Chart(ctx, {
+        // Initialize Latency Chart
+        const ctx = document.getElementById('latencyChart').getContext('2d');
+        const chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '10s'],
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
                 datasets: [{
-                    label: 'CPU (%)',
-                    data: [20, 25, 22, 30, 28, 35, 28, 24, 30, 28],
-                    borderColor: '#5865f2',
-                    tension: 0.4,
+                    data: [18, 20, 17, 19, 18, 22, 18, 17, 19, 18],
+                    borderColor: '#06b6d4',
                     borderWidth: 2,
+                    tension: 0.3,
                     pointRadius: 0
                 }]
             },
@@ -317,22 +326,20 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: {
-                    x: { display: false },
-                    y: { min: 0, max: 100, display: false }
-                }
+                scales: { x: { display: false }, y: { min: 10, max: 40, display: false } }
             }
         });
 
-        // Simulate resource fluctuations
+        // Live Hardware Simulation
         setInterval(() => {
-            const newCpu = Math.floor(Math.random() * 25) + 15;
-            document.getElementById('cpuValue').innerText = newCpu + '%';
-            document.getElementById('cpuBar').style.width = newCpu + '%';
+            const latency = Math.floor(Math.random() * 8) + 15;
+            chart.data.datasets[0].data.shift();
+            chart.data.datasets[0].data.push(latency);
+            chart.update('none');
 
-            resourceChart.data.datasets[0].data.shift();
-            resourceChart.data.datasets[0].data.push(newCpu);
-            resourceChart.update('none');
+            const cpu = Math.floor(Math.random() * 15) + 12;
+            document.getElementById('cpuTxt').innerText = cpu + '%';
+            document.getElementById('cpuBar').style.width = cpu + '%';
         }, 2000);
     </script>
 </body>
