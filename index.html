@@ -1,346 +1,357 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
+    <script>
+        // ========================================================
+        // THAY LINK CLOUDFLARE CỦA BẠN VÀO GIỮA 2 DẤU " " DƯỚI ĐÂY:
+        // ========================================================
+        const FIXED_API_URL = "https://luis-alert-cooperative-netscape.trycloudflare.com";
+        // ========================================================
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byteviet VIP Control Center</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Byteviet Discord Control v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        cyber: {
-                            bg: '#0b0f19',
-                            card: '#111827',
-                            border: '#1f2937',
-                            accent: '#6366f1',
-                            neon: '#06b6d4',
-                            success: '#10b981',
-                            warning: '#f59e0b',
-                            danger: '#ef4444'
-                        }
-                    },
-                    boxShadow: {
-                        'neon-glow': '0 0 15px rgba(6, 182, 212, 0.3)',
-                        'accent-glow': '0 0 20px rgba(99, 102, 241, 0.25)'
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome & Chart.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Glassmorphism & Cyber Custom Styles */
-        body {
-            background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-                              radial-gradient(circle at 0% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { 
+            background: radial-gradient(circle at top left, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom right, #4c1d95, transparent 40%),
+                        #090d16;
+            min-height: 100vh;
         }
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
+        .glass { 
+            background: rgba(15, 23, 42, 0.65); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0b0f19; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #374151; }
+        .btn-action {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+        }
+        .btn-action:active {
+            transform: translateY(0) scale(0.98);
+        }
+        .tab-btn.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border-color: #6366f1;
+        }
     </style>
 </head>
-<body class="bg-cyber-bg text-gray-100 min-h-screen flex flex-col font-sans selection:bg-cyber-neon selection:text-black">
+<body class="text-slate-100 p-4 sm:p-8 flex justify-center items-center selection:bg-indigo-500 selection:text-white">
 
-    <!-- Header / VIP Navbar -->
-    <header class="glass-panel sticky top-0 z-50 border-b border-gray-800/60 px-6 py-3.5 flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-            <div class="relative">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyber-accent to-cyber-neon flex items-center justify-center text-white text-xl font-bold shadow-accent-glow">
-                    <i class="fa-solid fa-crown"></i>
-                </div>
-                <span class="absolute -bottom-1 -right-1 flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-success opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-cyber-success"></span>
-                </span>
-            </div>
-            <div>
-                <div class="flex items-center gap-2">
-                    <h1 class="text-base font-extrabold tracking-wide text-white">BYTEVIET VIP SYSTEM</h1>
-                    <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold px-2 py-0.5 rounded-md">PRO V4.2</span>
-                </div>
-                <p class="text-xs text-gray-400">Enterprise Discord Bot & Server Infrastructure</p>
-            </div>
-        </div>
-
-        <div class="flex items-center space-x-6">
-            <!-- Global Stats Header -->
-            <div class="hidden md:flex items-center space-x-6 border-r border-gray-800 pr-6">
-                <div>
-                    <span class="text-[10px] text-gray-400 uppercase tracking-wider block">Server Latency</span>
-                    <span class="text-xs font-bold text-cyber-neon"><i class="fa-solid fa-bolt mr-1"></i>18 ms</span>
+    <div class="w-full max-w-5xl space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 glass p-6 rounded-3xl shadow-2xl">
+            <div class="flex items-center gap-4 text-center md:text-left">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center text-2xl text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-brands fa-discord"></i>
                 </div>
                 <div>
-                    <span class="text-[10px] text-gray-400 uppercase tracking-wider block">Active Guilds</span>
-                    <span class="text-xs font-bold text-white"><i class="fa-solid fa-server mr-1 text-indigo-400"></i>142 Servers</span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">
+                        Byteviet Dashboard
+                    </h1>
+                    <p class="text-slate-400 text-xs sm:text-sm">Hệ thống điều khiển Treo Discord Selfbot v2.0</p>
                 </div>
             </div>
-
-            <!-- Profile Badge -->
-            <div class="flex items-center space-x-3 bg-gray-900/80 border border-gray-800 px-3 py-1.5 rounded-xl">
-                <div class="w-7 h-7 rounded-lg bg-cyber-accent/20 border border-cyber-accent/40 flex items-center justify-center text-cyber-accent font-bold text-xs">
-                    VIP
-                </div>
-                <span class="text-xs font-semibold text-gray-200">Administrator</span>
-            </div>
+            
+            <a href="https://discord.com/oauth2/authorize?client_id=1545382570785640458&permissions=0&integration_type=0&scope=bot" target="_blank" onclick="playClickSound(); triggerHaptic();" class="btn-action glass-card px-5 py-3 rounded-2xl flex items-center gap-3 border border-indigo-500/30 hover:border-indigo-400 text-xs font-semibold text-indigo-300 hover:text-white transition group">
+                <i class="fa-solid fa-robot text-lg text-indigo-400 group-hover:rotate-12 transition"></i>
+                <span>Mời Bot Về Server</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-slate-500"></i>
+            </a>
         </div>
-    </header>
 
-    <!-- Main Content Grid -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        <!-- Left Column: Bot Management & System Metrics (5 cols) -->
-        <div class="lg:col-span-5 space-y-6">
-
-            <!-- Bot Application Info Card -->
-            <div class="glass-panel rounded-2xl p-5 shadow-xl relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-32 h-32 bg-cyber-accent/10 rounded-full blur-2xl"></div>
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h2 class="font-bold text-white text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-robot text-cyber-neon"></i> Discord Application Config
-                        </h2>
-                        <p class="text-xs text-gray-400">Cấu hình kết nối Application chính thức</p>
-                    </div>
-                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold px-2 py-0.5 rounded-full">Bot Online</span>
-                </div>
-
-                <div class="space-y-3">
-                    <div>
-                        <label class="text-[11px] text-gray-400 font-medium block mb-1">Application Client ID</label>
-                        <div class="relative">
-                            <input type="text" readonly value="1092837465918237465" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs font-mono text-gray-300 focus:outline-none">
-                            <button class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs p-1">
-                                <i class="fa-regular fa-copy"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Public Key</label>
-                            <input type="text" readonly value="a8f9c02b3e4f..." class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs font-mono text-gray-400 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Shard ID</label>
-                            <input type="text" readonly value="Shard #0 (Ready)" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-cyber-neon focus:outline-none font-semibold">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hardware Performance & Traffic Monitor -->
-            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-white text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-microchip text-cyber-accent"></i> Node Performance
-                    </h2>
-                    <span class="text-xs text-gray-400 font-mono">CPU: Ryzen 9 5900X</span>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-gray-900/60 p-3 rounded-xl border border-gray-800/80">
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="text-gray-400">CPU Load</span>
-                            <span class="text-cyber-neon font-bold" id="cpuTxt">19%</span>
-                        </div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
-                            <div id="cpuBar" class="bg-cyber-neon h-full transition-all duration-500" style="width: 19%"></div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-900/60 p-3 rounded-xl border border-gray-800/80">
-                        <div class="flex justify-between text-xs mb-1">
-                            <span class="text-gray-400">RAM Allocated</span>
-                            <span class="text-indigo-400 font-bold" id="ramTxt">1.8 GB</span>
-                        </div>
-                        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
-                            <div id="ramBar" class="bg-indigo-500 h-full transition-all duration-500" style="width: 45%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Realtime Latency Chart -->
-                <div class="pt-2">
-                    <span class="text-[11px] text-gray-400 font-medium block mb-2">Realtime Gateway Latency (ms)</span>
-                    <div class="h-28 w-full">
-                        <canvas id="latencyChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Server Control Tools -->
-            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-3">
-                <h2 class="font-bold text-white text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-cyber-warning"></i> Control Actions
+        <!-- Token Input Section -->
+        <div class="glass rounded-3xl p-6 shadow-xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i> Xác thực tài khoản
                 </h2>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="logAction('Đã khởi động lại Process Node.js thành công.')" class="bg-gray-900/80 hover:bg-gray-800 border border-gray-800 text-gray-200 text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-2 font-medium">
-                        <i class="fa-solid fa-rotate-right text-cyber-warning"></i> Restart Bot Node
-                    </button>
-                    <button onclick="logAction('Đã xóa bộ nhớ đệm Gateway Cache.')" class="bg-gray-900/80 hover:bg-gray-800 border border-gray-800 text-gray-200 text-xs py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-2 font-medium">
-                        <i class="fa-solid fa-broom text-cyber-neon"></i> Clear Gateway Cache
-                    </button>
-                </div>
+                <span id="userBadge" class="text-xs px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Chưa đăng nhập</span>
             </div>
-
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                    <input type="password" id="discordToken" placeholder="Nhập Discord Account Token..." class="w-full bg-slate-900/90 border border-slate-700/60 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition text-slate-200">
+                </div>
+                <button onclick="login(this)" class="btn-action bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-6 py-3 rounded-2xl font-semibold text-sm shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+                </button>
+            </div>
         </div>
 
-        <!-- Right Column: Rich Presence Studio & Terminal Console (7 cols) -->
-        <div class="lg:col-span-7 space-y-6">
-
-            <!-- Bot Rich Presence Studio -->
-            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-white text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-cyber-accent"></i> Bot Rich Presence Studio
-                    </h2>
-                    <span class="text-[10px] text-gray-400">Live Preview Card</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <!-- Config Controls -->
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Bot Activity Status</label>
-                            <select id="activityType" onchange="updatePreview()" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-cyber-accent">
-                                <option value="Playing">Playing</option>
-                                <option value="Streaming">Streaming</option>
-                                <option value="Listening">Listening to</option>
-                                <option value="Watching">Watching</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[11px] text-gray-400 font-medium block mb-1">Activity Name</label>
-                            <input type="text" id="rpcName" value="Byteviet Music Core v4" oninput="updatePreview()" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-cyber-accent">
-                        </div>
-                        <div>
-                            <label class="text-[11px] text-gray-400 font-medium block mb-1">State Details</label>
-                            <input type="text" id="rpcState" value="Serving 142 Discord Servers" oninput="updatePreview()" class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-cyber-accent">
-                        </div>
-                        <button onclick="logAction('Đã cập nhật trạng thái Rich Presence của Bot lên Discord Gateway.')" class="w-full bg-gradient-to-r from-cyber-accent to-indigo-600 hover:opacity-90 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-accent-glow">
-                            Publish Presence Status
-                        </button>
-                    </div>
-
-                    <!-- Live Profile Preview Card -->
-                    <div class="bg-gray-950 rounded-2xl p-4 border border-gray-800 relative overflow-hidden flex flex-col justify-between">
-                        <div class="h-14 bg-gradient-to-r from-indigo-900 to-purple-900 -mx-4 -mt-4 mb-8"></div>
-                        <div class="absolute top-5 left-4 w-12 h-12 rounded-full border-2 border-gray-950 bg-gray-800 overflow-hidden">
-                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=BytevietBot" alt="Bot Avatar">
-                        </div>
-                        <div class="space-y-3">
-                            <div>
-                                <div class="flex items-center gap-1.5">
-                                    <h3 class="font-bold text-sm text-white">Byteviet System</h3>
-                                    <span class="bg-cyber-accent text-white text-[9px] font-bold px-1 rounded">BOT</span>
-                                </div>
-                                <span class="text-[11px] text-gray-400">#0001</span>
-                            </div>
-                            <div class="pt-2 border-t border-gray-900">
-                                <span id="prevType" class="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-1">Playing</span>
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 rounded-lg bg-cyber-accent/20 border border-cyber-accent/30 flex items-center justify-center text-cyber-accent text-lg flex-shrink-0">
-                                        <i class="fa-solid fa-compact-disc animate-spin"></i>
-                                    </div>
-                                    <div class="min-w-0 flex-1">
-                                        <p id="prevName" class="text-xs font-bold text-white truncate">Byteviet Music Core v4</p>
-                                        <p id="prevState" class="text-[11px] text-gray-400 truncate">Serving 142 Discord Servers</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Terminal Console Logs (Interactive) -->
-            <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-3">
-                <div class="flex justify-between items-center">
-                    <h2 class="font-bold text-white text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-terminal text-cyber-neon"></i> System Terminal Logs
-                    </h2>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="clearConsole()" class="text-[11px] text-gray-400 hover:text-white px-2 py-1 rounded bg-gray-900 border border-gray-800">Clear</button>
-                    </div>
-                </div>
-
-                <div id="terminal" class="bg-gray-950 font-mono text-xs p-4 rounded-xl h-52 overflow-y-auto space-y-1.5 border border-gray-800/80">
-                    <div><span class="text-gray-500">[11:36:00]</span> <span class="text-cyber-neon">[SYSTEM]</span> Initializing Byteviet VIP Engine v4.2...</div>
-                    <div><span class="text-gray-500">[11:36:02]</span> <span class="text-emerald-400">[GATEWAY]</span> Shard #0 connected successfully. Session ID: e8f9a2...</div>
-                    <div><span class="text-gray-500">[11:36:03]</span> <span class="text-indigo-400">[COMMANDS]</span> Registered 24 Global Slash Commands.</div>
-                </div>
-            </div>
-
+        <!-- Mode Select Tabs -->
+        <div class="flex gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
+            <button onclick="switchTab('rpc')" id="tab-rpc" class="tab-btn active px-4 py-2 rounded-xl text-xs font-semibold border border-transparent transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-gamepad"></i> Rich Presence
+            </button>
+            <button onclick="switchTab('voice')" id="tab-voice" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-microphone-slash"></i> Treo Voice Room
+            </button>
+            <button onclick="switchTab('stream')" id="tab-stream" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-tv"></i> Treo Streaming / Lofi
+            </button>
+            <button onclick="switchTab('status-mode')" id="tab-status-mode" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold border border-transparent text-slate-400 hover:text-white transition flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-circle-dot"></i> Trạng Thái Online
+            </button>
         </div>
 
-    </main>
+        <!-- Tab 1: Custom RPC -->
+        <div id="section-rpc" class="tab-content glass rounded-3xl p-6 space-y-4 shadow-xl">
+            <h2 class="text-md font-bold text-purple-300 flex items-center gap-2">
+                <i class="fa-solid fa-sliders"></i> Tùy Chỉnh Rich Presence (RPC)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="rpcName" placeholder="Tên Game / App (VD: Visual Studio Code)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
+                <input type="text" id="rpcDetails" placeholder="Chi tiết (Details)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
+                <input type="text" id="rpcState" placeholder="Trạng thái (State)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
+                <input type="text" id="rpcLargeImage" placeholder="Link Ảnh Lớn (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
+                <input type="text" id="rpcSmallImage" placeholder="Link Ảnh Nhỏ (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
+                <input type="text" id="rpcButtonText" placeholder="Nút Bấm (Tùy chọn - VD: Join Server)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-purple-500 transition">
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button onclick="sendApi(this, '/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value, smallImage: rpcSmallImage.value, buttonText: rpcButtonText.value})" class="btn-action flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 py-3 rounded-2xl text-sm font-semibold shadow-lg flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-play"></i> Bật Custom RPC
+                </button>
+                <button onclick="sendApi(this, '/api/stop-rpc', {})" class="btn-action bg-slate-800 hover:bg-rose-900/50 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-stop"></i> Tắt
+                </button>
+            </div>
+        </div>
 
-    <!-- Script Engine -->
+        <!-- Tab 2: Voice Room -->
+        <div id="section-voice" class="tab-content hidden glass rounded-3xl p-6 space-y-4 shadow-xl">
+            <h2 class="text-md font-bold text-pink-300 flex items-center gap-2">
+                <i class="fa-solid fa-headset"></i> Treo Voice Room 24/7
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="guildId" placeholder="Server ID (Guild ID)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-pink-500 transition">
+                <input type="text" id="channelId" placeholder="Voice Channel ID" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-pink-500 transition">
+            </div>
+            <div class="flex gap-6 text-sm text-slate-300 py-2">
+                <label class="cursor-pointer flex items-center gap-3 select-none">
+                    <input type="checkbox" id="selfMute" checked class="w-4 h-4 accent-pink-500 rounded"> Tắt Micro (Self Mute)
+                </label>
+                <label class="cursor-pointer flex items-center gap-3 select-none">
+                    <input type="checkbox" id="selfDeaf" checked class="w-4 h-4 accent-pink-500 rounded"> Tắt Tai Nghe (Self Deaf)
+                </label>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button onclick="sendApi(this, '/api/voice', {guildId: guildId.value, channelId: channelId.value, selfMute: selfMute.checked, selfDeaf: selfDeaf.checked})" class="btn-action flex-1 bg-gradient-to-r from-pink-600 to-rose-600 py-3 rounded-2xl text-sm font-semibold shadow-lg flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> Treo Vào Voice
+                </button>
+                <button onclick="sendApi(this, '/api/stop-voice', {guildId: guildId.value})" class="btn-action bg-slate-800 hover:bg-rose-900/50 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-semibold flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> Rời Voice
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 3: Streaming Mode -->
+        <div id="section-stream" class="tab-content hidden glass rounded-3xl p-6 space-y-4 shadow-xl">
+            <h2 class="text-md font-bold text-emerald-300 flex items-center gap-2">
+                <i class="fa-solid fa-play"></i> Treo Trạng Thái Live Streaming
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="streamTitle" placeholder="Tiêu đề Stream (VD: Lofi Hip Hop Radio 24/7)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-emerald-500 transition">
+                <input type="text" id="streamUrl" placeholder="Link Twitch/YouTube Stream" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none focus:border-emerald-500 transition">
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button onclick="sendApi(this, '/api/stream', {title: streamTitle.value, url: streamUrl.value})" class="btn-action flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 py-3 rounded-2xl text-sm font-semibold shadow-lg flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-broadcast-tower"></i> Bật Streaming Mode
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab 4: Status Selector -->
+        <div id="section-status-mode" class="tab-content hidden glass rounded-3xl p-6 space-y-4 shadow-xl">
+            <h2 class="text-md font-bold text-amber-300 flex items-center gap-2">
+                <i class="fa-solid fa-user-clock"></i> Chỉnh Trạng Thái Hoạt Động
+            </h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button onclick="setStatus('online')" class="glass-card hover:bg-emerald-500/20 border-emerald-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                    <span class="w-4 h-4 rounded-full bg-emerald-500"></span>
+                    <span class="text-xs font-bold text-emerald-300">Trực Tuyến</span>
+                </button>
+                <button onclick="setStatus('idle')" class="glass-card hover:bg-amber-500/20 border-amber-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                    <span class="w-4 h-4 rounded-full bg-amber-500"></span>
+                    <span class="text-xs font-bold text-amber-300">Chờ (Idle)</span>
+                </button>
+                <button onclick="setStatus('dnd')" class="glass-card hover:bg-rose-500/20 border-rose-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                    <span class="w-4 h-4 rounded-full bg-rose-500"></span>
+                    <span class="text-xs font-bold text-rose-300">Đừng Làm Phiền</span>
+                </button>
+                <button onclick="setStatus('invisible')" class="glass-card hover:bg-slate-500/20 border-slate-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                    <span class="w-4 h-4 rounded-full bg-slate-500"></span>
+                    <span class="text-xs font-bold text-slate-300">Ẩn Trạng Thái</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Panel -->
+        <div class="glass rounded-2xl p-4 text-xs font-mono text-slate-300 flex items-center gap-3 shadow-inner" id="statusContainer">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" id="statusPing"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500" id="statusDot"></span>
+            </span>
+            <span id="status">Trạng thái: Đang chờ lệnh...</span>
+        </div>
+    </div>
+
     <script>
-        // Update Rich Presence Preview
-        function updatePreview() {
-            document.getElementById('prevType').innerText = document.getElementById('activityType').value;
-            document.getElementById('prevName').innerText = document.getElementById('rpcName').value || 'None';
-            document.getElementById('prevState').innerText = document.getElementById('rpcState').value || '';
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playClickSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
         }
 
-        // Terminal Logging System
-        function logAction(msg) {
-            const term = document.getElementById('terminal');
-            const time = new Date().toLocaleTimeString();
-            const log = document.createElement('div');
-            log.innerHTML = `<span class="text-gray-500">[${time}]</span> <span class="text-cyber-warning">[ACTION]</span> ${msg}`;
-            term.appendChild(log);
-            term.scrollTop = term.scrollHeight;
+        function triggerHaptic() {
+            if (navigator.vibrate) navigator.vibrate(20);
         }
 
-        function clearConsole() {
-            document.getElementById('terminal').innerHTML = '';
+        function switchTab(tabName) {
+            playClickSound();
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
-        // Initialize Latency Chart
-        const ctx = document.getElementById('latencyChart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-                datasets: [{
-                    data: [18, 20, 17, 19, 18, 22, 18, 17, 19, 18],
-                    borderColor: '#06b6d4',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { x: { display: false }, y: { min: 10, max: 40, display: false } }
+        function setButtonLoading(btn, isLoading) {
+            if (isLoading) {
+                btn.dataset.originalContent = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Xử lý...`;
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '0.7';
+            } else {
+                btn.innerHTML = btn.dataset.originalContent || btn.innerHTML;
+                btn.style.pointerEvents = 'auto';
+                btn.style.opacity = '1';
             }
+        }
+
+        function getBaseUrl() {
+            let url = FIXED_API_URL.trim();
+            if (url.endsWith('/')) url = url.slice(0, -1);
+            return url;
+        }
+
+        // Tự động lưu và load thông tin đã nhập
+        window.addEventListener('DOMContentLoaded', () => {
+            const fields = ['discordToken', 'guildId', 'channelId', 'rpcName', 'rpcDetails', 'rpcState', 'rpcLargeImage', 'rpcSmallImage'];
+            fields.forEach(id => {
+                const saved = localStorage.getItem(id);
+                if (saved) document.getElementById(id).value = saved;
+                document.getElementById(id).addEventListener('input', (e) => localStorage.setItem(id, e.target.value));
+            });
         });
 
-        // Live Hardware Simulation
-        setInterval(() => {
-            const latency = Math.floor(Math.random() * 8) + 15;
-            chart.data.datasets[0].data.shift();
-            chart.data.datasets[0].data.push(latency);
-            chart.update('none');
+        async function login(btn) {
+            playClickSound(); triggerHaptic();
+            const token = document.getElementById('discordToken').value;
+            if(!token) return alert('Vui lòng nhập Discord Token!');
 
-            const cpu = Math.floor(Math.random() * 15) + 12;
-            document.getElementById('cpuTxt').innerText = cpu + '%';
-            document.getElementById('cpuBar').style.width = cpu + '%';
-        }, 2000);
+            setButtonLoading(btn, true);
+            updateStatus('Đang xác thực Token...', 'blue');
+
+            try {
+                const res = await fetch(`${getBaseUrl()}/api/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    updateStatus(`Đã đăng nhập: ${data.user}`, 'emerald');
+                    document.getElementById('userBadge').innerText = data.user;
+                    document.getElementById('userBadge').className = 'text-xs px-3 py-1 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400';
+                } else {
+                    updateStatus(`Lỗi: ${data.error}`, 'rose');
+                }
+            } catch(e) {
+                updateStatus(`Lỗi kết nối Termux: ${e.message}`, 'rose');
+            } finally {
+                setButtonLoading(btn, false);
+            }
+        }
+
+        async function sendApi(btn, path, body) {
+            playClickSound(); triggerHaptic();
+            setButtonLoading(btn, true);
+            updateStatus('Đang gửi lệnh tới Termux...', 'blue');
+
+            try {
+                const res = await fetch(`${getBaseUrl()}${path}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                updateStatus(`Kết quả: ${data.message || data.error}`, data.success ? 'emerald' : 'rose');
+            } catch(e) {
+                updateStatus(`Lỗi gửi lệnh: ${e.message}`, 'rose');
+            } finally {
+                setButtonLoading(btn, false);
+            }
+        }
+
+        async function setStatus(statusType) {
+            playClickSound(); triggerHaptic();
+            updateStatus(`Đổi trạng thái sang ${statusType}...`, 'blue');
+            try {
+                const res = await fetch(`${getBaseUrl()}/api/status`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ status: statusType })
+                });
+                const data = await res.json();
+                updateStatus(`Đã cập nhật trạng thái: ${statusType}`, 'emerald');
+            } catch(e) {
+                updateStatus(`Lỗi cài đặt trạng thái: ${e.message}`, 'rose');
+            }
+        }
+
+        function updateStatus(message, color) {
+            const statusText = document.getElementById('status');
+            const statusDot = document.getElementById('statusDot');
+            const statusPing = document.getElementById('statusPing');
+
+            statusText.innerText = `Trạng thái: ${message}`;
+            
+            const colorMap = {
+                emerald: 'bg-emerald-500',
+                rose: 'bg-rose-500',
+                blue: 'bg-blue-500',
+                amber: 'bg-amber-500'
+            };
+
+            statusDot.className = `relative inline-flex rounded-full h-3 w-3 ${colorMap[color] || 'bg-slate-500'}`;
+            statusPing.className = `animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${colorMap[color] || 'bg-slate-500'}`;
+        }
     </script>
 </body>
 </html>
