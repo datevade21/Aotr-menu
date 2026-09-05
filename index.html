@@ -6,7 +6,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byteviet Cyber Control v4.0</title>
+    <title>Byteviet Ultra Dashboard v5.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,84 +14,73 @@
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         body { 
-            background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
+            background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.2) 0%, transparent 45%),
+                        radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.2) 0%, transparent 45%),
                         #030712;
             min-height: 100vh;
         }
         .glass { 
-            background: rgba(17, 24, 39, 0.7); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            background: rgba(17, 24, 39, 0.75); 
+            backdrop-filter: blur(24px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
         }
         .glass-card {
-            background: rgba(31, 41, 55, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(31, 41, 55, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         .btn-glow {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s ease;
+        }
+        .btn-glow:active {
+            transform: scale(0.96);
         }
         .btn-glow:hover {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
             transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
         }
         .tab-btn.active {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.3));
-            color: #c7d2fe;
-            border-color: #6366f1;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(236, 72, 153, 0.35));
+            color: #f3f4f6;
+            border-color: #818cf8;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
         }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.8); }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
     </style>
 </head>
 <body class="text-slate-100 p-4 sm:p-8 flex justify-center items-center">
 
-    <!-- FORM SYSTEM LOG IN / REGISTER -->
+    <!-- AUTH SYSTEM -->
     <div id="authContainer" class="w-full max-w-md glass p-8 rounded-3xl space-y-6">
-        <div class="text-center space-y-2">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 mx-auto flex items-center justify-center text-3xl text-white shadow-lg shadow-indigo-500/30">
+        <div class="text-center space-y-3">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 mx-auto flex items-center justify-center text-3xl text-white shadow-xl shadow-indigo-500/30">
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <h1 class="text-2xl font-black text-white tracking-wide" id="authTitle">AUTHENTICATION</h1>
-            <p class="text-xs text-slate-400" id="authSubtitle">Đăng nhập tài khoản điều khiển hệ thống Selfbot</p>
+            <h1 class="text-2xl font-black text-white tracking-wider" id="authTitle">CYBER AUTHENTICATION</h1>
+            <p class="text-xs text-slate-400" id="authSubtitle">Đăng nhập tài khoản quản trị hệ thống</p>
         </div>
 
         <form id="loginForm" onsubmit="handleWebLogin(event)" class="space-y-4">
-            <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1">Tên đăng nhập</label>
-                <input type="text" id="loginUser" required placeholder="Tên đăng nhập..." class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition">
-            </div>
-            <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1">Mật khẩu</label>
-                <input type="password" id="loginPass" required placeholder="Mật khẩu..." class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition">
-            </div>
-            <button type="submit" class="btn-glow w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 py-3.5 rounded-xl font-bold text-sm shadow-lg">ĐĂNG NHẬP SYSTEM</button>
-            <p class="text-xs text-center text-slate-400">Chưa có tài khoản? <a href="#" onclick="toggleAuth(true)" class="text-indigo-400 underline font-semibold">Tạo tài khoản mới</a></p>
+            <input type="text" id="loginUser" required placeholder="Tên đăng nhập..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="password" id="loginPass" required placeholder="Mật khẩu..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            <button type="submit" onclick="playClickSound()" class="btn-glow w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 py-3.5 rounded-xl font-bold text-sm shadow-lg">ĐĂNG NHẬP SYSTEM</button>
+            <p class="text-xs text-center text-slate-400">Chưa có tài khoản? <a href="#" onclick="toggleAuth(true); playClickSound();" class="text-indigo-400 underline font-semibold">Tạo tài khoản mới</a></p>
         </form>
 
         <form id="registerForm" onsubmit="handleWebRegister(event)" class="space-y-4 hidden">
-            <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1">Địa chỉ Gmail</label>
-                <input type="email" id="regEmail" required placeholder="yourmail@gmail.com" class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition">
-            </div>
-            <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1">Tên đăng nhập</label>
-                <input type="text" id="regUser" required placeholder="Tạo tên đăng nhập..." class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition">
-            </div>
-            <div>
-                <label class="text-xs font-semibold text-slate-300 block mb-1">Mật khẩu</label>
-                <input type="password" id="regPass" required placeholder="Tạo mật khẩu..." class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition">
-            </div>
-            <button type="submit" class="btn-glow w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-3.5 rounded-xl font-bold text-sm shadow-lg">TẠO TÀI KHOẢN</button>
-            <p class="text-xs text-center text-slate-400">Đã có tài khoản? <a href="#" onclick="toggleAuth(false)" class="text-indigo-400 underline font-semibold">Quay lại đăng nhập</a></p>
+            <input type="email" id="regEmail" required placeholder="Gmail..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="text" id="regUser" required placeholder="Tạo tên đăng nhập..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            <input type="password" id="regPass" required placeholder="Tạo mật khẩu..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+            <button type="submit" onclick="playClickSound()" class="btn-glow w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-3.5 rounded-xl font-bold text-sm shadow-lg">TẠO TÀI KHOẢN</button>
+            <p class="text-xs text-center text-slate-400">Đã có tài khoản? <a href="#" onclick="toggleAuth(false); playClickSound();" class="text-indigo-400 underline font-semibold">Đăng nhập ngay</a></p>
         </form>
     </div>
 
-    <!-- MAIN CONTROL DASHBOARD SYSTEM -->
+    <!-- MAIN DASHBOARD SYSTEM -->
     <div id="mainDashboard" class="w-full max-w-5xl space-y-6 hidden">
         <!-- Top Bar Header -->
         <div class="glass p-6 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-4">
@@ -100,176 +89,190 @@
                     <i class="fa-brands fa-discord"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">BYTEVIET DASHBOARD v4.0</h1>
-                    <p class="text-xs text-slate-400">Welcome, <span id="webUsernameDisplay" class="text-indigo-400 font-bold">User</span> | Status: Active</p>
+                    <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">BYTEVIET ULTRA v5.0</h1>
+                    <p class="text-xs text-slate-400">Xin chào, <span id="webUsernameDisplay" class="text-indigo-400 font-bold">User</span> | System Online</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
-                <!-- Thống kê lượt truy cập & Auth Bot -->
                 <div class="glass-card px-4 py-2 rounded-2xl border border-indigo-500/30 text-center">
-                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Lượt Xem Web</p>
-                    <p class="text-md font-extrabold text-indigo-400" id="statViews">0</p>
+                    <p class="text-[10px] uppercase text-slate-400 font-bold">Lượt Xem Web</p>
+                    <p class="text-md font-black text-indigo-400" id="statViews">0</p>
                 </div>
                 <div class="glass-card px-4 py-2 rounded-2xl border border-emerald-500/30 text-center">
-                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Lượt Auth Bot</p>
-                    <p class="text-md font-extrabold text-emerald-400" id="statAuths">0</p>
+                    <p class="text-[10px] uppercase text-slate-400 font-bold">Lượt Connect Bot</p>
+                    <p class="text-md font-black text-emerald-400" id="statAuths">0</p>
                 </div>
-                <!-- Nút Mời Bot -->
-                <a href="https://discord.com/oauth2/authorize?client_id=1545382570785640458&permissions=0&integration_type=0&scope=bot" target="_blank" class="btn-glow glass-card px-4 py-2.5 rounded-2xl border border-indigo-500/40 text-xs font-bold text-indigo-300 hover:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-robot text-indigo-400"></i> Mời Bot
+                <a href="https://discord.com/oauth2/authorize?client_id=1545382570785640458&permissions=0&integration_type=0&scope=bot" target="_blank" onclick="playClickSound()" class="btn-glow glass-card px-4 py-2.5 rounded-2xl border border-indigo-500/40 text-xs font-bold text-indigo-300 hover:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-indigo-400"></i> Add Bot
                 </a>
-                <button onclick="logoutWeb()" class="px-3 py-2.5 bg-rose-900/40 hover:bg-rose-800/60 text-rose-300 border border-rose-500/30 rounded-2xl text-xs font-semibold transition">
+                <button onclick="logoutWeb(); playClickSound();" class="px-3 py-2.5 bg-rose-900/40 hover:bg-rose-800/60 text-rose-300 border border-rose-500/30 rounded-2xl text-xs font-semibold">
                     <i class="fa-solid fa-power-off"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Token Discord Auth -->
-        <div class="glass p-6 rounded-3xl space-y-3">
+        <!-- DISCORD TOKEN VERIFICATION SECTION -->
+        <div class="glass p-6 rounded-3xl space-y-4">
             <div class="flex justify-between items-center">
                 <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-key"></i> Xác thực Discord Account Token
+                    <i class="fa-solid fa-key"></i> Kết Nối Discord Account Token
                 </h2>
-                <span id="discordBadge" class="text-xs px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400">Chưa nạp Token</span>
+                <div id="discordUserInfo" class="flex items-center gap-2 hidden">
+                    <img id="userAvatar" src="" class="w-6 h-6 rounded-full border border-indigo-400">
+                    <span id="discordBadge" class="text-xs px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">Bot Ready</span>
+                </div>
             </div>
             <div class="flex gap-3">
-                <input type="password" id="discordToken" placeholder="Dán Discord Account Token vào đây..." class="flex-1 bg-slate-900/90 border border-slate-700 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-                <button onclick="loginDiscord(this)" class="btn-glow bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-2xl font-semibold text-sm">Kết Nối Bot</button>
+                <input type="password" id="discordToken" placeholder="Dán Discord Token của bạn tại đây..." class="flex-1 bg-slate-900/90 border border-slate-700/80 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                <button onclick="loginDiscord(this); playClickSound();" class="btn-glow bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-2xl font-bold text-sm">Xác Nhận Token</button>
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
+        <!-- NAVIGATION TABS -->
         <div class="flex gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
-            <button onclick="switchTab('nitro')" id="tab-nitro" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-bolt text-amber-400"></i> Nitro Checker Log
+            <button onclick="switchTab('nitro'); playClickSound();" id="tab-nitro" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-bolt text-amber-400"></i> Nitro Live Checker
             </button>
-            <button onclick="switchTab('rpc')" id="tab-rpc" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
+            <button onclick="switchTab('rpc'); playClickSound();" id="tab-rpc" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-gamepad text-purple-400"></i> Custom RPC
             </button>
-            <button onclick="switchTab('voice')" id="tab-voice" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-microphone-slash text-pink-400"></i> Treo Voice Room
+            <button onclick="switchTab('voice'); playClickSound();" id="tab-voice" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-headset text-pink-400"></i> Treo Voice Channel
             </button>
-            <button onclick="switchTab('stream')" id="tab-stream" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
+            <button onclick="switchTab('stream'); playClickSound();" id="tab-stream" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-tv text-emerald-400"></i> Live Streaming
             </button>
-            <button onclick="switchTab('status-mode')" id="tab-status-mode" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-circle-dot text-indigo-400"></i> Trạng Thái Online
+            <button onclick="switchTab('status-mode'); playClickSound();" id="tab-status-mode" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-circle-dot text-indigo-400"></i> Trạng Thái
             </button>
         </div>
 
-        <!-- TAB 1: NITRO CHECKER VỚI BẢNG TERMINAL RUNNING CONTINUOUS -->
+        <!-- TAB 1: NITRO CHECKER -->
         <div id="section-nitro" class="tab-content glass p-6 rounded-3xl space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-md font-bold text-amber-300 flex items-center gap-2"><i class="fa-solid fa-terminal text-amber-400"></i> Terminal Live Scan SOCKS4</h2>
+                <h2 class="text-md font-bold text-amber-300 flex items-center gap-2"><i class="fa-solid fa-terminal text-amber-400"></i> Tiến Trình Quét Nitro SOCKS4</h2>
                 <div class="flex gap-2">
-                    <button onclick="startNitro()" class="btn-glow bg-gradient-to-r from-amber-600 to-orange-600 px-5 py-2 rounded-xl text-xs font-bold">Bắt Đầu Quét</button>
-                    <button onclick="stopNitro()" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-5 py-2 rounded-xl text-xs font-bold">Dừng Tiến Trình</button>
+                    <button onclick="startNitro(); playClickSound();" class="btn-glow bg-gradient-to-r from-amber-600 to-orange-600 px-5 py-2 rounded-xl text-xs font-bold">Bắt Đầu Quét</button>
+                    <button onclick="stopNitro(); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-5 py-2 rounded-xl text-xs font-bold">Dừng Quét</button>
                 </div>
             </div>
 
-            <!-- Stats Mini Bar -->
             <div class="grid grid-cols-3 gap-3 text-center">
                 <div class="glass-card p-3 rounded-2xl"><p class="text-[10px] uppercase text-slate-400 font-bold">Đã Thử</p><p class="text-xl font-black text-slate-200" id="nitroScanned">0</p></div>
                 <div class="glass-card p-3 rounded-2xl border border-emerald-500/30"><p class="text-[10px] uppercase text-emerald-400 font-bold">Mã Trúng (Hits)</p><p class="text-xl font-black text-emerald-400" id="nitroHits">0</p></div>
-                <div class="glass-card p-3 rounded-2xl border border-rose-500/30"><p class="text-[10px] uppercase text-rose-400 font-bold">Mã Lỗi (Bads)</p><p class="text-xl font-black text-rose-400" id="nitroBads">0</p></div>
+                <div class="glass-card p-3 rounded-2xl border border-rose-500/30"><p class="text-[10px] uppercase text-rose-400 font-bold">Mã Sai (Bads)</p><p class="text-xl font-black text-rose-400" id="nitroBads">0</p></div>
             </div>
 
-            <!-- TERMINAL LOG LIÊN TỤC -->
             <div class="space-y-2">
                 <p class="text-xs text-slate-400 font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-code"></i> Live Output Log:
+                    <i class="fa-solid fa-code"></i> Real-time Output Log:
                 </p>
                 <div id="terminalLog" class="bg-slate-950/90 border border-slate-800/80 p-4 rounded-2xl text-xs font-mono min-h-[220px] max-h-[280px] overflow-y-auto space-y-1 text-slate-300">
-                    <span class="text-slate-500">[SYSTEM] Đang chờ kích hoạt tiến trình quét...</span>
+                    <span class="text-slate-500">[SYSTEM] Đang chờ bấm nút "Bắt Đầu Quét"...</span>
                 </div>
             </div>
 
-            <!-- Valid Hits -->
             <div class="space-y-1">
-                <p class="text-xs text-emerald-400 font-bold">Danh sách mã trúng (Hit List):</p>
+                <p class="text-xs text-emerald-400 font-bold">Danh Sách Mã Hợp Lệ (Valid Hits):</p>
                 <div id="nitroHitsList" class="bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-xl text-xs font-mono text-emerald-400 min-h-[50px] max-h-[100px] overflow-y-auto">
-                    Chưa có mã hợp lệ nào được tìm thấy.
+                    Chưa có mã hợp lệ nào...
                 </div>
             </div>
         </div>
 
         <!-- TAB 2: RICH PRESENCE -->
         <div id="section-rpc" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Tùy Chỉnh Rich Presence (RPC)</h2>
+            <h2 class="text-md font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Cài Đặt Custom Rich Presence</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="rpcName" placeholder="Tên Game / App (VD: Visual Studio Code)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcDetails" placeholder="Chi tiết (Details)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcState" placeholder="Trạng thái (State)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
+                <input type="text" id="rpcName" placeholder="Tên Game / App" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
+                <input type="text" id="rpcDetails" placeholder="Dòng Chi Tiết (Details)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
+                <input type="text" id="rpcState" placeholder="Trạng Thái (State)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
                 <input type="text" id="rpcLargeImage" placeholder="Link Ảnh Lớn (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
                 <input type="text" id="rpcSmallImage" placeholder="Link Ảnh Nhỏ (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcButtonText" placeholder="Tên Nút Bấm (Tùy chọn)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcButtonUrl" placeholder="Link Nút Bấm (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none md:col-span-2">
+                <input type="text" id="rpcButtonText" placeholder="Tên Nút Bấm" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
+                <input type="text" id="rpcButtonUrl" placeholder="Link Nút Bấm" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none md:col-span-2">
             </div>
             <div class="flex gap-3">
-                <button onclick="sendApi('/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value, smallImage: rpcSmallImage.value, buttonText: rpcButtonText.value, buttonUrl: rpcButtonUrl.value})" class="btn-glow flex-1 bg-purple-600 py-3 rounded-2xl text-sm font-bold">Bật Custom RPC</button>
-                <button onclick="sendApi('/api/stop-rpc', {})" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Tắt</button>
+                <button onclick="sendApi('/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value, smallImage: rpcSmallImage.value, buttonText: rpcButtonText.value, buttonUrl: rpcButtonUrl.value}); playClickSound();" class="btn-glow flex-1 bg-purple-600 py-3 rounded-2xl text-sm font-bold">Bật Rich Presence</button>
+                <button onclick="sendApi('/api/stop-rpc', {}); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Tắt</button>
             </div>
         </div>
 
         <!-- TAB 3: VOICE ROOM -->
         <div id="section-voice" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-pink-300 flex items-center gap-2"><i class="fa-solid fa-headset"></i> Treo Voice Room 24/7</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="guildId" placeholder="Server ID (Guild ID)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="channelId" placeholder="Voice Channel ID" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-            </div>
+            <h2 class="text-md font-bold text-pink-300 flex items-center gap-2"><i class="fa-solid fa-headset"></i> Treo Phòng Voice Channel</h2>
+            <input type="text" id="channelId" placeholder="Voice Channel ID..." class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
             <div class="flex gap-6 text-xs text-slate-300">
                 <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="selfMute" checked class="accent-pink-500"> Tắt Micro (Self Mute)</label>
                 <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="selfDeaf" checked class="accent-pink-500"> Tắt Tai Nghe (Self Deaf)</label>
             </div>
             <div class="flex gap-3">
-                <button onclick="sendApi('/api/voice', {guildId: guildId.value, channelId: channelId.value, selfMute: selfMute.checked, selfDeaf: selfDeaf.checked})" class="btn-glow flex-1 bg-pink-600 py-3 rounded-2xl text-sm font-bold">Vào Phòng Voice</button>
-                <button onclick="sendApi('/api/stop-voice', {})" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Thoát Voice</button>
+                <button onclick="sendApi('/api/voice', {channelId: channelId.value, selfMute: selfMute.checked, selfDeaf: selfDeaf.checked}); playClickSound();" class="btn-glow flex-1 bg-pink-600 py-3 rounded-2xl text-sm font-bold">Kết Nối Voice</button>
+                <button onclick="sendApi('/api/stop-voice', {}); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Thoát Voice</button>
             </div>
         </div>
 
         <!-- TAB 4: STREAMING MODE -->
         <div id="section-stream" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-broadcast-tower"></i> Treo Trạng Thái Live Streaming</h2>
+            <h2 class="text-md font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-broadcast-tower"></i> Bật Live Streaming</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="streamTitle" placeholder="Tiêu đề Stream (VD: Lofi Radio 24/7)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
-                <input type="text" id="streamUrl" placeholder="Link Twitch Stream (VD: https://www.twitch.tv/discord)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
+                <input type="text" id="streamTitle" placeholder="Tiêu đề Stream..." class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
+                <input type="text" id="streamUrl" placeholder="Link Twitch Stream..." class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
             </div>
             <div class="flex gap-3">
-                <button onclick="sendApi('/api/stream', {title: streamTitle.value, url: streamUrl.value})" class="btn-glow flex-1 bg-emerald-600 py-3 rounded-2xl text-sm font-bold">Bật Streaming</button>
-                <button onclick="sendApi('/api/stop-rpc', {})" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Tắt</button>
+                <button onclick="sendApi('/api/stream', {title: streamTitle.value, url: streamUrl.value}); playClickSound();" class="btn-glow flex-1 bg-emerald-600 py-3 rounded-2xl text-sm font-bold">Bật Streaming</button>
+                <button onclick="sendApi('/api/stop-rpc', {}); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Tắt</button>
             </div>
         </div>
 
         <!-- TAB 5: STATUS SELECTOR -->
         <div id="section-status-mode" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-user-clock"></i> Đổi Trạng Thái Online</h2>
+            <h2 class="text-md font-bold text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-user-clock"></i> Đổi Trạng Thái Bot</h2>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button onclick="setStatus('online')" class="glass-card hover:bg-emerald-500/20 border-emerald-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                <button onclick="setStatus('online'); playClickSound();" class="glass-card hover:bg-emerald-500/20 border-emerald-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
                     <span class="w-4 h-4 rounded-full bg-emerald-500"></span><span class="text-xs font-bold text-emerald-300">Trực Tuyến</span>
                 </button>
-                <button onclick="setStatus('idle')" class="glass-card hover:bg-amber-500/20 border-amber-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                <button onclick="setStatus('idle'); playClickSound();" class="glass-card hover:bg-amber-500/20 border-amber-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
                     <span class="w-4 h-4 rounded-full bg-amber-500"></span><span class="text-xs font-bold text-amber-300">Chờ (Idle)</span>
                 </button>
-                <button onclick="setStatus('dnd')" class="glass-card hover:bg-rose-500/20 border-rose-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                <button onclick="setStatus('dnd'); playClickSound();" class="glass-card hover:bg-rose-500/20 border-rose-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
                     <span class="w-4 h-4 rounded-full bg-rose-500"></span><span class="text-xs font-bold text-rose-300">Đừng Làm Phiền</span>
                 </button>
-                <button onclick="setStatus('invisible')" class="glass-card hover:bg-slate-500/20 border-slate-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
+                <button onclick="setStatus('invisible'); playClickSound();" class="glass-card hover:bg-slate-500/20 border-slate-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
                     <span class="w-4 h-4 rounded-full bg-slate-500"></span><span class="text-xs font-bold text-slate-300">Ẩn Trạng Thái</span>
                 </button>
             </div>
         </div>
 
-        <!-- System Status Bar -->
+        <!-- Status Footer -->
         <div class="glass p-4 rounded-2xl text-xs font-mono text-slate-300 flex items-center gap-3">
             <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span></span>
-            <span id="status">Trạng thái: Đang chờ lệnh từ hệ thống...</span>
+            <span id="status">Trạng thái: Hệ thống đang hoạt động...</span>
         </div>
     </div>
 
     <script>
         let nitroTimer = null;
+        let audioCtx = null;
+
+        // Âm thanh bấm nút sinh ra bằng Web Audio API
+        function playClickSound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch(e) {}
+        }
 
         function getBaseUrl() {
             let url = FIXED_API_URL.trim();
@@ -280,7 +283,7 @@
         function toggleAuth(isRegister) {
             document.getElementById('loginForm').classList.toggle('hidden', isRegister);
             document.getElementById('registerForm').classList.toggle('hidden', !isRegister);
-            document.getElementById('authTitle').innerText = isRegister ? 'REGISTER ACCOUNT' : 'AUTHENTICATION';
+            document.getElementById('authTitle').innerText = isRegister ? 'REGISTER SYSTEM' : 'CYBER AUTHENTICATION';
         }
 
         async function handleWebRegister(e) {
@@ -345,26 +348,34 @@
         }
 
         async function loginDiscord(btn) {
-            const token = document.getElementById('discordToken').value;
-            if(!token) return alert('Vui lòng nhập Discord Token!');
-            updateStatus('Đang xác thực Token...');
+            const token = document.getElementById('discordToken').value.trim();
+            if(!token) return alert('Hãy nhập Discord Token!');
+            updateStatus('Đang xác thực Discord Token...');
             
-            const res = await fetch(`${getBaseUrl()}/api/login`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ token })
-            });
-            const data = await res.json();
-            if(data.success) {
-                updateStatus(`Kết nối thành công: ${data.user}`);
-                document.getElementById('discordBadge').innerText = data.user;
-                document.getElementById('discordBadge').className = 'text-xs px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800';
-                loadAnalytics();
-            } else updateStatus(`Lỗi: ${data.error}`);
+            try {
+                const res = await fetch(`${getBaseUrl()}/api/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    updateStatus(`Đã kết nối thành công: ${data.user}`);
+                    document.getElementById('discordUserInfo').classList.remove('hidden');
+                    document.getElementById('userAvatar').src = data.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
+                    document.getElementById('discordBadge').innerText = data.user;
+                    loadAnalytics();
+                } else {
+                    updateStatus(`Lỗi: ${data.error}`);
+                    alert(data.error);
+                }
+            } catch (err) {
+                updateStatus('Lỗi kết nối tới Server Backend!');
+            }
         }
 
         async function sendApi(path, body) {
-            updateStatus('Đang thực thi lệnh...');
+            updateStatus('Đang gửi lệnh...');
             const res = await fetch(`${getBaseUrl()}${path}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -379,8 +390,8 @@
         }
 
         async function startNitro() {
-            updateStatus('Đang khởi chạy Nitro SOCKS4 Checker...');
-            await sendApi('/api/nitro/start', { mode: '3' });
+            updateStatus('Đang kích hoạt Nitro SOCKS4 Checker...');
+            await sendApi('/api/nitro/start', {});
             if (nitroTimer) clearInterval(nitroTimer);
             nitroTimer = setInterval(pollNitroLogs, 1000);
         }
@@ -397,11 +408,11 @@
                     const termEl = document.getElementById('terminalLog');
                     if (data.stats.logs.length > 0) {
                         termEl.innerHTML = data.stats.logs.map(log => {
-                            if (log.includes('[SUCCESS]')) return `<div class="text-emerald-400 font-bold">${log}</div>`;
-                            if (log.includes('[FAILED]')) return `<div class="text-rose-400">${log}</div>`;
+                            if (log.includes('[HIT VALID]')) return `<div class="text-emerald-400 font-bold">${log}</div>`;
+                            if (log.includes('[INVALID]')) return `<div class="text-rose-400">${log}</div>`;
                             return `<div class="text-slate-400">${log}</div>`;
                         }).join('');
-                        termEl.scrollTop = termEl.scrollHeight; // Tự cuộn theo dòng mới nhất
+                        termEl.scrollTop = termEl.scrollHeight;
                     }
 
                     if (data.stats.validCodes.length > 0) {
