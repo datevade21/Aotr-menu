@@ -18,6 +18,7 @@
     --gold-dim: #7A5714;
     --teal: #22D3AA;
     --danger: #E5484D;
+    --discord: #5865F2;
     --radius-card: 14px;
     --radius-pill: 999px;
   }
@@ -42,6 +43,7 @@
   .btn{
     padding:10px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;
     transition:transform .12s ease, background .15s ease;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
   }
   .btn:active{transform:scale(.97);}
   .btn-primary{background:var(--gold);color:#1A1300;}
@@ -52,15 +54,15 @@
   .btn-teal:hover{background:#3fe6bd;}
   .btn-danger{background:transparent;color:var(--danger);border:1px solid rgba(229,72,77,.4);}
   .btn-danger:hover{background:rgba(229,72,77,.12);}
+  .btn-discord{background:var(--discord);color:#fff;}
+  .btn-discord:hover{background:#4752c4;}
 
   .profile-chip{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:var(--radius-pill);background:var(--surface);border:1px solid var(--line);}
   .profile-chip img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
   .profile-chip span{font-size:14px;font-weight:600;}
 
   /* ---------- intro strip ---------- */
-  .intro{
-    padding:36px 28px 12px;max-width:920px;
-  }
+  .intro{padding:36px 28px 12px;max-width:920px;}
   .intro h1{font-size:28px;margin:0 0 8px;font-weight:800;}
   .intro p{color:var(--text-dim);margin:0;font-size:15px;max-width:60ch;}
   .intro .accent{color:var(--gold);}
@@ -71,9 +73,7 @@
   .toolbar h2{font-size:16px;color:var(--text-dim);font-weight:600;margin:0;}
   .count-tag{font-size:13px;color:var(--text-dim);}
 
-  .grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;
-  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
   .card{
     background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);
     overflow:hidden;display:flex;flex-direction:column;
@@ -105,9 +105,7 @@
   }
 
   /* ---------- footer ---------- */
-  footer{
-    padding:20px 28px 40px;text-align:center;color:var(--text-dim);font-size:12.5px;
-  }
+  footer{padding:20px 28px 40px;text-align:center;color:var(--text-dim);font-size:12.5px;}
   footer button{background:none;color:var(--text-dim);text-decoration:underline;font-size:12.5px;}
 
   /* ---------- modal ---------- */
@@ -131,9 +129,7 @@
   }
   .field textarea{resize:vertical;min-height:64px;}
   .field input:focus, .field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;}
-  .avatar-pick{display:flex;align-items:center;gap:12px;}
-  .avatar-pick .preview{width:52px;height:52px;border-radius:50%;background:var(--surface-2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:11px;}
-  .avatar-pick .preview img{width:100%;height:100%;object-fit:cover;}
+
   .image-pick{
     border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;cursor:pointer;
     color:var(--text-dim);font-size:13px;
@@ -156,12 +152,12 @@
   .stat b{display:block;font-size:20px;font-family:'Sora',sans-serif;color:var(--teal);}
   .stat span{font-size:11.5px;color:var(--text-dim);}
 
-  /* redirect copy box */
-  .redirect-box{
+  /* config box */
+  .config-box{
     background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
-    padding:12px;margin-bottom:18px;
+    padding:14px;margin-bottom:18px;
   }
-  .redirect-box label{font-size:12px;color:var(--gold);font-weight:600;display:block;margin-bottom:6px;}
+  .config-box label{font-size:12px;color:var(--gold);font-weight:600;display:block;margin-bottom:6px;}
   .redirect-input-group{display:flex;gap:8px;}
   .redirect-input-group input{
     flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;
@@ -184,7 +180,7 @@
 
 <div class="intro">
   <h1>Mua bán vật phẩm <span class="accent">an toàn, nhanh gọn</span></h1>
-  <p>Đăng nhập bằng Discord để rao bán vật phẩm của bạn. Người mua liên hệ trực tiếp qua Discord của người bán.</p>
+  <p>Đăng nhập bằng Discord OAuth2 để tự động liên kết tài khoản và đăng bán vật phẩm.</p>
 </div>
 
 <main>
@@ -198,40 +194,15 @@
 <button class="btn btn-primary fab" id="fabPost">+ Đăng bán</button>
 
 <footer>
-  Dữ liệu minh hoạ — lưu trên trình duyệt của bạn. <button id="openAdmin">Quản trị viên</button>
+  Dữ liệu lưu trữ trên trình duyệt. <button id="openAdmin">Quản trị viên</button>
 </footer>
-
-<!-- LOGIN MODAL -->
-<div class="overlay" id="loginOverlay">
-  <div class="modal">
-    <button class="close-x" data-close="loginOverlay">✕</button>
-    <h2>Đăng nhập bằng Discord</h2>
-    <p class="sub">Nhập tên Discord và chọn ảnh đại diện để bắt đầu đăng bán.</p>
-    <div class="field">
-      <label>Tên Discord (vd: dat.dev)</label>
-      <input type="text" id="loginName" placeholder="username#0000">
-    </div>
-    <div class="field">
-      <label>Ảnh đại diện</label>
-      <div class="avatar-pick">
-        <div class="preview" id="loginAvatarPreview">Chưa có</div>
-        <input type="file" id="loginAvatarFile" accept="image/*" style="display:none">
-        <button class="btn btn-ghost" id="loginAvatarBtn" type="button">Chọn ảnh</button>
-      </div>
-    </div>
-    <p class="error-text" id="loginError">Vui lòng nhập tên Discord.</p>
-    <div class="modal-actions">
-      <button class="btn btn-teal" id="loginSubmit">Đăng nhập</button>
-    </div>
-  </div>
-</div>
 
 <!-- POST ITEM MODAL -->
 <div class="overlay" id="postOverlay">
   <div class="modal">
     <button class="close-x" data-close="postOverlay">✕</button>
     <h2>Đăng vật phẩm</h2>
-    <p class="sub">Vật phẩm sẽ hiển thị kèm tên và ảnh đại diện Discord của bạn.</p>
+    <p class="sub">Vật phẩm sẽ hiển thị kèm thông tin Discord thực tế của bạn.</p>
     <div class="field">
       <label>Tên vật phẩm</label>
       <input type="text" id="itemName" placeholder="VD: Acc Liên Quân Rank Cao Thủ">
@@ -278,11 +249,16 @@
   <div class="modal" style="max-width:520px;">
     <button class="close-x" data-close="adminPanelOverlay">✕</button>
     <h2>Trang quản trị <span class="admin-badge">ADMIN</span></h2>
-    <p class="sub">Cấu hình OAuth2 & Quản lý danh sách vật phẩm.</p>
+    <p class="sub">Cấu hình Discord OAuth2 & Quản lý bài đăng.</p>
     
-    <!-- KHU VỰC DISCORD REDIRECT URI DỄ SAO CHÉP -->
-    <div class="redirect-box">
-      <label>🔑 DISCORD REDIRECT URI (Dán vào Developer Portal):</label>
+    <div class="config-box">
+      <div class="field">
+        <label style="color:var(--gold);">DISCORD CLIENT ID:</label>
+        <input type="text" id="clientIdInput" placeholder="Nhập Client ID ứng dụng Discord">
+        <button class="btn btn-teal" id="saveClientIdBtn" style="width:100%; margin-top:8px; padding:6px; font-size:12px;">Lưu Client ID</button>
+      </div>
+      <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
+      <label>🔑 DISCORD REDIRECT URI (Dán vào Portal):</label>
       <div class="redirect-input-group">
         <input type="text" id="redirectUriInput" readonly>
         <button class="btn btn-teal" id="copyRedirectBtn" style="padding:6px 12px; font-size:12px;">Sao chép</button>
@@ -299,15 +275,16 @@
 
 <script>
 const ADMIN_PASSWORD = "27102012Dat@";
+const DEFAULT_CLIENT_ID = "1234567890123456789"; // Thay ID mặc định của bạn ở đây nếu muốn
 const PLACEHOLDER_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%232A2F3A'/></svg>`
 );
 
-let currentUser = null;   // {name, avatar}
-let items = [];           // [{id,name,price,desc,image,sellerName,sellerAvatar,ts}]
+let currentUser = null;   // {id, username, avatar}
+let items = [];           // [{id, name, price, desc, image, sellerId, sellerName, sellerAvatar, ts}]
 let pendingItemImage = null;
-let pendingLoginAvatar = null;
 let isAdmin = false;
+let discordClientId = localStorage.getItem('discord_client_id') || DEFAULT_CLIENT_ID;
 
 function fmtPrice(n){
   return Number(n).toLocaleString('vi-VN') + ' đ';
@@ -322,7 +299,50 @@ document.querySelectorAll('.overlay').forEach(ov=>{
   ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('show'); });
 });
 
-/* ---------- storage helpers ---------- */
+/* ---------- DISCORD OAUTH2 LOGIC ---------- */
+function getRedirectUri(){
+  return window.location.origin + window.location.pathname;
+}
+
+function loginWithDiscord(){
+  const redirectUri = encodeURIComponent(getRedirectUri());
+  const scope = encodeURIComponent('identify');
+  const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${discordClientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
+  window.location.href = authUrl;
+}
+
+function handleDiscordCallback(){
+  const fragment = new URLSearchParams(window.location.hash.slice(1));
+  const accessToken = fragment.get('access_token');
+  const tokenType = fragment.get('token_type');
+
+  if (accessToken) {
+    fetch('https://discord.com/api/users/@me', {
+      headers: { authorization: `${tokenType} ${accessToken}` }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.id) {
+        const avatarUrl = data.avatar 
+          ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png` 
+          : PLACEHOLDER_AVATAR;
+        
+        currentUser = {
+          id: data.id,
+          name: data.username,
+          avatar: avatarUrl
+        };
+        saveProfile();
+        renderHeader();
+        // Xóa token khỏi URL cho sạch
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    })
+    .catch(err => console.error('Lỗi xác thực Discord:', err));
+  }
+}
+
+/* ---------- STORAGE HELPERS ---------- */
 async function loadItems(){
   try{
     const res = await window.storage.get('marketplace-items', true);
@@ -346,14 +366,14 @@ async function saveProfile(){
   catch(e){ console.error('Lỗi lưu hồ sơ', e); }
 }
 
-/* ---------- header / login ---------- */
+/* ---------- HEADER / UI RENDER ---------- */
 function renderHeader(){
   const el = document.getElementById('headerRight');
   el.innerHTML = '';
   if(currentUser){
     const chip = document.createElement('div');
     chip.className = 'profile-chip';
-    chip.innerHTML = `<img src="${currentUser.avatar || PLACEHOLDER_AVATAR}"><span>${escapeHtml(currentUser.name)}</span>`;
+    chip.innerHTML = `<img src="${currentUser.avatar}"><span>${escapeHtml(currentUser.name)}</span>`;
     const logout = document.createElement('button');
     logout.className = 'btn btn-ghost';
     logout.textContent = 'Đăng xuất';
@@ -361,14 +381,15 @@ function renderHeader(){
       currentUser = null;
       await saveProfile();
       renderHeader();
+      renderGrid();
     };
     el.appendChild(chip);
     el.appendChild(logout);
   } else {
     const btn = document.createElement('button');
-    btn.className = 'btn btn-teal';
-    btn.textContent = 'Đăng nhập Discord';
-    btn.onclick = ()=>openModal('loginOverlay');
+    btn.className = 'btn btn-discord';
+    btn.innerHTML = `<svg width="18" height="14" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36,40.3,42.45,40.3C48.8,40.3,54,46,53.87,53,53.87,60,48.8,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.06-12.7,11.44-12.7C91.1,40.3,96.24,46,96.11,53,96.11,60,91.1,65.69,84.69,65.69Z"/></svg> Đăng nhập Discord`;
+    btn.onclick = loginWithDiscord;
     el.appendChild(btn);
   }
 }
@@ -379,36 +400,9 @@ function escapeHtml(str){
   return d.innerHTML;
 }
 
-document.getElementById('loginAvatarBtn').addEventListener('click', ()=>{
-  document.getElementById('loginAvatarFile').click();
-});
-document.getElementById('loginAvatarFile').addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    pendingLoginAvatar = reader.result;
-    document.getElementById('loginAvatarPreview').innerHTML = `<img src="${reader.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-  };
-  reader.readAsDataURL(file);
-});
-document.getElementById('loginSubmit').addEventListener('click', async ()=>{
-  const name = document.getElementById('loginName').value.trim();
-  const err = document.getElementById('loginError');
-  if(!name){ err.style.display='block'; return; }
-  err.style.display='none';
-  currentUser = { name, avatar: pendingLoginAvatar || PLACEHOLDER_AVATAR };
-  await saveProfile();
-  renderHeader();
-  closeModal('loginOverlay');
-  document.getElementById('loginName').value='';
-  pendingLoginAvatar = null;
-  document.getElementById('loginAvatarPreview').innerHTML = 'Chưa có';
-});
-
-/* ---------- post item ---------- */
+/* ---------- POST ITEM ---------- */
 document.getElementById('fabPost').addEventListener('click', ()=>{
-  if(!currentUser){ openModal('loginOverlay'); return; }
+  if(!currentUser){ loginWithDiscord(); return; }
   openModal('postOverlay');
 });
 document.getElementById('itemImagePick').addEventListener('click', ()=>{
@@ -438,6 +432,7 @@ document.getElementById('postSubmit').addEventListener('click', async ()=>{
     id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
     name, price: Number(price), desc,
     image: pendingItemImage,
+    sellerId: currentUser.id,
     sellerName: currentUser.name,
     sellerAvatar: currentUser.avatar,
     ts: Date.now()
@@ -454,7 +449,7 @@ document.getElementById('postSubmit').addEventListener('click', async ()=>{
   pick.innerHTML = 'Nhấn để chọn ảnh từ máy';
 });
 
-/* ---------- grid ---------- */
+/* ---------- GRID RENDER ---------- */
 function renderGrid(){
   const grid = document.getElementById('grid');
   document.getElementById('countTag').textContent = items.length + ' vật phẩm';
@@ -466,7 +461,7 @@ function renderGrid(){
   items.forEach(item=>{
     const card = document.createElement('div');
     card.className = 'card';
-    const canDelete = isAdmin || (currentUser && currentUser.name === item.sellerName);
+    const canDelete = isAdmin || (currentUser && currentUser.id === item.sellerId);
     card.innerHTML = `
       <div class="thumb">${item.image ? `<img src="${item.image}">` : `<span class="placeholder">Không có ảnh</span>`}</div>
       <div class="card-body">
@@ -496,7 +491,7 @@ function renderGrid(){
   });
 }
 
-/* ---------- admin ---------- */
+/* ---------- ADMIN ---------- */
 document.getElementById('openAdmin').addEventListener('click', ()=>{
   if(isAdmin){ renderAdminList(); openModal('adminPanelOverlay'); }
   else openModal('adminLoginOverlay');
@@ -520,17 +515,15 @@ document.getElementById('adminSubmit').addEventListener('click', ()=>{
 function renderAdminList(){
   document.getElementById('statCount').textContent = items.length;
   
-  // Tự động lấy URL hiện tại làm Redirect URI
-  const currentUri = window.location.origin + window.location.pathname;
-  const redirectInput = document.getElementById('redirectUriInput');
-  redirectInput.value = currentUri;
+  document.getElementById('clientIdInput').value = discordClientId;
+  document.getElementById('redirectUriInput').value = getRedirectUri();
 
-  const sellers = new Set(items.map(i => i.sellerName));
+  const sellers = new Set(items.map(i => i.sellerId || i.sellerName));
   document.getElementById('statSellers').textContent = sellers.size;
 
   const listEl = document.getElementById('adminList');
   if(items.length === 0){
-    listEl.innerHTML = '<p style="color:var(--text-dim);font-size:13px;text-align:center;">Không có vật phẩm nào để quản lý.</p>';
+    listEl.innerHTML = '<p style="color:var(--text-dim);font-size:13px;text-align:center;">Không có vật phẩm nào.</p>';
     return;
   }
 
@@ -561,7 +554,15 @@ function renderAdminList(){
   });
 }
 
-// Chức năng nút Sao chép Redirect URI
+document.getElementById('saveClientIdBtn').addEventListener('click', () => {
+  const val = document.getElementById('clientIdInput').value.trim();
+  if(val){
+    discordClientId = val;
+    localStorage.setItem('discord_client_id', val);
+    alert('Đã lưu Client ID thành công!');
+  }
+});
+
 document.getElementById('copyRedirectBtn').addEventListener('click', () => {
   const input = document.getElementById('redirectUriInput');
   input.select();
@@ -572,7 +573,8 @@ document.getElementById('copyRedirectBtn').addEventListener('click', () => {
   });
 });
 
-// Khởi chạy ban đầu
+/* ---------- KHỞI CHẠY ---------- */
+handleDiscordCallback();
 loadProfile();
 loadItems();
 </script>
