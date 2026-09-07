@@ -6,6 +6,9 @@
 <title>AOTR MARKET — Sổ giao dịch vật phẩm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<!-- Firebase (dùng cho lưu trữ dữ liệu dùng chung khi host trên website riêng / GitHub Pages) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <style>
   :root{
     --bg: #0F0D0A;
@@ -362,7 +365,7 @@
 <button class="btn btn-primary fab" id="fabPost">+ Đăng bán</button>
 
 <footer>
-  <span class="save-note"><span class="dot"></span>Dữ liệu lưu trên máy chủ — không mất khi tải lại hay cập nhật trang</span>
+  <span class="save-note" id="footerSaveNote"><span class="dot"></span>Đang kiểm tra kết nối lưu trữ...</span>
   <button id="openAdmin">Quản trị viên</button>
 </footer>
 
@@ -440,6 +443,7 @@
       <button data-pane="paneZones">Khu</button>
       <button data-pane="paneStats">Thống kê</button>
       <button data-pane="paneConfig">Discord</button>
+      <button data-pane="paneStorage">Lưu trữ</button>
     </div>
 
     <!-- ITEMS PANE -->
@@ -498,6 +502,28 @@
       <button class="btn btn-danger" id="wipeAllBtn" style="width:100%;">Xoá toàn bộ vật phẩm trên chợ</button>
     </div>
 
+    <!-- STORAGE PANE -->
+    <div class="admin-pane" id="paneStorage">
+      <div class="config-box">
+        <label>TRẠNG THÁI KẾT NỐI FIREBASE</label>
+        <p id="storageStatus" style="font-size:13px;margin:0 0 4px;">Đang kiểm tra...</p>
+        <p class="security-note" style="margin-top:8px;">
+          Trang này chạy độc lập trên website/GitHub của bạn nên cần một cơ sở dữ liệu thật để lưu dữ liệu dùng chung
+          (vật phẩm, khu) giữa mọi người truy cập — mình đã nối sẵn code cho <b>Firebase Firestore</b> (miễn phí).
+        </p>
+      </div>
+      <div class="config-box">
+        <label>CÁCH BẬT LƯU TRỮ (LÀM 1 LẦN)</label>
+        <p class="security-note" style="margin:0;">
+          1. Vào <b>console.firebase.google.com</b> → Tạo dự án mới (miễn phí).<br>
+          2. Vào <b>Build → Firestore Database</b> → Create database → chọn chế độ <b>test mode</b>.<br>
+          3. Vào <b>⚙️ Project settings → General</b> → mục "Your apps" → bấm biểu tượng <b>&lt;/&gt;</b> để tạo Web App.<br>
+          4. Firebase sẽ đưa cho bạn 6 giá trị (apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId).<br>
+          5. Mở file HTML này bằng trình soạn thảo code, tìm dòng chữ <span class="mono">const firebaseConfig</span> gần đầu thẻ &lt;script&gt;, dán 6 giá trị vào đúng chỗ, lưu file và tải lại lên GitHub.
+        </p>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -513,6 +539,42 @@ const ZONE_SWATCHES = ['#E8B34C','#3F9C8C','#6B5B95','#C1483C','#4A90D9','#D9775
 const PLACEHOLDER_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%23241D13'/></svg>`
 );
+
+/* ================= FIREBASE SETUP =================
+   Dán 6 giá trị Firebase của bạn vào đây (lấy từ console.firebase.google.com
+   -> Project settings -> General -> Your apps -> Web app). Xem hướng dẫn
+   đầy đủ trong trang quản trị, tab "Lưu trữ". Nếu để nguyên như bên dưới,
+   trang sẽ KHÔNG lưu được dữ liệu.
+*/
+const firebaseConfig = {
+  apiKey: "DÁN_API_KEY_VÀO_ĐÂY",
+  authDomain: "DÁN_AUTH_DOMAIN_VÀO_ĐÂY",
+  projectId: "DÁN_PROJECT_ID_VÀO_ĐÂY",
+  storageBucket: "DÁN_STORAGE_BUCKET_VÀO_ĐÂY",
+  messagingSenderId: "DÁN_SENDER_ID_VÀO_ĐÂY",
+  appId: "DÁN_APP_ID_VÀO_ĐÂY"
+};
+let db = null;
+let firebaseReady = false;
+try{
+  if(firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("DÁN_")){
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    firebaseReady = true;
+  }
+}catch(e){ console.error('Lỗi khởi tạo Firebase:', e); firebaseReady = false; }
+
+function updateStorageStatusUI(){
+  const el = document.getElementById('storageStatus');
+  const footEl = document.getElementById('footerSaveNote');
+  if(firebaseReady){
+    if(el) el.innerHTML = '<span style="color:#3F9C8C;">● Đã kết nối Firebase — dữ liệu đang được lưu dùng chung cho mọi người.</span>';
+    if(footEl) footEl.innerHTML = '<span class="dot" style="background:#3F9C8C;"></span>Dữ liệu lưu trên máy chủ — không mất khi tải lại hay cập nhật trang';
+  } else {
+    if(el) el.innerHTML = '<span style="color:#C1483C;">● Chưa cấu hình Firebase — dữ liệu KHÔNG được lưu, sẽ mất khi tải lại trang và người khác không thấy bài đăng của bạn.</span>';
+    if(footEl) footEl.innerHTML = '<span class="dot" style="background:#C1483C;"></span>⚠ Chưa cấu hình lưu trữ — dữ liệu sẽ mất khi tải lại trang (xem trang quản trị)';
+  }
+}
 
 let currentUser = null;
 let items = [];
@@ -643,56 +705,77 @@ function handleDiscordCallback(){
 }
 
 /* ---------- STORAGE HELPERS ----------
-   Toàn bộ vật phẩm, khu và cấu hình dùng window.storage (shared=true) — lưu trên máy chủ,
-   không phải localStorage của trình duyệt, nên không mất khi tải lại trang, đổi thiết bị,
-   hay khi bạn cập nhật lại nội dung file này. Hồ sơ Discord của từng người dùng lưu riêng (shared=false).
+   Vật phẩm và khu được lưu dùng chung cho mọi người qua Firebase Firestore
+   (xem firebaseConfig ở đầu file / tab "Lưu trữ" trong trang quản trị).
+   Hồ sơ đăng nhập Discord của riêng bạn lưu bằng localStorage của trình duyệt
+   (chỉ cần nhớ trên máy bạn, không cần dùng chung).
 */
 async function loadItems(){
+  if(!firebaseReady){ items = []; return; }
   try{
-    const res = await window.storage.get('marketplace-items', true);
-    items = res && res.value ? JSON.parse(res.value) : [];
-  }catch(e){ items = []; }
+    const snap = await db.collection('items').orderBy('ts','desc').get();
+    items = snap.docs.map(d=>d.data());
+  }catch(e){ console.error('Lỗi tải vật phẩm', e); items = []; }
 }
-async function saveItems(){
-  try{ await window.storage.set('marketplace-items', JSON.stringify(items), true); }
-  catch(e){ console.error('Lỗi lưu dữ liệu', e); }
+async function saveItemDoc(item){
+  if(!firebaseReady){ showToast('Chưa cấu hình Firebase — xem tab "Lưu trữ" trong trang quản trị'); return false; }
+  try{ await db.collection('items').doc(item.id).set(item); return true; }
+  catch(e){ console.error('Lỗi lưu vật phẩm', e); showToast('Lỗi lưu dữ liệu, thử lại sau'); return false; }
+}
+async function deleteItemDoc(id){
+  if(!firebaseReady) return false;
+  try{ await db.collection('items').doc(id).delete(); return true; }
+  catch(e){ console.error('Lỗi xoá vật phẩm', e); return false; }
 }
 async function loadZones(){
+  if(!firebaseReady){ zones = JSON.parse(JSON.stringify(DEFAULT_ZONES)); return; }
   try{
-    const res = await window.storage.get('marketplace-zones', true);
-    zones = res && res.value ? JSON.parse(res.value) : JSON.parse(JSON.stringify(DEFAULT_ZONES));
-  }catch(e){ zones = JSON.parse(JSON.stringify(DEFAULT_ZONES)); }
-  if(!zones.length) zones = JSON.parse(JSON.stringify(DEFAULT_ZONES));
+    const snap = await db.collection('zones').get();
+    zones = snap.docs.map(d=>d.data());
+    if(!zones.length){
+      zones = JSON.parse(JSON.stringify(DEFAULT_ZONES));
+      await Promise.all(zones.map(z=>db.collection('zones').doc(z.id).set(z)));
+    }
+  }catch(e){ console.error('Lỗi tải khu', e); zones = JSON.parse(JSON.stringify(DEFAULT_ZONES)); }
 }
-async function saveZones(){
-  try{ await window.storage.set('marketplace-zones', JSON.stringify(zones), true); }
-  catch(e){ console.error('Lỗi lưu khu', e); }
+async function saveZoneDoc(zone){
+  if(!firebaseReady) return false;
+  try{ await db.collection('zones').doc(zone.id).set(zone); return true; }
+  catch(e){ console.error('Lỗi lưu khu', e); return false; }
+}
+async function deleteZoneDoc(id){
+  if(!firebaseReady) return false;
+  try{ await db.collection('zones').doc(id).delete(); return true; }
+  catch(e){ console.error('Lỗi xoá khu', e); return false; }
 }
 async function loadSiteConfig(){
+  if(!firebaseReady) return;
   try{
-    const res = await window.storage.get('marketplace-config', true);
-    if(res && res.value){
-      const cfg = JSON.parse(res.value);
+    const doc = await db.collection('config').doc('site').get();
+    if(doc.exists){
+      const cfg = doc.data();
       discordClientId = cfg.clientId || DEFAULT_CLIENT_ID;
       discordWebhookUrl = cfg.webhookUrl || DEFAULT_WEBHOOK_URL;
     }
-  }catch(e){ /* keep defaults */ }
+  }catch(e){ console.error('Lỗi tải cấu hình', e); }
 }
 async function saveSiteConfig(){
-  try{ await window.storage.set('marketplace-config', JSON.stringify({clientId:discordClientId, webhookUrl:discordWebhookUrl}), true); }
+  if(!firebaseReady){ showToast('Chưa cấu hình Firebase — xem tab "Lưu trữ" trong trang quản trị'); return; }
+  try{ await db.collection('config').doc('site').set({clientId:discordClientId, webhookUrl:discordWebhookUrl}); }
   catch(e){ console.error('Lỗi lưu cấu hình', e); }
 }
-async function loadProfile(){
+function loadProfile(){
   try{
-    const res = await window.storage.get('my-profile', false);
-    currentUser = res && res.value ? JSON.parse(res.value) : null;
+    const raw = localStorage.getItem('aotr-market-profile');
+    currentUser = raw ? JSON.parse(raw) : null;
   }catch(e){ currentUser = null; }
   renderHeader();
 }
-async function saveProfile(){
-  try{ await window.storage.set('my-profile', JSON.stringify(currentUser), false); }
+function saveProfile(){
+  try{ localStorage.setItem('aotr-market-profile', JSON.stringify(currentUser)); }
   catch(e){ console.error('Lỗi lưu hồ sơ', e); }
 }
+
 
 /* ---------- HEADER / NAV ---------- */
 function renderHeader(){
@@ -813,10 +896,23 @@ document.getElementById('itemImageFile').addEventListener('change', (e)=>{
   if(!file) return;
   const reader = new FileReader();
   reader.onload = ()=>{
-    pendingItemImage = reader.result;
-    const pick = document.getElementById('itemImagePick');
-    pick.classList.add('has-image');
-    pick.innerHTML = `<img src="${reader.result}">`;
+    const img = new Image();
+    img.onload = ()=>{
+      // Nén & thu nhỏ ảnh để tránh vượt giới hạn 1MB/bản ghi của Firestore
+      const maxW = 900;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const compressed = canvas.toDataURL('image/jpeg', 0.72);
+      pendingItemImage = compressed;
+      const pick = document.getElementById('itemImagePick');
+      pick.classList.add('has-image');
+      pick.innerHTML = `<img src="${compressed}">`;
+    };
+    img.src = reader.result;
   };
   reader.readAsDataURL(file);
 });
@@ -830,12 +926,18 @@ document.getElementById('postSubmit').addEventListener('click', async ()=>{
   if(!name || !price){ err.style.display='block'; return; }
   err.style.display='none';
 
+  const submitBtn = document.getElementById('postSubmit');
+  submitBtn.disabled = true;
+
   if(editingItemId){
     const it = items.find(i=>i.id===editingItemId);
     if(it){
-      it.zoneId = zoneId; it.name = name; it.price = Number(price); it.desc = desc; it.image = pendingItemImage;
-      await saveItems();
-      showToast('Đã lưu thay đổi');
+      const updated = {...it, zoneId, name, price: Number(price), desc, image: pendingItemImage};
+      const ok = await saveItemDoc(updated);
+      if(ok){
+        Object.assign(it, updated);
+        showToast('Đã lưu thay đổi');
+      }
     }
   } else {
     const newItem = {
@@ -845,20 +947,24 @@ document.getElementById('postSubmit').addEventListener('click', async ()=>{
       sellerId: currentUser.id, sellerName: currentUser.name, sellerAvatar: currentUser.avatar,
       ts: Date.now()
     };
-    items.unshift(newItem);
-    await saveItems();
-    sendDiscordWebhook('NEW_ITEM', newItem);
-    showToast('Đã đăng bán vật phẩm');
+    const ok = await saveItemDoc(newItem);
+    if(ok){
+      items.unshift(newItem);
+      sendDiscordWebhook('NEW_ITEM', newItem);
+      showToast('Đã đăng bán vật phẩm');
+    }
   }
 
+  submitBtn.disabled = false;
   renderAll();
   closeModal('postOverlay');
 });
 
 async function deleteItem(id){
   const deletedItem = items.find(it => it.id === id);
+  const ok = await deleteItemDoc(id);
+  if(!ok){ showToast('Không thể xoá — kiểm tra kết nối Firebase'); return; }
   items = items.filter(it=>it.id !== id);
-  await saveItems();
   if (deletedItem) sendDiscordWebhook('DELETE_ITEM', deletedItem);
   renderAll();
   if(isAdmin){ renderAdminList(); renderZoneManageList(); renderStatsPane(); }
@@ -986,6 +1092,7 @@ function openAdminPanel(){
   renderAdminList();
   renderZoneManageList();
   renderStatsPane();
+  updateStorageStatusUI();
   document.getElementById('webhookUrlInput').value = discordWebhookUrl;
   document.getElementById('clientIdInput').value = discordClientId;
   document.getElementById('redirectUriInput').value = getRedirectUri();
@@ -1048,8 +1155,8 @@ function renderAdminList(){
 
 document.getElementById('wipeAllBtn').addEventListener('click', async ()=>{
   if(!confirm('Xoá toàn bộ vật phẩm trên chợ? Hành động này không thể hoàn tác.')) return;
+  await Promise.all(items.map(it=>deleteItemDoc(it.id)));
   items = [];
-  await saveItems();
   renderAll();
   renderAdminList();
   renderZoneManageList();
@@ -1140,8 +1247,10 @@ document.getElementById('addZoneBtn').addEventListener('click', async ()=>{
   const nameInput = document.getElementById('newZoneName');
   const name = nameInput.value.trim();
   if(!name){ showToast('Nhập tên khu trước đã'); return; }
-  zones.push({ id: 'z-' + Date.now().toString(36), name, color: pickedSwatch });
-  await saveZones();
+  const newZone = { id: 'z-' + Date.now().toString(36), name, color: pickedSwatch };
+  const ok = await saveZoneDoc(newZone);
+  if(!ok) return;
+  zones.push(newZone);
   nameInput.value = '';
   renderZoneManageList();
   renderZoneChips();
@@ -1173,11 +1282,13 @@ function renderZoneManageList(){
       const inUse = items.filter(i=>i.zoneId===zid).length;
       if(inUse>0 && !confirm(`Khu này đang có ${inUse} vật phẩm. Xoá khu sẽ chuyển các vật phẩm đó sang khu đầu tiên còn lại. Tiếp tục?`)) return;
       const fallback = zones.find(z=>z.id!==zid);
-      items.forEach(i=>{ if(i.zoneId===zid) i.zoneId = fallback.id; });
+      const affected = items.filter(i=>i.zoneId===zid);
+      affected.forEach(i=>{ i.zoneId = fallback.id; });
+      await Promise.all(affected.map(i=>saveItemDoc(i)));
+      const okDel = await deleteZoneDoc(zid);
+      if(!okDel) return;
       zones = zones.filter(z=>z.id!==zid);
       if(activeZoneFilter===zid) activeZoneFilter='all';
-      await saveZones();
-      await saveItems();
       renderZoneManageList();
       renderZoneChips();
       renderGrid();
@@ -1219,6 +1330,7 @@ async function init(){
   await Promise.all([loadProfile(), loadItems(), loadZones(), loadSiteConfig()]);
   renderHeader();
   renderAll();
+  updateStorageStatusUI();
 }
 init();
 </script>
