@@ -488,4 +488,94 @@ function renderGrid(){
   });
   grid.querySelectorAll('[data-del]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
-      items = items.filter(it=>it.id !== btn.dataset.del
+      items = items.filter(it=>it.id !== btn.dataset.del);
+      await saveItems();
+      renderGrid();
+      if(isAdmin) renderAdminList();
+    });
+  });
+}
+
+/* ---------- admin ---------- */
+document.getElementById('openAdmin').addEventListener('click', ()=>{
+  if(isAdmin){ renderAdminList(); openModal('adminPanelOverlay'); }
+  else openModal('adminLoginOverlay');
+});
+document.getElementById('adminSubmit').addEventListener('click', ()=>{
+  const val = document.getElementById('adminPassword').value;
+  const err = document.getElementById('adminError');
+  if(val === ADMIN_PASSWORD){
+    isAdmin = true;
+    err.style.display='none';
+    document.getElementById('adminPassword').value='';
+    closeModal('adminLoginOverlay');
+    renderAdminList();
+    renderGrid();
+    openModal('adminPanelOverlay');
+  } else {
+    err.style.display='block';
+  }
+});
+
+function renderAdminList(){
+  document.getElementById('statCount').textContent = items.length;
+  
+  // Tự động lấy URL hiện tại làm Redirect URI
+  const currentUri = window.location.origin + window.location.pathname;
+  const redirectInput = document.getElementById('redirectUriInput');
+  redirectInput.value = currentUri;
+
+  const sellers = new Set(items.map(i => i.sellerName));
+  document.getElementById('statSellers').textContent = sellers.size;
+
+  const listEl = document.getElementById('adminList');
+  if(items.length === 0){
+    listEl.innerHTML = '<p style="color:var(--text-dim);font-size:13px;text-align:center;">Không có vật phẩm nào để quản lý.</p>';
+    return;
+  }
+
+  listEl.innerHTML = '';
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'admin-row';
+    row.innerHTML = `
+      <div class="info">
+        <img src="${item.image || PLACEHOLDER_AVATAR}">
+        <div>
+          <div class="name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
+          <div style="font-size:11px;color:var(--text-dim);">${fmtPrice(item.price)} • ${escapeHtml(item.sellerName)}</div>
+        </div>
+      </div>
+      <button class="btn btn-danger" data-admin-del="${item.id}">Xoá</button>
+    `;
+    listEl.appendChild(row);
+  });
+
+  listEl.querySelectorAll('[data-admin-del]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      items = items.filter(it => it.id !== btn.dataset.admin-del);
+      await saveItems();
+      renderGrid();
+      renderAdminList();
+    });
+  });
+}
+
+// Chức năng nút Sao chép Redirect URI
+document.getElementById('copyRedirectBtn').addEventListener('click', () => {
+  const input = document.getElementById('redirectUriInput');
+  input.select();
+  navigator.clipboard.writeText(input.value).then(() => {
+    const btn = document.getElementById('copyRedirectBtn');
+    btn.textContent = 'Đã chép!';
+    setTimeout(() => { btn.textContent = 'Sao chép'; }, 2000);
+  });
+});
+
+// Khởi chạy ban đầu
+loadProfile();
+loadItems();
+</script>
+
+</body>
+</html>
