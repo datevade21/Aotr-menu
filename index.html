@@ -1,480 +1,491 @@
-
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi">
 <head>
-    <script>
-        const FIXED_API_URL = "https://luis-alert-cooperative-netscape.trycloudflare.com";
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byteviet Ultra Dashboard v5.2</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        body { 
-            background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.2) 0%, transparent 45%),
-                        radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.2) 0%, transparent 45%),
-                        #030712;
-            min-height: 100vh;
-        }
-        .glass { 
-            background: rgba(17, 24, 39, 0.75); 
-            backdrop-filter: blur(24px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-        }
-        .glass-card {
-            background: rgba(31, 41, 55, 0.45);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-        .btn-glow { transition: all 0.25s ease; }
-        .btn-glow:active { transform: scale(0.96); }
-        .btn-glow:hover {
-            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
-            transform: translateY(-2px);
-        }
-        .tab-btn.active {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(236, 72, 153, 0.35));
-            color: #f3f4f6;
-            border-color: #818cf8;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.8); }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHỢ VIP — Chợ mua bán vật phẩm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0F1115;
+    --surface: #171A21;
+    --surface-2: #1E222B;
+    --line: #2A2F3A;
+    --text: #EDEDF0;
+    --text-dim: #9096A6;
+    --gold: #F5A623;
+    --gold-dim: #7A5714;
+    --teal: #22D3AA;
+    --danger: #E5484D;
+    --radius-card: 14px;
+    --radius-pill: 999px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.5;}
+  h1,h2,h3,.brand{font-family:'Sora',sans-serif;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- topbar ---------- */
+  header{
+    position:sticky;top:0;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px;background:rgba(15,17,21,.9);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{font-size:20px;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:8px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);}
+  .header-right{display:flex;align-items:center;gap:12px;}
+
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .btn{
+    padding:10px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;
+    transition:transform .12s ease, background .15s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--gold);color:#1A1300;}
+  .btn-primary:hover{background:#ffb43d;}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+  .btn-teal{background:var(--teal);color:#04231C;}
+  .btn-teal:hover{background:#3fe6bd;}
+  .btn-danger{background:transparent;color:var(--danger);border:1px solid rgba(229,72,77,.4);}
+  .btn-danger:hover{background:rgba(229,72,77,.12);}
+
+  .profile-chip{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:var(--radius-pill);background:var(--surface);border:1px solid var(--line);}
+  .profile-chip img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
+  .profile-chip span{font-size:14px;font-weight:600;}
+
+  /* ---------- intro strip ---------- */
+  .intro{
+    padding:36px 28px 12px;max-width:920px;
+  }
+  .intro h1{font-size:28px;margin:0 0 8px;font-weight:800;}
+  .intro p{color:var(--text-dim);margin:0;font-size:15px;max-width:60ch;}
+  .intro .accent{color:var(--gold);}
+
+  /* ---------- grid ---------- */
+  main{padding:24px 28px 120px;max-width:1200px;margin:0 auto;}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
+  .toolbar h2{font-size:16px;color:var(--text-dim);font-weight:600;margin:0;}
+  .count-tag{font-size:13px;color:var(--text-dim);}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;
+  }
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);
+    overflow:hidden;display:flex;flex-direction:column;
+  }
+  .card .thumb{
+    width:100%;aspect-ratio:4/3;background:var(--surface-2);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .card .thumb img{width:100%;height:100%;object-fit:cover;}
+  .card .thumb .placeholder{color:var(--text-dim);font-size:13px;}
+  .card-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .card-body h3{font-size:15px;margin:0;font-weight:600;}
+  .card-body p.desc{font-size:13px;color:var(--text-dim);margin:0;min-height:32px;}
+  .price{font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:var(--gold);}
+  .seller-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid var(--line);}
+  .seller{display:flex;align-items:center;gap:8px;}
+  .seller img{width:24px;height:24px;border-radius:50%;object-fit:cover;}
+  .seller span{font-size:12.5px;color:var(--text-dim);}
+  .card-actions{display:flex;gap:8px;}
+  .empty-state{
+    grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-dim);
+    border:1px dashed var(--line);border-radius:var(--radius-card);
+  }
+
+  /* ---------- fab ---------- */
+  .fab{
+    position:fixed;right:26px;bottom:26px;z-index:30;
+    padding:14px 22px;font-size:15px;box-shadow:0 8px 24px rgba(245,166,35,.25);
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    padding:20px 28px 40px;text-align:center;color:var(--text-dim);font-size:12.5px;
+  }
+  footer button{background:none;color:var(--text-dim);text-decoration:underline;font-size:12.5px;}
+
+  /* ---------- modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(6,7,9,.7);display:none;align-items:center;justify-content:center;
+    z-index:50;padding:16px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    width:100%;max-width:440px;padding:26px;max-height:90vh;overflow-y:auto;
+    position:relative;
+  }
+  .modal h2{font-size:19px;margin:0 0 4px;}
+  .modal .sub{color:var(--text-dim);font-size:13px;margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;margin-bottom:6px;color:var(--text-dim);}
+  .field input, .field textarea{
+    width:100%;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);
+    border-radius:8px;color:var(--text);font-family:inherit;font-size:14px;
+  }
+  .field textarea{resize:vertical;min-height:64px;}
+  .field input:focus, .field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;}
+  .avatar-pick{display:flex;align-items:center;gap:12px;}
+  .avatar-pick .preview{width:52px;height:52px;border-radius:50%;background:var(--surface-2);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text-dim);font-size:11px;}
+  .avatar-pick .preview img{width:100%;height:100%;object-fit:cover;}
+  .image-pick{
+    border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;cursor:pointer;
+    color:var(--text-dim);font-size:13px;
+  }
+  .image-pick.has-image{padding:0;border-style:solid;overflow:hidden;}
+  .image-pick img{width:100%;max-height:180px;object-fit:cover;}
+  .modal-actions{display:flex;gap:10px;margin-top:6px;}
+  .modal-actions .btn{flex:1;}
+  .error-text{color:var(--danger);font-size:13px;margin:-6px 0 12px;display:none;}
+  .close-x{position:absolute;top:16px;right:18px;background:none;color:var(--text-dim);font-size:18px;}
+
+  /* admin */
+  .admin-badge{background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);letter-spacing:.3px;}
+  .admin-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;gap:10px;}
+  .admin-row .info{display:flex;align-items:center;gap:10px;overflow:hidden;}
+  .admin-row img{width:30px;height:30px;border-radius:6px;object-fit:cover;flex-shrink:0;}
+  .admin-row .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;}
+  .stat-row{display:flex;gap:10px;margin-bottom:16px;}
+  .stat{flex:1;background:var(--surface-2);border-radius:10px;padding:12px;text-align:center;}
+  .stat b{display:block;font-size:20px;font-family:'Sora',sans-serif;color:var(--teal);}
+  .stat span{font-size:11.5px;color:var(--text-dim);}
+
+  /* redirect copy box */
+  .redirect-box{
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
+    padding:12px;margin-bottom:18px;
+  }
+  .redirect-box label{font-size:12px;color:var(--gold);font-weight:600;display:block;margin-bottom:6px;}
+  .redirect-input-group{display:flex;gap:8px;}
+  .redirect-input-group input{
+    flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;
+    padding:6px 10px;color:var(--text);font-size:12.5px;font-family:monospace;
+  }
+
+  @media (max-width:520px){
+    header{padding:14px 16px;}
+    .intro, main{padding-left:16px;padding-right:16px;}
+    .fab{right:16px;bottom:16px;padding:13px 18px;}
+  }
+</style>
 </head>
-<body class="text-slate-100 p-4 sm:p-8 flex justify-center items-center">
+<body>
 
-    <!-- AUTH SYSTEM -->
-    <div id="authContainer" class="w-full max-w-md glass p-8 rounded-3xl space-y-6">
-        <div class="text-center space-y-3">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 mx-auto flex items-center justify-center text-3xl text-white shadow-xl shadow-indigo-500/30">
-                <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <h1 class="text-2xl font-black text-white tracking-wider" id="authTitle">CYBER AUTHENTICATION</h1>
-            <p class="text-xs text-slate-400" id="authSubtitle">Đăng nhập tài khoản quản trị hệ thống</p>
-        </div>
+<header>
+  <div class="brand"><span class="dot"></span>CHỢ VIP</div>
+  <div class="header-right" id="headerRight"></div>
+</header>
 
-        <form id="loginForm" onsubmit="handleWebLogin(event)" class="space-y-4">
-            <input type="text" id="loginUser" required placeholder="Tên đăng nhập..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-            <input type="password" id="loginPass" required placeholder="Mật khẩu..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-            <button type="submit" onclick="playClickSound()" class="btn-glow w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 py-3.5 rounded-xl font-bold text-sm shadow-lg">ĐĂNG NHẬP SYSTEM</button>
-            <p class="text-xs text-center text-slate-400">Chưa có tài khoản? <a href="#" onclick="toggleAuth(true); playClickSound();" class="text-indigo-400 underline font-semibold">Tạo tài khoản mới</a></p>
-        </form>
+<div class="intro">
+  <h1>Mua bán vật phẩm <span class="accent">an toàn, nhanh gọn</span></h1>
+  <p>Đăng nhập bằng Discord để rao bán vật phẩm của bạn. Người mua liên hệ trực tiếp qua Discord của người bán.</p>
+</div>
 
-        <form id="registerForm" onsubmit="handleWebRegister(event)" class="space-y-4 hidden">
-            <input type="email" id="regEmail" required placeholder="Gmail..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-            <input type="text" id="regUser" required placeholder="Tạo tên đăng nhập..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-            <input type="password" id="regPass" required placeholder="Tạo mật khẩu..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-            <button type="submit" onclick="playClickSound()" class="btn-glow w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-3.5 rounded-xl font-bold text-sm shadow-lg">TẠO TÀI KHOẢN</button>
-            <p class="text-xs text-center text-slate-400">Đã có tài khoản? <a href="#" onclick="toggleAuth(false); playClickSound();" class="text-indigo-400 underline font-semibold">Đăng nhập ngay</a></p>
-        </form>
+<main>
+  <div class="toolbar">
+    <h2>Đang rao bán</h2>
+    <span class="count-tag" id="countTag">0 vật phẩm</span>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<button class="btn btn-primary fab" id="fabPost">+ Đăng bán</button>
+
+<footer>
+  Dữ liệu minh hoạ — lưu trên trình duyệt của bạn. <button id="openAdmin">Quản trị viên</button>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="close-x" data-close="loginOverlay">✕</button>
+    <h2>Đăng nhập bằng Discord</h2>
+    <p class="sub">Nhập tên Discord và chọn ảnh đại diện để bắt đầu đăng bán.</p>
+    <div class="field">
+      <label>Tên Discord (vd: dat.dev)</label>
+      <input type="text" id="loginName" placeholder="username#0000">
+    </div>
+    <div class="field">
+      <label>Ảnh đại diện</label>
+      <div class="avatar-pick">
+        <div class="preview" id="loginAvatarPreview">Chưa có</div>
+        <input type="file" id="loginAvatarFile" accept="image/*" style="display:none">
+        <button class="btn btn-ghost" id="loginAvatarBtn" type="button">Chọn ảnh</button>
+      </div>
+    </div>
+    <p class="error-text" id="loginError">Vui lòng nhập tên Discord.</p>
+    <div class="modal-actions">
+      <button class="btn btn-teal" id="loginSubmit">Đăng nhập</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST ITEM MODAL -->
+<div class="overlay" id="postOverlay">
+  <div class="modal">
+    <button class="close-x" data-close="postOverlay">✕</button>
+    <h2>Đăng vật phẩm</h2>
+    <p class="sub">Vật phẩm sẽ hiển thị kèm tên và ảnh đại diện Discord của bạn.</p>
+    <div class="field">
+      <label>Tên vật phẩm</label>
+      <input type="text" id="itemName" placeholder="VD: Acc Liên Quân Rank Cao Thủ">
+    </div>
+    <div class="field">
+      <label>Giá (VNĐ)</label>
+      <input type="number" id="itemPrice" min="0" placeholder="VD: 150000">
+    </div>
+    <div class="field">
+      <label>Mô tả (không bắt buộc)</label>
+      <textarea id="itemDesc" placeholder="Thông tin thêm về vật phẩm..."></textarea>
+    </div>
+    <div class="field">
+      <label>Ảnh vật phẩm</label>
+      <div class="image-pick" id="itemImagePick">Nhấn để chọn ảnh từ máy</div>
+      <input type="file" id="itemImageFile" accept="image/*" style="display:none">
+    </div>
+    <p class="error-text" id="postError">Vui lòng nhập đầy đủ tên và giá.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="postSubmit">Đăng bán</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="overlay" id="adminLoginOverlay">
+  <div class="modal">
+    <button class="close-x" data-close="adminLoginOverlay">✕</button>
+    <h2>Đăng nhập quản trị</h2>
+    <p class="sub">Khu vực dành riêng cho quản trị viên.</p>
+    <div class="field">
+      <label>Mật khẩu</label>
+      <input type="password" id="adminPassword" placeholder="••••••••">
+    </div>
+    <p class="error-text" id="adminError">Sai mật khẩu.</p>
+    <div class="modal-actions">
+      <button class="btn btn-teal" id="adminSubmit">Vào trang quản trị</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="overlay" id="adminPanelOverlay">
+  <div class="modal" style="max-width:520px;">
+    <button class="close-x" data-close="adminPanelOverlay">✕</button>
+    <h2>Trang quản trị <span class="admin-badge">ADMIN</span></h2>
+    <p class="sub">Cấu hình OAuth2 & Quản lý danh sách vật phẩm.</p>
+    
+    <!-- KHU VỰC DISCORD REDIRECT URI DỄ SAO CHÉP -->
+    <div class="redirect-box">
+      <label>🔑 DISCORD REDIRECT URI (Dán vào Developer Portal):</label>
+      <div class="redirect-input-group">
+        <input type="text" id="redirectUriInput" readonly>
+        <button class="btn btn-teal" id="copyRedirectBtn" style="padding:6px 12px; font-size:12px;">Sao chép</button>
+      </div>
     </div>
 
-    <!-- MAIN DASHBOARD SYSTEM -->
-    <div id="mainDashboard" class="w-full max-w-5xl space-y-6 hidden">
-        <!-- Top Bar Header -->
-        <div class="glass p-6 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center text-2xl text-white shadow-lg shadow-indigo-500/30">
-                    <i class="fa-brands fa-discord"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300">BYTEVIET ULTRA v5.2</h1>
-                    <p class="text-xs text-slate-400">Xin chào, <span id="webUsernameDisplay" class="text-indigo-400 font-bold">User</span> | System Online</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-                <div class="glass-card px-4 py-2 rounded-2xl border border-indigo-500/30 text-center">
-                    <p class="text-[10px] uppercase text-slate-400 font-bold">Lượt Xem Web</p>
-                    <p class="text-md font-black text-indigo-400" id="statViews">0</p>
-                </div>
-                <div class="glass-card px-4 py-2 rounded-2xl border border-emerald-500/30 text-center">
-                    <p class="text-[10px] uppercase text-slate-400 font-bold">Lượt Connect Bot</p>
-                    <p class="text-md font-black text-emerald-400" id="statAuths">0</p>
-                </div>
-                <a href="https://discord.com/oauth2/authorize?client_id=1545382570785640458&permissions=0&integration_type=0&scope=bot" target="_blank" onclick="playClickSound()" class="btn-glow glass-card px-4 py-2.5 rounded-2xl border border-indigo-500/40 text-xs font-bold text-indigo-300 hover:text-white flex items-center gap-2">
-                    <i class="fa-solid fa-robot text-indigo-400"></i> Add Bot
-                </a>
-                <button onclick="logoutWeb(); playClickSound();" class="px-3 py-2.5 bg-rose-900/40 hover:bg-rose-800/60 text-rose-300 border border-rose-500/30 rounded-2xl text-xs font-semibold">
-                    <i class="fa-solid fa-power-off"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- DISCORD TOKEN VERIFICATION SECTION -->
-        <div class="glass p-6 rounded-3xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
-                    <i class="fa-solid fa-key"></i> Kết Nối Discord Account Token
-                </h2>
-                <div id="discordUserInfo" class="flex items-center gap-2 hidden">
-                    <img id="userAvatar" src="" class="w-6 h-6 rounded-full border border-indigo-400">
-                    <span id="discordBadge" class="text-xs px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">Bot Ready</span>
-                </div>
-            </div>
-            <div class="flex gap-3">
-                <input type="password" id="discordToken" placeholder="Dán Discord Token của bạn tại đây..." class="flex-1 bg-slate-900/90 border border-slate-700/80 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
-                <button onclick="loginDiscord(this); playClickSound();" class="btn-glow bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-2xl font-bold text-sm">Xác Nhận Token</button>
-            </div>
-        </div>
-
-        <!-- NAVIGATION TABS -->
-        <div class="flex gap-2 border-b border-slate-800 pb-2 overflow-x-auto">
-            <button onclick="switchTab('nitro'); playClickSound();" id="tab-nitro" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-bolt text-amber-400"></i> Nitro Live Checker
-            </button>
-            <button onclick="switchTab('rpc'); playClickSound();" id="tab-rpc" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-gamepad text-purple-400"></i> Custom RPC
-            </button>
-            <button onclick="switchTab('voice'); playClickSound();" id="tab-voice" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-headset text-pink-400"></i> Treo Voice Channel
-            </button>
-            <button onclick="switchTab('stream'); playClickSound();" id="tab-stream" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-tv text-emerald-400"></i> Live Streaming
-            </button>
-            <button onclick="switchTab('status-mode'); playClickSound();" id="tab-status-mode" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold border border-transparent text-slate-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-circle-dot text-indigo-400"></i> Trạng Thái
-            </button>
-        </div>
-
-        <!-- TAB 1: NITRO CHECKER (Cấu hình Proxy chuẩn theo Python Script) -->
-        <div id="section-nitro" class="tab-content glass p-6 rounded-3xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-md font-bold text-amber-300 flex items-center gap-2"><i class="fa-solid fa-terminal text-amber-400"></i> Tiến Trình Quét Nitro</h2>
-                <div class="flex gap-2">
-                    <button onclick="startNitro(); playClickSound();" class="btn-glow bg-gradient-to-r from-amber-600 to-orange-600 px-5 py-2 rounded-xl text-xs font-bold">Bắt Đầu Quét</button>
-                    <button onclick="stopNitro(); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-5 py-2 rounded-xl text-xs font-bold">Dừng Quét</button>
-                </div>
-            </div>
-
-            <!-- Cấu hình Proxy Socks/Threads -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold uppercase">Loại Proxy:</label>
-                    <select id="nitroProxyType" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-amber-300 focus:outline-none">
-                        <option value="5" selected>SOCKS5</option>
-                        <option value="4">SOCKS4</option>
-                        <option value="1">HTTP / HTTPS</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold uppercase">Số Luồng (Threads):</label>
-                    <input type="number" id="nitroThreads" value="100" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none">
-                </div>
-                <div>
-                    <label class="text-[10px] text-slate-400 font-bold uppercase">Timeout (s):</label>
-                    <input type="number" id="nitroTimeout" value="5" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs focus:outline-none">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-3 text-center">
-                <div class="glass-card p-3 rounded-2xl"><p class="text-[10px] uppercase text-slate-400 font-bold">Đã Thử</p><p class="text-xl font-black text-slate-200" id="nitroScanned">0</p></div>
-                <div class="glass-card p-3 rounded-2xl border border-emerald-500/30"><p class="text-[10px] uppercase text-emerald-400 font-bold">Mã Trúng (Hits)</p><p class="text-xl font-black text-emerald-400" id="nitroHits">0</p></div>
-                <div class="glass-card p-3 rounded-2xl border border-rose-500/30"><p class="text-[10px] uppercase text-rose-400 font-bold">Mã Sai (Bads)</p><p class="text-xl font-black text-rose-400" id="nitroBads">0</p></div>
-            </div>
-
-            <div class="space-y-2">
-                <p class="text-xs text-slate-400 font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-code"></i> Real-time Output Log:
-                </p>
-                <div id="terminalLog" class="bg-slate-950/90 border border-slate-800/80 p-4 rounded-2xl text-xs font-mono min-h-[200px] max-h-[250px] overflow-y-auto space-y-1 text-slate-300">
-                    <span class="text-slate-500">[SYSTEM] Đang chờ bấm nút "Bắt Đầu Quét"...</span>
-                </div>
-            </div>
-
-            <div class="space-y-1">
-                <p class="text-xs text-emerald-400 font-bold">Danh Sách Mã Hợp Lệ (Valid Hits):</p>
-                <div id="nitroHitsList" class="bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-xl text-xs font-mono text-emerald-400 min-h-[50px] max-h-[100px] overflow-y-auto">
-                    Chưa có mã hợp lệ nào...
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: RICH PRESENCE -->
-        <div id="section-rpc" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-purple-300 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Cài Đặt Custom Rich Presence</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="rpcName" placeholder="Tên Game / App" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcDetails" placeholder="Dòng Chi Tiết (Details)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcState" placeholder="Trạng Thái (State)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcLargeImage" placeholder="Link Ảnh Lớn (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcSmallImage" placeholder="Link Ảnh Nhỏ (URL)" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcButtonText" placeholder="Tên Nút Bấm" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-                <input type="text" id="rpcButtonUrl" placeholder="Link Nút Bấm" class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none md:col-span-2">
-            </div>
-            <div class="flex gap-3">
-                <button onclick="sendApi('/api/rpc', {name: rpcName.value, details: rpcDetails.value, state: rpcState.value, largeImage: rpcLargeImage.value, smallImage: rpcSmallImage.value, buttonText: rpcButtonText.value, buttonUrl: rpcButtonUrl.value}); playClickSound();" class="btn-glow flex-1 bg-purple-600 py-3 rounded-2xl text-sm font-bold">Bật Rich Presence</button>
-                <button onclick="sendApi('/api/stop-rpc', {}); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Tắt</button>
-            </div>
-        </div>
-
-        <!-- TAB 3: VOICE ROOM -->
-        <div id="section-voice" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-pink-300 flex items-center gap-2"><i class="fa-solid fa-headset"></i> Treo Phòng Voice Channel</h2>
-            <input type="text" id="channelId" placeholder="Voice Channel ID..." class="w-full bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm focus:outline-none">
-            <div class="flex gap-6 text-xs text-slate-300">
-                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="selfMute" checked class="accent-pink-500"> Tắt Micro (Self Mute)</label>
-                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="selfDeaf" checked class="accent-pink-500"> Tắt Tai Nghe (Self Deaf)</label>
-            </div>
-            <div class="flex gap-3">
-                <button onclick="sendApi('/api/voice', {channelId: channelId.value, selfMute: selfMute.checked, selfDeaf: selfDeaf.checked}); playClickSound();" class="btn-glow flex-1 bg-pink-600 py-3 rounded-2xl text-sm font-bold">Kết Nối Voice</button>
-                <button onclick="sendApi('/api/stop-voice', {}); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Thoát Voice</button>
-            </div>
-        </div>
-
-        <!-- TAB 4: STREAMING MODE -->
-        <div id="section-stream" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-emerald-300 flex items-center gap-2"><i class="fa-solid fa-broadcast-tower"></i> Bật Live Streaming</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="streamTitle" placeholder="Tiêu đề Stream..." class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
-                <input type="text" id="streamUrl" placeholder="Link Twitch Stream..." class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-3 text-sm">
-            </div>
-            <div class="flex gap-3">
-                <button onclick="sendApi('/api/stream', {title: streamTitle.value, url: streamUrl.value}); playClickSound();" class="btn-glow flex-1 bg-emerald-600 py-3 rounded-2xl text-sm font-bold">Bật Streaming</button>
-                <button onclick="sendApi('/api/stop-rpc', {}); playClickSound();" class="bg-slate-800 text-rose-400 border border-rose-500/30 px-6 py-3 rounded-2xl text-sm font-bold">Tắt</button>
-            </div>
-        </div>
-
-        <!-- TAB 5: STATUS SELECTOR -->
-        <div id="section-status-mode" class="tab-content hidden glass p-6 rounded-3xl space-y-4">
-            <h2 class="text-md font-bold text-indigo-300 flex items-center gap-2"><i class="fa-solid fa-user-clock"></i> Đổi Trạng Thái Bot</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button onclick="setStatus('online'); playClickSound();" class="glass-card hover:bg-emerald-500/20 border-emerald-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-emerald-500"></span><span class="text-xs font-bold text-emerald-300">Trực Tuyến</span>
-                </button>
-                <button onclick="setStatus('idle'); playClickSound();" class="glass-card hover:bg-amber-500/20 border-amber-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-amber-500"></span><span class="text-xs font-bold text-amber-300">Chờ (Idle)</span>
-                </button>
-                <button onclick="setStatus('dnd'); playClickSound();" class="glass-card hover:bg-rose-500/20 border-rose-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-rose-500"></span><span class="text-xs font-bold text-rose-300">Đừng Làm Phiền</span>
-                </button>
-                <button onclick="setStatus('invisible'); playClickSound();" class="glass-card hover:bg-slate-500/20 border-slate-500/30 p-4 rounded-2xl flex flex-col items-center gap-2 transition">
-                    <span class="w-4 h-4 rounded-full bg-slate-500"></span><span class="text-xs font-bold text-slate-300">Ẩn Trạng Thái</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Status Footer -->
-        <div class="glass p-4 rounded-2xl text-xs font-mono text-slate-300 flex items-center gap-3">
-            <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span></span>
-            <span id="status">Trạng thái: Hệ thống đang hoạt động...</span>
-        </div>
+    <div class="stat-row">
+      <div class="stat"><b id="statCount">0</b><span>vật phẩm</span></div>
+      <div class="stat"><b id="statSellers">0</b><span>người bán</span></div>
     </div>
+    <div id="adminList"></div>
+  </div>
+</div>
 
-    <script>
-        let nitroTimer = null;
-        let audioCtx = null;
+<script>
+const ADMIN_PASSWORD = "27102012Dat@";
+const PLACEHOLDER_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(
+  `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%232A2F3A'/></svg>`
+);
 
-        function playClickSound() {
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-            } catch(e) {}
-        }
+let currentUser = null;   // {name, avatar}
+let items = [];           // [{id,name,price,desc,image,sellerName,sellerAvatar,ts}]
+let pendingItemImage = null;
+let pendingLoginAvatar = null;
+let isAdmin = false;
 
-        function getBaseUrl() {
-            if (typeof FIXED_API_URL !== 'undefined' && FIXED_API_URL.startsWith('http')) {
-                let url = FIXED_API_URL.trim();
-                return url.endsWith('/') ? url.slice(0, -1) : url;
-            }
-            return window.location.origin;
-        }
+function fmtPrice(n){
+  return Number(n).toLocaleString('vi-VN') + ' đ';
+}
 
-        function toggleAuth(isRegister) {
-            document.getElementById('loginForm').classList.toggle('hidden', isRegister);
-            document.getElementById('registerForm').classList.toggle('hidden', !isRegister);
-            document.getElementById('authTitle').innerText = isRegister ? 'REGISTER SYSTEM' : 'CYBER AUTHENTICATION';
-            document.getElementById('authSubtitle').innerText = isRegister ? 'Tạo tài khoản quản trị hệ thống mới' : 'Đăng nhập tài khoản quản trị hệ thống';
-        }
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('[data-close]').forEach(btn=>{
+  btn.addEventListener('click', ()=>closeModal(btn.dataset.close));
+});
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('show'); });
+});
 
-        async function handleWebRegister(e) {
-            e.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            const username = document.getElementById('regUser').value;
-            const password = document.getElementById('regPass').value;
+/* ---------- storage helpers ---------- */
+async function loadItems(){
+  try{
+    const res = await window.storage.get('marketplace-items', true);
+    items = res && res.value ? JSON.parse(res.value) : [];
+  }catch(e){ items = []; }
+  renderGrid();
+}
+async function saveItems(){
+  try{ await window.storage.set('marketplace-items', JSON.stringify(items), true); }
+  catch(e){ console.error('Lỗi lưu dữ liệu', e); }
+}
+async function loadProfile(){
+  try{
+    const res = await window.storage.get('my-profile', false);
+    currentUser = res && res.value ? JSON.parse(res.value) : null;
+  }catch(e){ currentUser = null; }
+  renderHeader();
+}
+async function saveProfile(){
+  try{ await window.storage.set('my-profile', JSON.stringify(currentUser), false); }
+  catch(e){ console.error('Lỗi lưu hồ sơ', e); }
+}
 
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/auth/register`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, username, password })
-                });
-                const data = await res.json();
-                alert(data.message || data.error);
-                if (data.success) toggleAuth(false);
-            } catch (err) {
-                alert('Không thể kết nối đến máy chủ!');
-            }
-        }
+/* ---------- header / login ---------- */
+function renderHeader(){
+  const el = document.getElementById('headerRight');
+  el.innerHTML = '';
+  if(currentUser){
+    const chip = document.createElement('div');
+    chip.className = 'profile-chip';
+    chip.innerHTML = `<img src="${currentUser.avatar || PLACEHOLDER_AVATAR}"><span>${escapeHtml(currentUser.name)}</span>`;
+    const logout = document.createElement('button');
+    logout.className = 'btn btn-ghost';
+    logout.textContent = 'Đăng xuất';
+    logout.onclick = async ()=>{
+      currentUser = null;
+      await saveProfile();
+      renderHeader();
+    };
+    el.appendChild(chip);
+    el.appendChild(logout);
+  } else {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-teal';
+    btn.textContent = 'Đăng nhập Discord';
+    btn.onclick = ()=>openModal('loginOverlay');
+    el.appendChild(btn);
+  }
+}
 
-        async function handleWebLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('loginUser').value;
-            const password = document.getElementById('loginPass').value;
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
 
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/auth/login`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    localStorage.setItem('webUser', data.username);
-                    showDashboard(data.username);
-                } else {
-                    alert(data.error);
-                }
-            } catch (err) {
-                alert('Không thể kết nối đến máy chủ!');
-            }
-        }
+document.getElementById('loginAvatarBtn').addEventListener('click', ()=>{
+  document.getElementById('loginAvatarFile').click();
+});
+document.getElementById('loginAvatarFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    pendingLoginAvatar = reader.result;
+    document.getElementById('loginAvatarPreview').innerHTML = `<img src="${reader.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('loginSubmit').addEventListener('click', async ()=>{
+  const name = document.getElementById('loginName').value.trim();
+  const err = document.getElementById('loginError');
+  if(!name){ err.style.display='block'; return; }
+  err.style.display='none';
+  currentUser = { name, avatar: pendingLoginAvatar || PLACEHOLDER_AVATAR };
+  await saveProfile();
+  renderHeader();
+  closeModal('loginOverlay');
+  document.getElementById('loginName').value='';
+  pendingLoginAvatar = null;
+  document.getElementById('loginAvatarPreview').innerHTML = 'Chưa có';
+});
 
-        function showDashboard(username) {
-            document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('mainDashboard').classList.remove('hidden');
-            document.getElementById('webUsernameDisplay').innerText = username;
-            loadAnalytics();
-        }
+/* ---------- post item ---------- */
+document.getElementById('fabPost').addEventListener('click', ()=>{
+  if(!currentUser){ openModal('loginOverlay'); return; }
+  openModal('postOverlay');
+});
+document.getElementById('itemImagePick').addEventListener('click', ()=>{
+  document.getElementById('itemImageFile').click();
+});
+document.getElementById('itemImageFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    pendingItemImage = reader.result;
+    const pick = document.getElementById('itemImagePick');
+    pick.classList.add('has-image');
+    pick.innerHTML = `<img src="${reader.result}">`;
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('postSubmit').addEventListener('click', async ()=>{
+  const name = document.getElementById('itemName').value.trim();
+  const price = document.getElementById('itemPrice').value;
+  const desc = document.getElementById('itemDesc').value.trim();
+  const err = document.getElementById('postError');
+  if(!name || !price){ err.style.display='block'; return; }
+  err.style.display='none';
 
-        function logoutWeb() {
-            localStorage.removeItem('webUser');
-            location.reload();
-        }
+  items.unshift({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    name, price: Number(price), desc,
+    image: pendingItemImage,
+    sellerName: currentUser.name,
+    sellerAvatar: currentUser.avatar,
+    ts: Date.now()
+  });
+  await saveItems();
+  renderGrid();
+  closeModal('postOverlay');
+  document.getElementById('itemName').value='';
+  document.getElementById('itemPrice').value='';
+  document.getElementById('itemDesc').value='';
+  pendingItemImage = null;
+  const pick = document.getElementById('itemImagePick');
+  pick.classList.remove('has-image');
+  pick.innerHTML = 'Nhấn để chọn ảnh từ máy';
+});
 
-        async function loadAnalytics() {
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/analytics`);
-                const data = await res.json();
-                if(data.success) {
-                    document.getElementById('statViews').innerText = data.stats.webViews || 0;
-                    document.getElementById('statAuths').innerText = data.stats.botAuths || 0;
-                }
-            } catch(e) {}
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('webUser');
-            if(savedUser) showDashboard(savedUser);
-        });
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(`section-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-        }
-
-        async function loginDiscord(btn) {
-            const token = document.getElementById('discordToken').value.trim();
-            if(!token) return alert('Hãy nhập Discord Token!');
-            updateStatus('Đang xác thực Discord Token...');
-            
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/login`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ token })
-                });
-                const data = await res.json();
-                if(data.success) {
-                    updateStatus(`Đã kết nối thành công: ${data.user}`);
-                    document.getElementById('discordUserInfo').classList.remove('hidden');
-                    document.getElementById('userAvatar').src = data.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
-                    document.getElementById('discordBadge').innerText = data.user;
-                    loadAnalytics();
-                } else {
-                    updateStatus(`Lỗi: ${data.error}`);
-                    alert(data.error);
-                }
-            } catch (err) {
-                updateStatus('Lỗi kết nối tới Server Backend!');
-            }
-        }
-
-        async function sendApi(path, body) {
-            updateStatus('Đang gửi lệnh...');
-            try {
-                const res = await fetch(`${getBaseUrl()}${path}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(body)
-                });
-                const data = await res.json();
-                updateStatus(data.message || data.error);
-            } catch(e) {
-                updateStatus('Không thể gửi lệnh!');
-            }
-        }
-
-        async function setStatus(statusType) {
-            sendApi('/api/status', { status: statusType });
-        }
-
-        async function startNitro() {
-            const proxyType = document.getElementById('nitroProxyType').value;
-            const threads = document.getElementById('nitroThreads').value;
-            const timeout = document.getElementById('nitroTimeout').value;
-
-            updateStatus('Đang khởi chạy Nitro Checker...');
-            await sendApi('/api/nitro/start', { proxyType, threads, timeout });
-            if (nitroTimer) clearInterval(nitroTimer);
-            nitroTimer = setInterval(pollNitroLogs, 1000);
-        }
-
-        async function pollNitroLogs() {
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/nitro/status`);
-                const data = await res.json();
-                if(data.success && data.stats) {
-                    document.getElementById('nitroScanned').innerText = data.stats.scanned;
-                    document.getElementById('nitroHits').innerText = data.stats.hits;
-                    document.getElementById('nitroBads').innerText = data.stats.bads;
-
-                    const termEl = document.getElementById('terminalLog');
-                    if (data.stats.logs.length > 0) {
-                        termEl.innerHTML = data.stats.logs.map(log => {
-                            if (log.includes('[HIT VALID]')) return `<div class="text-emerald-400 font-bold">${log}</div>`;
-                            if (log.includes('[INVALID]')) return `<div class="text-rose-400">${log}</div>`;
-                            return `<div class="text-slate-400">${log}</div>`;
-                        }).join('');
-                        termEl.scrollTop = termEl.scrollHeight;
-                    }
-
-                    if (data.stats.validCodes.length > 0) {
-                        document.getElementById('nitroHitsList').innerHTML = data.stats.validCodes.join('<br>');
-                    }
-                }
-            } catch(e) {}
-        }
-
-        async function stopNitro() {
-            if (nitroTimer) clearInterval(nitroTimer);
-            updateStatus('Đang dừng Nitro Checker...');
-            sendApi('/api/nitro/stop', {});
-        }
-
-        function updateStatus(msg) {
-            document.getElementById('status').innerText = `Trạng thái: ${msg}`;
-        }
-    </script>
-</body>
-</html>
+/* ---------- grid ---------- */
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  document.getElementById('countTag').textContent = items.length + ' vật phẩm';
+  if(items.length === 0){
+    grid.innerHTML = '<div class="empty-state">Chưa có vật phẩm nào. Hãy là người đăng bán đầu tiên!</div>';
+    return;
+  }
+  grid.innerHTML = '';
+  items.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    const canDelete = isAdmin || (currentUser && currentUser.name === item.sellerName);
+    card.innerHTML = `
+      <div class="thumb">${item.image ? `<img src="${item.image}">` : `<span class="placeholder">Không có ảnh</span>`}</div>
+      <div class="card-body">
+        <h3>${escapeHtml(item.name)}</h3>
+        <p class="desc">${escapeHtml(item.desc || '')}</p>
+        <div class="price">${fmtPrice(item.price)}</div>
+        <div class="seller-row">
+          <div class="seller">
+            <img src="${item.sellerAvatar || PLACEHOLDER_AVATAR}">
+            <span>${escapeHtml(item.sellerName)}</span>
+          </div>
+          <div class="card-actions">
+            ${canDelete ? `<button class="btn btn-danger" data-del="${item.id}">Xoá</button>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+  grid.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      items = items.filter(it=>it.id !== btn.dataset.del
