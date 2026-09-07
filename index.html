@@ -249,15 +249,27 @@
   <div class="modal" style="max-width:520px;">
     <button class="close-x" data-close="adminPanelOverlay">✕</button>
     <h2>Trang quản trị <span class="admin-badge">ADMIN</span></h2>
-    <p class="sub">Cấu hình Discord OAuth2 & Quản lý bài đăng.</p>
+    <p class="sub">Cấu hình Discord OAuth2 & Webhook Thông Báo.</p>
     
     <div class="config-box">
+      <!-- DISCORD WEBHOOK CONFIG -->
+      <div class="field">
+        <label style="color:var(--teal);">DISCORD WEBHOOK URL:</label>
+        <input type="text" id="webhookUrlInput" placeholder="https://discord.com/api/webhooks/...">
+        <button class="btn btn-teal" id="saveWebhookBtn" style="width:100%; margin-top:8px; padding:6px; font-size:12px;">Lưu Webhook URL</button>
+      </div>
+
+      <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
+
+      <!-- DISCORD CLIENT ID CONFIG -->
       <div class="field">
         <label style="color:var(--gold);">DISCORD CLIENT ID:</label>
         <input type="text" id="clientIdInput" placeholder="Nhập Client ID ứng dụng Discord">
         <button class="btn btn-teal" id="saveClientIdBtn" style="width:100%; margin-top:8px; padding:6px; font-size:12px;">Lưu Client ID</button>
       </div>
+
       <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
+
       <label>🔑 DISCORD REDIRECT URI (Dán vào Portal):</label>
       <div class="redirect-input-group">
         <input type="text" id="redirectUriInput" readonly>
@@ -275,16 +287,17 @@
 
 <script>
 const ADMIN_PASSWORD = "27102012Dat@";
-const DEFAULT_CLIENT_ID = "1234567890123456789"; // Thay ID mặc định của bạn ở đây nếu muốn
+const DEFAULT_CLIENT_ID = "1234567890123456789"; 
 const PLACEHOLDER_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%232A2F3A'/></svg>`
 );
 
-let currentUser = null;   // {id, username, avatar}
-let items = [];           // [{id, name, price, desc, image, sellerId, sellerName, sellerAvatar, ts}]
+let currentUser = null;   
+let items = [];           
 let pendingItemImage = null;
 let isAdmin = false;
 let discordClientId = localStorage.getItem('discord_client_id') || DEFAULT_CLIENT_ID;
+let discordWebhookUrl = localStorage.getItem('discord_webhook_url') || '';
 
 function fmtPrice(n){
   return Number(n).toLocaleString('vi-VN') + ' đ';
@@ -298,6 +311,53 @@ document.querySelectorAll('[data-close]').forEach(btn=>{
 document.querySelectorAll('.overlay').forEach(ov=>{
   ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('show'); });
 });
+
+/* ---------- DISCORD WEBHOOK SENDER ---------- */
+async function sendDiscordWebhook(type, item) {
+  if (!discordWebhookUrl) return;
+
+  let embed = {};
+
+  if (type === 'NEW_ITEM') {
+    embed = {
+      title: "🛒 BÀI ĐĂNG BÁN MỚI!",
+      color: 16100899, // Màu Gold (#F5A623)
+      fields: [
+        { name: "Vật phẩm", value: item.name, inline: true },
+        { name: "Giá bán", value: fmtPrice(item.price), inline: true },
+        { name: "Mô tả", value: item.desc || "Không có mô tả", inline: false },
+        { name: "Người bán", value: `<@${item.sellerId}> (${item.sellerName})`, inline: true }
+      ],
+      footer: { text: "Chợ VIP System" },
+      timestamp: new Date().toISOString()
+    };
+  } else if (type === 'DELETE_ITEM') {
+    embed = {
+      title: "🗑️ VẬT PHẨM ĐÃ BỊ XÓA",
+      color: 15026253, // Màu Đỏ (#E5484D)
+      fields: [
+        { name: "Vật phẩm", value: item.name, inline: true },
+        { name: "Giá", value: fmtPrice(item.price), inline: true },
+        { name: "Người bán", value: item.sellerName, inline: true }
+      ],
+      footer: { text: "Chợ VIP System - Quản lý" },
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  try {
+    await fetch(discordWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: "Chợ VIP Bot",
+        embeds: [embed]
+      })
+    });
+  } catch (e) {
+    console.error("Lỗi gửi Webhook Discord:", e);
+  }
+}
 
 /* ---------- DISCORD OAUTH2 LOGIC ---------- */
 function getRedirectUri(){
@@ -334,7 +394,6 @@ function handleDiscordCallback(){
         };
         saveProfile();
         renderHeader();
-        // Xóa token khỏi URL cho sạch
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     })
@@ -420,6 +479,7 @@ document.getElementById('itemImageFile').addEventListener('change', (e)=>{
   };
   reader.readAsDataURL(file);
 });
+
 document.getElementById('postSubmit').addEventListener('click', async ()=>{
   const name = document.getElementById('itemName').value.trim();
   const price = document.getElementById('itemPrice').value;
@@ -428,7 +488,7 @@ document.getElementById('postSubmit').addEventListener('click', async ()=>{
   if(!name || !price){ err.style.display='block'; return; }
   err.style.display='none';
 
-  items.unshift({
+  const newItem = {
     id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
     name, price: Number(price), desc,
     image: pendingItemImage,
@@ -436,8 +496,14 @@ document.getElementById('postSubmit').addEventListener('click', async ()=>{
     sellerName: currentUser.name,
     sellerAvatar: currentUser.avatar,
     ts: Date.now()
-  });
+  };
+
+  items.unshift(newItem);
   await saveItems();
+  
+  // Gửi Webhook thông báo về Discord
+  sendDiscordWebhook('NEW_ITEM', newItem);
+
   renderGrid();
   closeModal('postOverlay');
   document.getElementById('itemName').value='';
@@ -481,10 +547,17 @@ function renderGrid(){
     `;
     grid.appendChild(card);
   });
+
   grid.querySelectorAll('[data-del]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
+      const deletedItem = items.find(it => it.id === btn.dataset.del);
       items = items.filter(it=>it.id !== btn.dataset.del);
       await saveItems();
+
+      if (deletedItem) {
+        sendDiscordWebhook('DELETE_ITEM', deletedItem);
+      }
+
       renderGrid();
       if(isAdmin) renderAdminList();
     });
@@ -515,6 +588,7 @@ document.getElementById('adminSubmit').addEventListener('click', ()=>{
 function renderAdminList(){
   document.getElementById('statCount').textContent = items.length;
   
+  document.getElementById('webhookUrlInput').value = discordWebhookUrl;
   document.getElementById('clientIdInput').value = discordClientId;
   document.getElementById('redirectUriInput').value = getRedirectUri();
 
@@ -546,13 +620,27 @@ function renderAdminList(){
 
   listEl.querySelectorAll('[data-admin-del]').forEach(btn => {
     btn.addEventListener('click', async () => {
+      const deletedItem = items.find(it => it.id === btn.dataset.admin-del);
       items = items.filter(it => it.id !== btn.dataset.admin-del);
       await saveItems();
+
+      if (deletedItem) {
+        sendDiscordWebhook('DELETE_ITEM', deletedItem);
+      }
+
       renderGrid();
       renderAdminList();
     });
   });
 }
+
+/* ---------- BẤM LƯU CẤU HÌNH WEBHOOK & CLIENT ID ---------- */
+document.getElementById('saveWebhookBtn').addEventListener('click', () => {
+  const val = document.getElementById('webhookUrlInput').value.trim();
+  discordWebhookUrl = val;
+  localStorage.setItem('discord_webhook_url', val);
+  alert('Đã lưu Discord Webhook URL thành công!');
+});
 
 document.getElementById('saveClientIdBtn').addEventListener('click', () => {
   const val = document.getElementById('clientIdInput').value.trim();
