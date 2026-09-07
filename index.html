@@ -3,51 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHỢ VIP — Chợ mua bán vật phẩm</title>
+<title>AOTR MARKET — Chợ mua bán vật phẩm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #0F1115;
-    --surface: #171A21;
-    --surface-2: #1E222B;
-    --line: #2A2F3A;
-    --text: #EDEDF0;
-    --text-dim: #9096A6;
-    --gold: #F5A623;
-    --gold-dim: #7A5714;
+    --bg: #0A0C11;
+    --bg-2: #0D1017;
+    --surface: #161A22;
+    --surface-2: #1D222C;
+    --surface-3: #252B37;
+    --line: #272C39;
+    --text: #EDEEF2;
+    --text-dim: #8B92A6;
+    --gold: #F0A93C;
+    --gold-soft: rgba(240,169,60,.14);
     --teal: #22D3AA;
+    --teal-soft: rgba(34,211,170,.14);
     --danger: #E5484D;
     --discord: #5865F2;
-    --radius-card: 14px;
+    --radius-card: 16px;
     --radius-pill: 999px;
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.5;}
+  body{margin:0;background:
+      radial-gradient(1100px 500px at 85% -10%, rgba(240,169,60,.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(34,211,170,.06), transparent 55%),
+      var(--bg);
+    color:var(--text);font-family:'Inter',sans-serif;line-height:1.5;min-height:100vh;}
   h1,h2,h3,.brand{font-family:'Sora',sans-serif;}
   a{color:inherit;}
   img{max-width:100%;display:block;}
+  ::selection{background:var(--gold-soft);color:var(--gold);}
 
   /* ---------- topbar ---------- */
   header{
     position:sticky;top:0;z-index:20;
     display:flex;align-items:center;justify-content:space-between;
-    padding:16px 28px;background:rgba(15,17,21,.9);backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
+    padding:14px 28px;background:rgba(10,12,17,.82);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);gap:16px;flex-wrap:wrap;
   }
-  .brand{font-size:20px;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:8px;}
-  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--gold);}
+  .brand{font-size:19px;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:9px;flex-shrink:0;}
+  .brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--gold),#c97a1b);
+    display:flex;align-items:center;justify-content:center;color:#1A1300;font-size:14px;font-weight:800;}
+  .header-nav{display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius-pill);padding:3px;}
+  .header-nav button{padding:8px 16px;border-radius:var(--radius-pill);font-size:13.5px;font-weight:600;
+    background:transparent;color:var(--text-dim);}
+  .header-nav button.active{background:var(--surface-3);color:var(--text);}
   .header-right{display:flex;align-items:center;gap:12px;}
 
-  button{font-family:inherit;cursor:pointer;border:none;}
+  button{font-family:inherit;cursor:pointer;border:none;color:var(--text);}
   .btn{
     padding:10px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;
-    transition:transform .12s ease, background .15s ease;
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    transition:transform .12s ease, background .15s ease, border-color .15s ease;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;
   }
   .btn:active{transform:scale(.97);}
-  .btn-primary{background:var(--gold);color:#1A1300;}
-  .btn-primary:hover{background:#ffb43d;}
+  .btn-primary{background:linear-gradient(135deg,var(--gold),#d68f28);color:#1A1300;}
+  .btn-primary:hover{filter:brightness(1.08);}
   .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line);}
   .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
   .btn-teal{background:var(--teal);color:#04231C;}
@@ -56,52 +70,75 @@
   .btn-danger:hover{background:rgba(229,72,77,.12);}
   .btn-discord{background:var(--discord);color:#fff;}
   .btn-discord:hover{background:#4752c4;}
+  .btn-sm{padding:7px 13px;font-size:12.5px;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
 
   .profile-chip{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:var(--radius-pill);background:var(--surface);border:1px solid var(--line);}
   .profile-chip img{width:28px;height:28px;border-radius:50%;object-fit:cover;}
-  .profile-chip span{font-size:14px;font-weight:600;}
+  .profile-chip span{font-size:13.5px;font-weight:600;}
 
   /* ---------- intro strip ---------- */
-  .intro{padding:36px 28px 12px;max-width:920px;}
-  .intro h1{font-size:28px;margin:0 0 8px;font-weight:800;}
+  .intro{padding:40px 28px 8px;max-width:960px;}
+  .intro h1{font-size:30px;margin:0 0 8px;font-weight:800;letter-spacing:-.2px;}
   .intro p{color:var(--text-dim);margin:0;font-size:15px;max-width:60ch;}
   .intro .accent{color:var(--gold);}
 
+  /* ---------- filter bar ---------- */
+  .filterbar{padding:22px 28px 0;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+  .filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .chip-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;flex:1;}
+  .zone-chip{flex-shrink:0;padding:7px 14px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;
+    background:var(--surface);border:1px solid var(--line);color:var(--text-dim);}
+  .zone-chip.active{background:var(--surface-3);color:var(--text);border-color:var(--gold);}
+  .zone-chip .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;}
+  .search-input{flex-shrink:0;width:220px;padding:9px 14px;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius-pill);color:var(--text);font-size:13.5px;}
+  .search-input:focus{outline:2px solid var(--teal);outline-offset:1px;}
+  .time-tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-pill);padding:3px;flex-shrink:0;}
+  .time-tabs button{padding:7px 14px;border-radius:var(--radius-pill);font-size:12.5px;font-weight:600;background:transparent;color:var(--text-dim);}
+  .time-tabs button.active{background:var(--teal-soft);color:var(--teal);}
+
   /* ---------- grid ---------- */
-  main{padding:24px 28px 120px;max-width:1200px;margin:0 auto;}
-  .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
-  .toolbar h2{font-size:16px;color:var(--text-dim);font-weight:600;margin:0;}
+  main{padding:20px 28px 120px;max-width:1200px;margin:0 auto;}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap;}
+  .toolbar h2{font-size:15px;color:var(--text-dim);font-weight:600;margin:0;}
   .count-tag{font-size:13px;color:var(--text-dim);}
 
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;}
   .card{
     background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);
-    overflow:hidden;display:flex;flex-direction:column;
+    overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s ease, transform .15s ease;
   }
+  .card:hover{border-color:#3a4152;}
   .card .thumb{
     width:100%;aspect-ratio:4/3;background:var(--surface-2);
-    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;
   }
   .card .thumb img{width:100%;height:100%;object-fit:cover;}
   .card .thumb .placeholder{color:var(--text-dim);font-size:13px;}
-  .card-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .zone-badge{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--radius-pill);
+    backdrop-filter:blur(6px);}
+  .time-badge{position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:var(--radius-pill);
+    background:rgba(10,12,17,.65);color:var(--text-dim);backdrop-filter:blur(6px);}
+  .card-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:9px;flex:1;}
   .card-body h3{font-size:15px;margin:0;font-weight:600;}
   .card-body p.desc{font-size:13px;color:var(--text-dim);margin:0;min-height:32px;}
   .price{font-family:'Sora',sans-serif;font-weight:700;font-size:17px;color:var(--gold);}
-  .seller-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid var(--line);}
-  .seller{display:flex;align-items:center;gap:8px;}
-  .seller img{width:24px;height:24px;border-radius:50%;object-fit:cover;}
-  .seller span{font-size:12.5px;color:var(--text-dim);}
-  .card-actions{display:flex;gap:8px;}
+  .seller-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid var(--line);gap:8px;}
+  .seller{display:flex;align-items:center;gap:8px;min-width:0;}
+  .seller img{width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+  .seller span{font-size:12.5px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .card-actions{display:flex;gap:8px;flex-shrink:0;}
   .empty-state{
     grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-dim);
     border:1px dashed var(--line);border-radius:var(--radius-card);
   }
+  .empty-state b{display:block;color:var(--text);font-size:15px;margin-bottom:4px;font-family:'Sora',sans-serif;}
 
   /* ---------- fab ---------- */
   .fab{
     position:fixed;right:26px;bottom:26px;z-index:30;
-    padding:14px 22px;font-size:15px;box-shadow:0 8px 24px rgba(245,166,35,.25);
+    padding:14px 22px;font-size:15px;box-shadow:0 10px 26px rgba(240,169,60,.28);
   }
 
   /* ---------- footer ---------- */
@@ -110,7 +147,7 @@
 
   /* ---------- modal ---------- */
   .overlay{
-    position:fixed;inset:0;background:rgba(6,7,9,.7);display:none;align-items:center;justify-content:center;
+    position:fixed;inset:0;background:rgba(5,6,9,.72);display:none;align-items:center;justify-content:center;
     z-index:50;padding:16px;
   }
   .overlay.show{display:flex;}
@@ -123,12 +160,12 @@
   .modal .sub{color:var(--text-dim);font-size:13px;margin:0 0 18px;}
   .field{margin-bottom:14px;}
   .field label{display:block;font-size:13px;margin-bottom:6px;color:var(--text-dim);}
-  .field input, .field textarea{
+  .field input, .field textarea, .field select{
     width:100%;padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);
     border-radius:8px;color:var(--text);font-family:inherit;font-size:14px;
   }
   .field textarea{resize:vertical;min-height:64px;}
-  .field input:focus, .field textarea:focus{outline:2px solid var(--teal);outline-offset:1px;}
+  .field input:focus, .field textarea:focus, .field select:focus{outline:2px solid var(--teal);outline-offset:1px;}
 
   .image-pick{
     border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;cursor:pointer;
@@ -143,14 +180,29 @@
 
   /* admin */
   .admin-badge{background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);letter-spacing:.3px;}
+  .admin-tabs{display:flex;gap:4px;background:var(--surface-2);border-radius:var(--radius-pill);padding:3px;margin-bottom:16px;}
+  .admin-tabs button{flex:1;padding:8px 10px;border-radius:var(--radius-pill);font-size:12.5px;font-weight:600;background:transparent;color:var(--text-dim);}
+  .admin-tabs button.active{background:var(--surface-3);color:var(--text);}
+  .admin-pane{display:none;}
+  .admin-pane.active{display:block;}
   .admin-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;gap:10px;}
   .admin-row .info{display:flex;align-items:center;gap:10px;overflow:hidden;}
   .admin-row img{width:30px;height:30px;border-radius:6px;object-fit:cover;flex-shrink:0;}
-  .admin-row .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;}
+  .admin-row .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;}
+  .admin-search{margin-bottom:12px;}
   .stat-row{display:flex;gap:10px;margin-bottom:16px;}
   .stat{flex:1;background:var(--surface-2);border-radius:10px;padding:12px;text-align:center;}
   .stat b{display:block;font-size:20px;font-family:'Sora',sans-serif;color:var(--teal);}
-  .stat span{font-size:11.5px;color:var(--text-dim);}
+  .stat span{font-size:11px;color:var(--text-dim);}
+
+  /* zone management */
+  .zone-manage-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .zone-manage-row .swatch{width:16px;height:16px;border-radius:5px;flex-shrink:0;}
+  .zone-manage-row .zname{flex:1;font-size:13.5px;font-weight:600;}
+  .zone-manage-row .zcount{font-size:11.5px;color:var(--text-dim);}
+  .swatch-pick{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+  .swatch-pick .sw{width:22px;height:22px;border-radius:6px;cursor:pointer;border:2px solid transparent;}
+  .swatch-pick .sw.selected{border-color:#fff;}
 
   /* config box */
   .config-box{
@@ -164,28 +216,52 @@
     padding:6px 10px;color:var(--text);font-size:12.5px;font-family:monospace;
   }
 
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--surface-3);border:1px solid var(--line);color:var(--text);padding:12px 20px;border-radius:var(--radius-pill);
+    font-size:13.5px;z-index:60;transition:transform .2s ease, opacity .2s ease;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
   @media (max-width:520px){
-    header{padding:14px 16px;}
-    .intro, main{padding-left:16px;padding-right:16px;}
+    header{padding:12px 16px;}
+    .intro, main, .filterbar{padding-left:16px;padding-right:16px;}
     .fab{right:16px;bottom:16px;padding:13px 18px;}
+    .search-input{width:150px;}
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand"><span class="dot"></span>CHỢ VIP</div>
+  <div class="brand"><span class="mark">A</span>AOTR MARKET</div>
+  <div class="header-nav">
+    <button id="navPublic" class="active">Chợ chung</button>
+    <button id="navMine">Vật phẩm của tôi</button>
+  </div>
   <div class="header-right" id="headerRight"></div>
 </header>
 
-<div class="intro">
+<div class="intro" id="introBlock">
   <h1>Mua bán vật phẩm <span class="accent">an toàn, nhanh gọn</span></h1>
-  <p>Đăng nhập bằng Discord OAuth2 để tự động liên kết tài khoản và đăng bán vật phẩm.</p>
+  <p>Đăng nhập bằng Discord để liên kết tài khoản, chọn khu phù hợp và đăng bán vật phẩm chỉ trong vài giây.</p>
+</div>
+
+<div class="filterbar">
+  <div class="filter-row">
+    <div class="chip-scroll" id="zoneChips"></div>
+    <div class="time-tabs" id="timeTabs">
+      <button data-t="all" class="active">Tất cả</button>
+      <button data-t="today">Hôm nay</button>
+      <button data-t="yesterday">Hôm qua</button>
+    </div>
+  </div>
+  <div class="filter-row">
+    <input class="search-input" id="searchInput" placeholder="Tìm vật phẩm...">
+  </div>
 </div>
 
 <main>
   <div class="toolbar">
-    <h2>Đang rao bán</h2>
+    <h2 id="gridTitle">Đang rao bán</h2>
     <span class="count-tag" id="countTag">0 vật phẩm</span>
   </div>
   <div class="grid" id="grid"></div>
@@ -194,15 +270,21 @@
 <button class="btn btn-primary fab" id="fabPost">+ Đăng bán</button>
 
 <footer>
-  Dữ liệu lưu trữ trên trình duyệt. <button id="openAdmin">Quản trị viên</button>
+  Dữ liệu lưu trữ trên máy chủ chia sẻ. <button id="openAdmin">Quản trị viên</button>
 </footer>
 
-<!-- POST ITEM MODAL -->
+<div class="toast" id="toast"></div>
+
+<!-- POST / EDIT ITEM MODAL -->
 <div class="overlay" id="postOverlay">
   <div class="modal">
     <button class="close-x" data-close="postOverlay">✕</button>
-    <h2>Đăng vật phẩm</h2>
+    <h2 id="postModalTitle">Đăng vật phẩm</h2>
     <p class="sub">Vật phẩm sẽ hiển thị kèm thông tin Discord thực tế của bạn.</p>
+    <div class="field">
+      <label>Khu</label>
+      <select id="itemZone"></select>
+    </div>
     <div class="field">
       <label>Tên vật phẩm</label>
       <input type="text" id="itemName" placeholder="VD: Acc Liên Quân Rank Cao Thủ">
@@ -246,69 +328,103 @@
 
 <!-- ADMIN PANEL MODAL -->
 <div class="overlay" id="adminPanelOverlay">
-  <div class="modal" style="max-width:520px;">
+  <div class="modal" style="max-width:560px;">
     <button class="close-x" data-close="adminPanelOverlay">✕</button>
     <h2>Trang quản trị <span class="admin-badge">ADMIN</span></h2>
-    <p class="sub">Cấu hình Discord OAuth2 & Webhook Thông Báo.</p>
-    
-    <div class="config-box">
-      <!-- DISCORD WEBHOOK CONFIG -->
-      <div class="field">
-        <label style="color:var(--teal);">DISCORD WEBHOOK URL:</label>
-        <input type="text" id="webhookUrlInput" placeholder="https://discord.com/api/webhooks/...">
-        <button class="btn btn-teal" id="saveWebhookBtn" style="width:100%; margin-top:8px; padding:6px; font-size:12px;">Lưu Webhook URL</button>
-      </div>
-
-      <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
-
-      <!-- DISCORD CLIENT ID CONFIG -->
-      <div class="field">
-        <label style="color:var(--gold);">DISCORD CLIENT ID:</label>
-        <input type="text" id="clientIdInput" placeholder="Nhập Client ID ứng dụng Discord">
-        <button class="btn btn-teal" id="saveClientIdBtn" style="width:100%; margin-top:8px; padding:6px; font-size:12px;">Lưu Client ID</button>
-      </div>
-
-      <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
-
-      <label>🔑 DISCORD REDIRECT URI (Dán vào Portal):</label>
-      <div class="redirect-input-group">
-        <input type="text" id="redirectUriInput" readonly>
-        <button class="btn btn-teal" id="copyRedirectBtn" style="padding:6px 12px; font-size:12px;">Sao chép</button>
-      </div>
-    </div>
+    <p class="sub">Quản lý khu, vật phẩm và cấu hình Discord.</p>
 
     <div class="stat-row">
       <div class="stat"><b id="statCount">0</b><span>vật phẩm</span></div>
       <div class="stat"><b id="statSellers">0</b><span>người bán</span></div>
+      <div class="stat"><b id="statZones">0</b><span>khu</span></div>
     </div>
-    <div id="adminList"></div>
+
+    <div class="admin-tabs">
+      <button data-pane="paneItems" class="active">Vật phẩm</button>
+      <button data-pane="paneZones">Khu</button>
+      <button data-pane="paneConfig">Discord</button>
+    </div>
+
+    <!-- ITEMS PANE -->
+    <div class="admin-pane active" id="paneItems">
+      <input class="search-input admin-search" id="adminSearch" placeholder="Tìm theo tên hoặc người bán..." style="width:100%;">
+      <div id="adminList"></div>
+    </div>
+
+    <!-- ZONES PANE -->
+    <div class="admin-pane" id="paneZones">
+      <p class="sub" style="margin:0 0 10px;">Tạo khu để người dùng chọn khi đăng bán vật phẩm.</p>
+      <div class="field">
+        <label>Tên khu mới</label>
+        <input type="text" id="newZoneName" placeholder="VD: Acc Liên Quân, Vật phẩm Roblox...">
+        <div class="swatch-pick" id="zoneSwatchPick"></div>
+      </div>
+      <button class="btn btn-teal" id="addZoneBtn" style="width:100%;margin-bottom:16px;">+ Thêm khu</button>
+      <div id="zoneManageList"></div>
+    </div>
+
+    <!-- CONFIG PANE -->
+    <div class="admin-pane" id="paneConfig">
+      <div class="config-box">
+        <div class="field">
+          <label style="color:var(--teal);">DISCORD WEBHOOK URL:</label>
+          <input type="text" id="webhookUrlInput" placeholder="https://discord.com/api/webhooks/...">
+          <button class="btn btn-teal" id="saveWebhookBtn" style="width:100%; margin-top:8px; padding:6px; font-size:12px;">Lưu Webhook URL</button>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
+        <div class="field">
+          <label style="color:var(--gold);">DISCORD CLIENT ID:</label>
+          <input type="text" id="clientIdInput" placeholder="Nhập Client ID ứng dụng Discord">
+          <button class="btn btn-teal" id="saveClientIdBtn" style="width:100%; margin-top:8px; padding:6px; font-size:12px;">Lưu Client ID</button>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--line); margin:12px 0;">
+        <label>🔑 DISCORD REDIRECT URI (Dán vào Portal):</label>
+        <div class="redirect-input-group">
+          <input type="text" id="redirectUriInput" readonly>
+          <button class="btn btn-teal" id="copyRedirectBtn" style="padding:6px 12px; font-size:12px;">Sao chép</button>
+        </div>
+      </div>
+      <button class="btn btn-danger" id="wipeAllBtn" style="width:100%;">Xoá toàn bộ vật phẩm trên chợ</button>
+    </div>
+
   </div>
 </div>
 
 <script>
 const ADMIN_PASSWORD = "27102012Dat@";
-
-// Đã cập nhật Client ID và Webhook URL theo yêu cầu của bạn:
-const DEFAULT_CLIENT_ID = "1545382570785640458"; 
+const DEFAULT_CLIENT_ID = "1545382570785640458";
 const DEFAULT_WEBHOOK_URL = "https://discord.com/api/webhooks/1546463617694695474/2LWb5NVWzsjvMY9Y7yTXq_yc9OdKkzVCe0S-noDQm8BqR8oVXtvQADMtXDVav8QS8wAT";
+const DEFAULT_ZONES = [
+  {id:'z-general', name:'Chung', color:'#F0A93C'},
+];
+const ZONE_SWATCHES = ['#F0A93C','#22D3AA','#5865F2','#E5484D','#B679F0','#4FA8E0','#F06BA8','#8FD14F'];
 
 const PLACEHOLDER_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%232A2F3A'/></svg>`
 );
 
-let currentUser = null;   
-let items = [];           
+let currentUser = null;
+let items = [];
+let zones = [];
 let pendingItemImage = null;
 let isAdmin = false;
+let editingItemId = null;
+let view = 'public';        // 'public' | 'mine'
+let activeZoneFilter = 'all';
+let activeTimeFilter = 'all';
+let searchQuery = '';
+let discordClientId = DEFAULT_CLIENT_ID;
+let discordWebhookUrl = DEFAULT_WEBHOOK_URL;
+let pickedSwatch = ZONE_SWATCHES[0];
 
-// Tự động sử dụng giá trị mới nếu chưa từng lưu cấu hình cũ trong trình duyệt
-let discordClientId = localStorage.getItem('discord_client_id') || DEFAULT_CLIENT_ID;
-let discordWebhookUrl = localStorage.getItem('discord_webhook_url') || DEFAULT_WEBHOOK_URL;
-
-function fmtPrice(n){
-  return Number(n).toLocaleString('vi-VN') + ' đ';
+function fmtPrice(n){ return Number(n).toLocaleString('vi-VN') + ' đ'; }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._h);
+  showToast._h = setTimeout(()=>t.classList.remove('show'), 2200);
 }
-
 function openModal(id){ document.getElementById(id).classList.add('show'); }
 function closeModal(id){ document.getElementById(id).classList.remove('show'); }
 document.querySelectorAll('[data-close]').forEach(btn=>{
@@ -317,89 +433,89 @@ document.querySelectorAll('[data-close]').forEach(btn=>{
 document.querySelectorAll('.overlay').forEach(ov=>{
   ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('show'); });
 });
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str ?? '';
+  return d.innerHTML;
+}
+function isSameDay(ts, dayOffset){
+  const d = new Date(ts);
+  const ref = new Date();
+  ref.setDate(ref.getDate() + dayOffset);
+  return d.getFullYear()===ref.getFullYear() && d.getMonth()===ref.getMonth() && d.getDate()===ref.getDate();
+}
+function timeLabel(ts){
+  if(isSameDay(ts,0)) return 'Hôm nay';
+  if(isSameDay(ts,-1)) return 'Hôm qua';
+  return new Date(ts).toLocaleDateString('vi-VN');
+}
+function zoneById(id){ return zones.find(z=>z.id===id); }
 
 /* ---------- DISCORD WEBHOOK SENDER ---------- */
 async function sendDiscordWebhook(type, item) {
   if (!discordWebhookUrl) return;
-
   let embed = {};
-
+  const zone = zoneById(item.zoneId);
   if (type === 'NEW_ITEM') {
     embed = {
       title: "🛒 BÀI ĐĂNG BÁN MỚI!",
-      color: 16100899, // Màu Gold (#F5A623)
+      color: 15767356,
       fields: [
+        { name: "Khu", value: zone ? zone.name : 'Không rõ', inline: true },
         { name: "Vật phẩm", value: item.name, inline: true },
         { name: "Giá bán", value: fmtPrice(item.price), inline: true },
         { name: "Mô tả", value: item.desc || "Không có mô tả", inline: false },
         { name: "Người bán", value: `<@${item.sellerId}> (${item.sellerName})`, inline: true }
       ],
-      footer: { text: "Chợ VIP System" },
+      footer: { text: "AOTR Market System" },
       timestamp: new Date().toISOString()
     };
   } else if (type === 'DELETE_ITEM') {
     embed = {
-      title: "🗑️ VẬT PHẨM ĐÃ BỊ XÓA",
-      color: 15026253, // Màu Đỏ (#E5484D)
+      title: "🗑️ VẬT PHẨM ĐÃ BỊ XOÁ",
+      color: 15026253,
       fields: [
         { name: "Vật phẩm", value: item.name, inline: true },
         { name: "Giá", value: fmtPrice(item.price), inline: true },
         { name: "Người bán", value: item.sellerName, inline: true }
       ],
-      footer: { text: "Chợ VIP System - Quản lý" },
+      footer: { text: "AOTR Market System - Quản lý" },
       timestamp: new Date().toISOString()
     };
   }
-
   try {
     await fetch(discordWebhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: "Chợ VIP Bot",
-        embeds: [embed]
-      })
+      body: JSON.stringify({ username: "AOTR Market Bot", embeds: [embed] })
     });
-  } catch (e) {
-    console.error("Lỗi gửi Webhook Discord:", e);
-  }
+  } catch (e) { console.error("Lỗi gửi Webhook Discord:", e); }
 }
 
 /* ---------- DISCORD OAUTH2 LOGIC ---------- */
-function getRedirectUri(){
-  return window.location.origin + window.location.pathname;
-}
-
+function getRedirectUri(){ return window.location.origin + window.location.pathname; }
 function loginWithDiscord(){
   const redirectUri = encodeURIComponent(getRedirectUri());
   const scope = encodeURIComponent('identify');
   const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${discordClientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
   window.location.href = authUrl;
 }
-
 function handleDiscordCallback(){
   const fragment = new URLSearchParams(window.location.hash.slice(1));
   const accessToken = fragment.get('access_token');
   const tokenType = fragment.get('token_type');
-
   if (accessToken) {
-    fetch('https://discord.com/api/users/@me', {
-      headers: { authorization: `${tokenType} ${accessToken}` }
-    })
+    fetch('https://discord.com/api/users/@me', { headers: { authorization: `${tokenType} ${accessToken}` } })
     .then(res => res.json())
     .then(data => {
       if(data.id) {
-        const avatarUrl = data.avatar 
-          ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png` 
+        const avatarUrl = data.avatar
+          ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png`
           : PLACEHOLDER_AVATAR;
-        
-        currentUser = {
-          id: data.id,
-          name: data.username,
-          avatar: avatarUrl
-        };
+        currentUser = { id: data.id, name: data.username, avatar: avatarUrl };
         saveProfile();
         renderHeader();
+        renderAll();
         window.history.replaceState({}, document.title, window.location.pathname);
       }
     })
@@ -413,11 +529,35 @@ async function loadItems(){
     const res = await window.storage.get('marketplace-items', true);
     items = res && res.value ? JSON.parse(res.value) : [];
   }catch(e){ items = []; }
-  renderGrid();
 }
 async function saveItems(){
   try{ await window.storage.set('marketplace-items', JSON.stringify(items), true); }
   catch(e){ console.error('Lỗi lưu dữ liệu', e); }
+}
+async function loadZones(){
+  try{
+    const res = await window.storage.get('marketplace-zones', true);
+    zones = res && res.value ? JSON.parse(res.value) : JSON.parse(JSON.stringify(DEFAULT_ZONES));
+  }catch(e){ zones = JSON.parse(JSON.stringify(DEFAULT_ZONES)); }
+  if(!zones.length) zones = JSON.parse(JSON.stringify(DEFAULT_ZONES));
+}
+async function saveZones(){
+  try{ await window.storage.set('marketplace-zones', JSON.stringify(zones), true); }
+  catch(e){ console.error('Lỗi lưu khu', e); }
+}
+async function loadSiteConfig(){
+  try{
+    const res = await window.storage.get('marketplace-config', true);
+    if(res && res.value){
+      const cfg = JSON.parse(res.value);
+      discordClientId = cfg.clientId || DEFAULT_CLIENT_ID;
+      discordWebhookUrl = cfg.webhookUrl || DEFAULT_WEBHOOK_URL;
+    }
+  }catch(e){ /* keep defaults */ }
+}
+async function saveSiteConfig(){
+  try{ await window.storage.set('marketplace-config', JSON.stringify({clientId:discordClientId, webhookUrl:discordWebhookUrl}), true); }
+  catch(e){ console.error('Lỗi lưu cấu hình', e); }
 }
 async function loadProfile(){
   try{
@@ -431,7 +571,7 @@ async function saveProfile(){
   catch(e){ console.error('Lỗi lưu hồ sơ', e); }
 }
 
-/* ---------- HEADER / UI RENDER ---------- */
+/* ---------- HEADER / NAV ---------- */
 function renderHeader(){
   const el = document.getElementById('headerRight');
   el.innerHTML = '';
@@ -445,8 +585,9 @@ function renderHeader(){
     logout.onclick = async ()=>{
       currentUser = null;
       await saveProfile();
+      view = 'public';
       renderHeader();
-      renderGrid();
+      renderAll();
     };
     el.appendChild(chip);
     el.appendChild(logout);
@@ -458,18 +599,68 @@ function renderHeader(){
     el.appendChild(btn);
   }
 }
+document.getElementById('navPublic').addEventListener('click', ()=>{ view='public'; renderAll(); });
+document.getElementById('navMine').addEventListener('click', ()=>{
+  if(!currentUser){ loginWithDiscord(); return; }
+  view='mine'; renderAll();
+});
 
-function escapeHtml(str){
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
+/* ---------- ZONE CHIPS / FILTERS ---------- */
+function renderZoneChips(){
+  const wrap = document.getElementById('zoneChips');
+  wrap.innerHTML = '';
+  const allChip = document.createElement('button');
+  allChip.className = 'zone-chip' + (activeZoneFilter==='all' ? ' active' : '');
+  allChip.textContent = 'Tất cả khu';
+  allChip.onclick = ()=>{ activeZoneFilter='all'; renderAll(); };
+  wrap.appendChild(allChip);
+  zones.forEach(z=>{
+    const chip = document.createElement('button');
+    chip.className = 'zone-chip' + (activeZoneFilter===z.id ? ' active' : '');
+    chip.innerHTML = `<span class="dot" style="background:${z.color}"></span>${escapeHtml(z.name)}`;
+    chip.onclick = ()=>{ activeZoneFilter=z.id; renderAll(); };
+    wrap.appendChild(chip);
+  });
+}
+document.querySelectorAll('#timeTabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    activeTimeFilter = btn.dataset.t;
+    document.querySelectorAll('#timeTabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGrid();
+  });
+});
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  searchQuery = e.target.value.trim().toLowerCase();
+  renderGrid();
+});
+
+function populateZoneSelect(){
+  const sel = document.getElementById('itemZone');
+  sel.innerHTML = zones.map(z=>`<option value="${z.id}">${escapeHtml(z.name)}</option>`).join('');
 }
 
-/* ---------- POST ITEM ---------- */
+/* ---------- POST / EDIT ITEM ---------- */
 document.getElementById('fabPost').addEventListener('click', ()=>{
   if(!currentUser){ loginWithDiscord(); return; }
-  openModal('postOverlay');
+  openPostModal(null);
 });
+function openPostModal(item){
+  editingItemId = item ? item.id : null;
+  document.getElementById('postModalTitle').textContent = item ? 'Sửa vật phẩm' : 'Đăng vật phẩm';
+  document.getElementById('postSubmit').textContent = item ? 'Lưu thay đổi' : 'Đăng bán';
+  populateZoneSelect();
+  document.getElementById('itemZone').value = item ? item.zoneId : zones[0].id;
+  document.getElementById('itemName').value = item ? item.name : '';
+  document.getElementById('itemPrice').value = item ? item.price : '';
+  document.getElementById('itemDesc').value = item ? (item.desc||'') : '';
+  pendingItemImage = item ? item.image : null;
+  const pick = document.getElementById('itemImagePick');
+  if(pendingItemImage){ pick.classList.add('has-image'); pick.innerHTML = `<img src="${pendingItemImage}">`; }
+  else { pick.classList.remove('has-image'); pick.innerHTML = 'Nhấn để chọn ảnh từ máy'; }
+  document.getElementById('postError').style.display='none';
+  openModal('postOverlay');
+}
 document.getElementById('itemImagePick').addEventListener('click', ()=>{
   document.getElementById('itemImageFile').click();
 });
@@ -487,6 +678,7 @@ document.getElementById('itemImageFile').addEventListener('change', (e)=>{
 });
 
 document.getElementById('postSubmit').addEventListener('click', async ()=>{
+  const zoneId = document.getElementById('itemZone').value;
   const name = document.getElementById('itemName').value.trim();
   const price = document.getElementById('itemPrice').value;
   const desc = document.getElementById('itemDesc').value.trim();
@@ -494,48 +686,90 @@ document.getElementById('postSubmit').addEventListener('click', async ()=>{
   if(!name || !price){ err.style.display='block'; return; }
   err.style.display='none';
 
-  const newItem = {
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
-    name, price: Number(price), desc,
-    image: pendingItemImage,
-    sellerId: currentUser.id,
-    sellerName: currentUser.name,
-    sellerAvatar: currentUser.avatar,
-    ts: Date.now()
-  };
+  if(editingItemId){
+    const it = items.find(i=>i.id===editingItemId);
+    if(it){
+      it.zoneId = zoneId; it.name = name; it.price = Number(price); it.desc = desc; it.image = pendingItemImage;
+      await saveItems();
+      showToast('Đã lưu thay đổi');
+    }
+  } else {
+    const newItem = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+      zoneId, name, price: Number(price), desc,
+      image: pendingItemImage,
+      sellerId: currentUser.id, sellerName: currentUser.name, sellerAvatar: currentUser.avatar,
+      ts: Date.now()
+    };
+    items.unshift(newItem);
+    await saveItems();
+    sendDiscordWebhook('NEW_ITEM', newItem);
+    showToast('Đã đăng bán vật phẩm');
+  }
 
-  items.unshift(newItem);
-  await saveItems();
-  
-  // Gửi Webhook thông báo về Discord
-  sendDiscordWebhook('NEW_ITEM', newItem);
-
-  renderGrid();
+  renderAll();
   closeModal('postOverlay');
-  document.getElementById('itemName').value='';
-  document.getElementById('itemPrice').value='';
-  document.getElementById('itemDesc').value='';
-  pendingItemImage = null;
-  const pick = document.getElementById('itemImagePick');
-  pick.classList.remove('has-image');
-  pick.innerHTML = 'Nhấn để chọn ảnh từ máy';
 });
 
+async function deleteItem(id){
+  const deletedItem = items.find(it => it.id === id);
+  items = items.filter(it=>it.id !== id);
+  await saveItems();
+  if (deletedItem) sendDiscordWebhook('DELETE_ITEM', deletedItem);
+  renderAll();
+  if(isAdmin) renderAdminList();
+}
+
 /* ---------- GRID RENDER ---------- */
+function getFilteredItems(){
+  let list = view==='mine' && currentUser
+    ? items.filter(i=>i.sellerId===currentUser.id)
+    : items.slice();
+
+  if(activeZoneFilter!=='all') list = list.filter(i=>i.zoneId===activeZoneFilter);
+
+  if(view==='public'){
+    if(activeTimeFilter==='today') list = list.filter(i=>isSameDay(i.ts,0));
+    if(activeTimeFilter==='yesterday') list = list.filter(i=>isSameDay(i.ts,-1));
+  }
+
+  if(searchQuery){
+    list = list.filter(i =>
+      i.name.toLowerCase().includes(searchQuery) ||
+      (i.desc||'').toLowerCase().includes(searchQuery) ||
+      i.sellerName.toLowerCase().includes(searchQuery)
+    );
+  }
+  return list;
+}
+
 function renderGrid(){
+  document.getElementById('gridTitle').textContent = view==='mine' ? 'Vật phẩm của tôi' : 'Đang rao bán';
+  document.getElementById('timeTabs').style.display = view==='mine' ? 'none' : 'flex';
+  const list = getFilteredItems();
   const grid = document.getElementById('grid');
-  document.getElementById('countTag').textContent = items.length + ' vật phẩm';
-  if(items.length === 0){
-    grid.innerHTML = '<div class="empty-state">Chưa có vật phẩm nào. Hãy là người đăng bán đầu tiên!</div>';
+  document.getElementById('countTag').textContent = list.length + ' vật phẩm';
+
+  if(list.length === 0){
+    grid.innerHTML = view==='mine'
+      ? '<div class="empty-state"><b>Bạn chưa đăng vật phẩm nào</b>Nhấn "Đăng bán" để tạo bài đăng đầu tiên của bạn.</div>'
+      : '<div class="empty-state"><b>Chưa có vật phẩm nào</b>Hãy là người đăng bán đầu tiên!</div>';
     return;
   }
+
   grid.innerHTML = '';
-  items.forEach(item=>{
+  list.forEach(item=>{
+    const zone = zoneById(item.zoneId);
     const card = document.createElement('div');
     card.className = 'card';
-    const canDelete = isAdmin || (currentUser && currentUser.id === item.sellerId);
+    const isMine = currentUser && currentUser.id === item.sellerId;
+    const canManage = isAdmin || isMine;
     card.innerHTML = `
-      <div class="thumb">${item.image ? `<img src="${item.image}">` : `<span class="placeholder">Không có ảnh</span>`}</div>
+      <div class="thumb">
+        ${item.image ? `<img src="${item.image}">` : `<span class="placeholder">Không có ảnh</span>`}
+        ${zone ? `<span class="zone-badge" style="background:${zone.color}22;color:${zone.color};border:1px solid ${zone.color}55;">${escapeHtml(zone.name)}</span>` : ''}
+        <span class="time-badge">${timeLabel(item.ts)}</span>
+      </div>
       <div class="card-body">
         <h3>${escapeHtml(item.name)}</h3>
         <p class="desc">${escapeHtml(item.desc || '')}</p>
@@ -546,7 +780,8 @@ function renderGrid(){
             <span>${escapeHtml(item.sellerName)}</span>
           </div>
           <div class="card-actions">
-            ${canDelete ? `<button class="btn btn-danger" data-del="${item.id}">Xoá</button>` : ''}
+            ${isMine ? `<button class="btn btn-ghost btn-sm" data-edit="${item.id}">Sửa</button>` : ''}
+            ${canManage ? `<button class="btn btn-danger btn-sm" data-del="${item.id}">Xoá</button>` : ''}
           </div>
         </div>
       </div>
@@ -555,24 +790,27 @@ function renderGrid(){
   });
 
   grid.querySelectorAll('[data-del]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const deletedItem = items.find(it => it.id === btn.dataset.del);
-      items = items.filter(it=>it.id !== btn.dataset.del);
-      await saveItems();
-
-      if (deletedItem) {
-        sendDiscordWebhook('DELETE_ITEM', deletedItem);
-      }
-
-      renderGrid();
-      if(isAdmin) renderAdminList();
+    btn.addEventListener('click', ()=>deleteItem(btn.dataset.del));
+  });
+  grid.querySelectorAll('[data-edit]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const it = items.find(i=>i.id===btn.dataset.edit);
+      if(it) openPostModal(it);
     });
   });
 }
 
+function renderAll(){
+  document.getElementById('introBlock').style.display = view==='mine' ? 'none' : 'block';
+  document.getElementById('navPublic').classList.toggle('active', view==='public');
+  document.getElementById('navMine').classList.toggle('active', view==='mine');
+  renderZoneChips();
+  renderGrid();
+}
+
 /* ---------- ADMIN ---------- */
 document.getElementById('openAdmin').addEventListener('click', ()=>{
-  if(isAdmin){ renderAdminList(); openModal('adminPanelOverlay'); }
+  if(isAdmin){ openAdminPanel(); }
   else openModal('adminLoginOverlay');
 });
 document.getElementById('adminSubmit').addEventListener('click', ()=>{
@@ -583,32 +821,57 @@ document.getElementById('adminSubmit').addEventListener('click', ()=>{
     err.style.display='none';
     document.getElementById('adminPassword').value='';
     closeModal('adminLoginOverlay');
-    renderAdminList();
+    openAdminPanel();
     renderGrid();
-    openModal('adminPanelOverlay');
   } else {
     err.style.display='block';
   }
 });
+document.getElementById('adminPassword').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter') document.getElementById('adminSubmit').click();
+});
 
-function renderAdminList(){
-  document.getElementById('statCount').textContent = items.length;
-  
+function openAdminPanel(){
+  renderAdminStats();
+  renderAdminList();
+  renderZoneManageList();
   document.getElementById('webhookUrlInput').value = discordWebhookUrl;
   document.getElementById('clientIdInput').value = discordClientId;
   document.getElementById('redirectUriInput').value = getRedirectUri();
+  openModal('adminPanelOverlay');
+}
+document.querySelectorAll('.admin-tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.admin-tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.pane).classList.add('active');
+  });
+});
 
+function renderAdminStats(){
+  document.getElementById('statCount').textContent = items.length;
   const sellers = new Set(items.map(i => i.sellerId || i.sellerName));
   document.getElementById('statSellers').textContent = sellers.size;
+  document.getElementById('statZones').textContent = zones.length;
+}
+
+document.getElementById('adminSearch').addEventListener('input', renderAdminList);
+
+function renderAdminList(){
+  renderAdminStats();
+  const q = (document.getElementById('adminSearch').value||'').trim().toLowerCase();
+  let list = items.slice();
+  if(q) list = list.filter(i => i.name.toLowerCase().includes(q) || i.sellerName.toLowerCase().includes(q));
 
   const listEl = document.getElementById('adminList');
-  if(items.length === 0){
-    listEl.innerHTML = '<p style="color:var(--text-dim);font-size:13px;text-align:center;">Không có vật phẩm nào.</p>';
+  if(list.length === 0){
+    listEl.innerHTML = '<p style="color:var(--text-dim);font-size:13px;text-align:center;padding:16px 0;">Không có vật phẩm nào.</p>';
     return;
   }
-
   listEl.innerHTML = '';
-  items.forEach(item => {
+  list.forEach(item => {
+    const zone = zoneById(item.zoneId);
     const row = document.createElement('div');
     row.className = 'admin-row';
     row.innerHTML = `
@@ -616,47 +879,104 @@ function renderAdminList(){
         <img src="${item.image || PLACEHOLDER_AVATAR}">
         <div>
           <div class="name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
-          <div style="font-size:11px;color:var(--text-dim);">${fmtPrice(item.price)} • ${escapeHtml(item.sellerName)}</div>
+          <div style="font-size:11px;color:var(--text-dim);">${fmtPrice(item.price)} • ${escapeHtml(item.sellerName)}${zone ? ' • '+escapeHtml(zone.name) : ''}</div>
         </div>
       </div>
-      <button class="btn btn-danger" data-admin-del="${item.id}">Xoá</button>
+      <button class="btn btn-danger btn-sm" data-admin-del="${item.id}">Xoá</button>
     `;
     listEl.appendChild(row);
   });
-
   listEl.querySelectorAll('[data-admin-del]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const deletedItem = items.find(it => it.id === btn.dataset.admin-del);
-      items = items.filter(it => it.id !== btn.dataset.admin-del);
+    btn.addEventListener('click', ()=>deleteItem(btn.dataset.adminDel));
+  });
+}
+
+document.getElementById('wipeAllBtn').addEventListener('click', async ()=>{
+  if(!confirm('Xoá toàn bộ vật phẩm trên chợ? Hành động này không thể hoàn tác.')) return;
+  items = [];
+  await saveItems();
+  renderAll();
+  renderAdminList();
+  showToast('Đã xoá toàn bộ vật phẩm');
+});
+
+/* ---------- ZONE MANAGEMENT ---------- */
+function renderSwatchPick(){
+  const wrap = document.getElementById('zoneSwatchPick');
+  wrap.innerHTML = '';
+  ZONE_SWATCHES.forEach(c=>{
+    const sw = document.createElement('div');
+    sw.className = 'sw' + (c===pickedSwatch ? ' selected' : '');
+    sw.style.background = c;
+    sw.onclick = ()=>{ pickedSwatch = c; renderSwatchPick(); };
+    wrap.appendChild(sw);
+  });
+}
+renderSwatchPick();
+
+document.getElementById('addZoneBtn').addEventListener('click', async ()=>{
+  const nameInput = document.getElementById('newZoneName');
+  const name = nameInput.value.trim();
+  if(!name){ showToast('Nhập tên khu trước đã'); return; }
+  zones.push({ id: 'z-' + Date.now().toString(36), name, color: pickedSwatch });
+  await saveZones();
+  nameInput.value = '';
+  renderZoneManageList();
+  renderZoneChips();
+  renderAdminStats();
+  showToast('Đã thêm khu "'+name+'"');
+});
+
+function renderZoneManageList(){
+  const wrap = document.getElementById('zoneManageList');
+  wrap.innerHTML = '';
+  zones.forEach(z=>{
+    const count = items.filter(i=>i.zoneId===z.id).length;
+    const row = document.createElement('div');
+    row.className = 'zone-manage-row';
+    row.innerHTML = `
+      <span class="swatch" style="background:${z.color}"></span>
+      <span class="zname">${escapeHtml(z.name)}</span>
+      <span class="zcount">${count} vật phẩm</span>
+      <button class="btn btn-danger btn-sm" data-zone-del="${z.id}" ${zones.length<=1 ? 'disabled title="Cần giữ lại ít nhất 1 khu"' : ''}>Xoá</button>
+    `;
+    wrap.appendChild(row);
+  });
+  wrap.querySelectorAll('[data-zone-del]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      if(zones.length<=1) return;
+      const zid = btn.dataset.zoneDel;
+      const inUse = items.filter(i=>i.zoneId===zid).length;
+      if(inUse>0 && !confirm(`Khu này đang có ${inUse} vật phẩm. Xoá khu sẽ chuyển các vật phẩm đó sang khu đầu tiên còn lại. Tiếp tục?`)) return;
+      const fallback = zones.find(z=>z.id!==zid);
+      items.forEach(i=>{ if(i.zoneId===zid) i.zoneId = fallback.id; });
+      zones = zones.filter(z=>z.id!==zid);
+      if(activeZoneFilter===zid) activeZoneFilter='all';
+      await saveZones();
       await saveItems();
-
-      if (deletedItem) {
-        sendDiscordWebhook('DELETE_ITEM', deletedItem);
-      }
-
+      renderZoneManageList();
+      renderZoneChips();
       renderGrid();
-      renderAdminList();
+      renderAdminStats();
+      showToast('Đã xoá khu');
     });
   });
 }
 
-/* ---------- BẤM LƯU CẤU HÌNH WEBHOOK & CLIENT ID ---------- */
-document.getElementById('saveWebhookBtn').addEventListener('click', () => {
-  const val = document.getElementById('webhookUrlInput').value.trim();
-  discordWebhookUrl = val;
-  localStorage.setItem('discord_webhook_url', val);
-  alert('Đã lưu Discord Webhook URL thành công!');
+/* ---------- SAVE CONFIG ---------- */
+document.getElementById('saveWebhookBtn').addEventListener('click', async () => {
+  discordWebhookUrl = document.getElementById('webhookUrlInput').value.trim();
+  await saveSiteConfig();
+  showToast('Đã lưu Discord Webhook URL');
 });
-
-document.getElementById('saveClientIdBtn').addEventListener('click', () => {
+document.getElementById('saveClientIdBtn').addEventListener('click', async () => {
   const val = document.getElementById('clientIdInput').value.trim();
   if(val){
     discordClientId = val;
-    localStorage.setItem('discord_client_id', val);
-    alert('Đã lưu Client ID thành công!');
+    await saveSiteConfig();
+    showToast('Đã lưu Client ID');
   }
 });
-
 document.getElementById('copyRedirectBtn').addEventListener('click', () => {
   const input = document.getElementById('redirectUriInput');
   input.select();
@@ -668,9 +988,13 @@ document.getElementById('copyRedirectBtn').addEventListener('click', () => {
 });
 
 /* ---------- KHỞI CHẠY ---------- */
-handleDiscordCallback();
-loadProfile();
-loadItems();
+async function init(){
+  handleDiscordCallback();
+  await Promise.all([loadProfile(), loadItems(), loadZones(), loadSiteConfig()]);
+  renderHeader();
+  renderAll();
+}
+init();
 </script>
 
 </body>
