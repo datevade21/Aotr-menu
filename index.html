@@ -287,7 +287,11 @@
 
 <script>
 const ADMIN_PASSWORD = "27102012Dat@";
-const DEFAULT_CLIENT_ID = "1234567890123456789"; 
+
+// Đã cập nhật Client ID và Webhook URL theo yêu cầu của bạn:
+const DEFAULT_CLIENT_ID = "1545382570785640458"; 
+const DEFAULT_WEBHOOK_URL = "https://discord.com/api/webhooks/1546463617694695474/2LWb5NVWzsjvMY9Y7yTXq_yc9OdKkzVCe0S-noDQm8BqR8oVXtvQADMtXDVav8QS8wAT";
+
 const PLACEHOLDER_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><rect width='60' height='60' fill='%232A2F3A'/></svg>`
 );
@@ -296,8 +300,10 @@ let currentUser = null;
 let items = [];           
 let pendingItemImage = null;
 let isAdmin = false;
+
+// Tự động sử dụng giá trị mới nếu chưa từng lưu cấu hình cũ trong trình duyệt
 let discordClientId = localStorage.getItem('discord_client_id') || DEFAULT_CLIENT_ID;
-let discordWebhookUrl = localStorage.getItem('discord_webhook_url') || '';
+let discordWebhookUrl = localStorage.getItem('discord_webhook_url') || DEFAULT_WEBHOOK_URL;
 
 function fmtPrice(n){
   return Number(n).toLocaleString('vi-VN') + ' đ';
