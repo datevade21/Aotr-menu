@@ -39,9 +39,11 @@
         .admin-toggle { text-align: right; font-size: 11px; margin-bottom: 8px; }
         .admin-toggle a { color: #8b949e; text-decoration: none; cursor: pointer; }
         .admin-toggle a:hover { color: #f59e0b; }
+        
         .admin-panel { display: none; background: #0d1117; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
         .admin-panel input { width: 100%; margin-bottom: 8px; font-size: 13px; padding: 8px; }
         .admin-panel button { background: #238636; color: #fff; border: none; padding: 8px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+        .error-pass { color: #f85149; font-size: 11px; text-align: center; margin-top: 4px; display: none; }
     </style>
 </head>
 <body>
@@ -52,11 +54,19 @@
             <a onclick="toggleAdmin()">⚙️ Cài đặt Link Cloudflare</a>
         </div>
 
-        <div id="adminPanel" class="admin-panel">
-            <div style="font-size: 12px; color: #f59e0b; font-weight: bold; margin-bottom: 6px;">QUẢN TRỊ TÊN MIỀN</div>
-            <input type="password" id="adminPass" placeholder="Nhập mật khẩu (27102012Dat@)...">
+        <!-- Bước 1: Nhập mật khẩu trước -->
+        <div id="passPanel" class="admin-panel" style="display: none;">
+            <div style="font-size: 12px; color: #f59e0b; font-weight: bold; margin-bottom: 6px;">🔐 NHẬP MẬT KHẨU QUẢN TRỊ</div>
+            <input type="password" id="adminPass" placeholder="Nhập mật khẩu...">
+            <button onclick="checkPassword()">Xác nhận</button>
+            <div id="errorPass" class="error-pass">Sai mật khẩu!</div>
+        </div>
+
+        <!-- Bước 2: Chỉ hiện khi nhập đúng mật khẩu -->
+        <div id="configPanel" class="admin-panel" style="display: none;">
+            <div style="font-size: 12px; color: #3fb950; font-weight: bold; margin-bottom: 6px;">⚡ ĐỔI LINK CLOUDFLARE</div>
             <input type="text" id="newUrl" placeholder="Dán link https://xxx.trycloudflare.com vào đây...">
-            <button onclick="saveConfig()">Lưu cấu hình</button>
+            <button onclick="saveConfig()" style="background: #f59e0b; color: #000;">Lưu cấu hình</button>
         </div>
         
         <div class="script-box">
@@ -101,33 +111,48 @@
     </div>
 
     <script>
-        // Link mặc định ban đầu (hoặc lấy từ trình duyệt nếu đã lưu)
         let CLOUDFLARE_URL = localStorage.getItem('cf_url') || "https://speed-supervisors-reports-hotel.trycloudflare.com";
 
         function toggleAdmin() {
-            const panel = document.getElementById('adminPanel');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            const passPanel = document.getElementById('passPanel');
+            const configPanel = document.getElementById('configPanel');
+            
+            // Nếu bảng cấu hình đang mở thì ẩn đi, ngược lại thì hiện bảng nhập pass
+            if (configPanel.style.display === 'block') {
+                configPanel.style.display = 'none';
+            } else {
+                passPanel.style.display = passPanel.style.display === 'block' ? 'none' : 'block';
+            }
+            document.getElementById('errorPass').style.display = 'none';
+        }
+
+        function checkPassword() {
+            const pass = document.getElementById('adminPass').value;
+            const errDiv = document.getElementById('errorPass');
+
+            if (pass === "27102012Dat@") {
+                document.getElementById('passPanel').style.display = 'none';
+                document.getElementById('configPanel').style.display = 'block';
+                document.getElementById('adminPass').value = ''; // Xóa pass cho bảo mật
+                errDiv.style.display = 'none';
+            } else {
+                errDiv.style.display = 'block';
+            }
         }
 
         function saveConfig() {
-            const pass = document.getElementById('adminPass').value;
             const url = document.getElementById('newUrl').value.trim();
-
-            if (pass !== "27102012Dat@") {
-                alert("Sai mật khẩu quản trị!");
-                return;
-            }
             if (!url) {
                 alert("Vui lòng nhập link Cloudflare!");
                 return;
             }
 
-            // Lưu vào bộ nhớ trình duyệt (Lưu vĩnh viễn trên máy bạn)
-            CLOUDFLARE_URL = url.replace(/\/$/, ''); // Xóa dấu / ở cuối nếu có
+            CLOUDFLARE_URL = url.replace(/\/$/, '');
             localStorage.setItem('cf_url', CLOUDFLARE_URL);
             
             alert("Đã cập nhật link Cloudflare thành công!");
-            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('configPanel').style.display = 'none';
+            document.getElementById('newUrl').value = '';
             loadScriptTemplate();
         }
 
