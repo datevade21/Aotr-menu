@@ -1,204 +1,161 @@
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 7000;
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blox Fruits Stats Tracker</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0e14; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .card { background: #151922; border: 1px solid #282e3d; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; box-shadow: 0 16px 36px rgba(0,0,0,0.6); }
+        h2 { color: #38bdf8; text-align: center; margin: 0 0 18px 0; font-size: 22px; letter-spacing: 1.5px; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 20px; }
+        input { flex: 1; background: #0b0e14; border: 1px solid #282e3d; border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px; outline: none; }
+        input:focus { border-color: #38bdf8; }
+        button { background: #38bdf8; color: #000; border: none; font-weight: bold; border-radius: 8px; padding: 0 20px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        button:hover { background: #0284c7; color: #fff; }
+        
+        /* Loading Spinner */
+        .loader { display: none; margin: 20px auto; border: 4px solid #202634; border-top: 4px solid #38bdf8; border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-app.use(express.json());
-const liveData = {};
+        .stats-box { display: none; background: #0b0e14; border-radius: 12px; padding: 16px; border: 1px solid #202634; margin-top: 10px; }
+        .user-header { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #202634; padding-bottom: 12px; margin-bottom: 14px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #38bdf8; background: #202634; }
+        .user-meta { flex: 1; }
+        .display-name { font-weight: bold; font-size: 15px; color: #f0f6fc; }
+        .username { font-size: 13px; color: #8b949e; }
+        .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        .badge-online { background: #23863622; color: #3fb950; border: 1px solid #23863655; }
+        .badge-offline { background: #da363322; color: #f85149; border: 1px solid #da363355; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .stat-card { background: #151922; padding: 10px 12px; border-radius: 8px; border: 1px solid #202634; }
+        .stat-label { font-size: 11px; color: #8b949e; text-transform: uppercase; margin-bottom: 4px; }
+        .stat-value { font-size: 15px; font-weight: bold; }
+        
+        .val-level { color: #a78bfa; }
+        .val-beli { color: #4ade80; }
+        .val-frag { color: #c084fc; }
+        .val-bounty { color: #facc15; }
+        .val-fruit { color: #fb7185; }
+        .val-sea { color: #38bdf8; }
 
-app.post('/api/update', (req, res) => {
-    const { username, game, level, beli, fragments, bounty, devilFruit, sea, status } = req.body;
-    if (!username) return res.status(400).json({ error: "Missing username" });
+        .footer-time { font-size: 11px; color: #64748b; text-align: right; margin-top: 6px; }
+        .error { color: #f85149; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>BLOX FRUITS STATS</h2>
+        <div class="input-group">
+            <input type="text" id="usernameInput" placeholder="Nhập Roblox Username...">
+            <button onclick="startTracking()">Tra cứu</button>
+        </div>
+        <div id="loader" class="loader"></div>
+        <div id="errorMsg" class="error"></div>
+        <div id="statsBox" class="stats-box">
+            <div class="user-header">
+                <img id="dispAvatar" class="avatar" src="" alt="avatar">
+                <div class="user-meta">
+                    <div id="dispDisplayName" class="display-name">---</div>
+                    <div id="dispUsername" class="username">@---</div>
+                </div>
+                <span class="badge" id="dispStatus">OFFLINE</span>
+            </div>
 
-    liveData[username.toLowerCase()] = {
-        game: game || "Blox Fruits",
-        level: level || 0,
-        beli: beli || 0,
-        fragments: fragments || 0,
-        bounty: bounty || 0,
-        devilFruit: devilFruit || "None",
-        sea: sea || "Sea 1",
-        status: status || "IN-GAME",
-        lastUpdated: new Date().toLocaleTimeString()
-    };
-    return res.json({ success: true });
-});
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value val-level" id="dispLevel">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Map / Sea</div>
+                    <div class="stat-value val-sea" id="dispSea">---</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Beli (Tiền)</div>
+                    <div class="stat-value val-beli" id="dispBeli">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Fragments (F)</div>
+                    <div class="stat-value val-frag" id="dispFrag">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Bounty / Honor</div>
+                    <div class="stat-value val-bounty" id="dispBounty">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Devil Fruit</div>
+                    <div class="stat-value val-fruit" id="dispFruit">None</div>
+                </div>
+            </div>
 
-app.get('/api/stats', async (req, res) => {
-    const username = (req.query.username || "").trim();
-    if (!username) return res.status(400).json({ error: "Vui lòng nhập Username" });
+            <div class="footer-time">Cập nhật lúc: <span id="dispTime">--:--:--</span></div>
+        </div>
+    </div>
 
-    try {
-        const userRes = await fetch("https://users.roblox.com/v1/usernames/users", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usernames: [username] })
-        });
-        const userData = await userRes.json();
+    <script>
+        let loopId = null;
 
-        if (!userData.data || userData.data.length === 0) {
-            return res.status(404).json({ error: "Không tìm thấy người dùng" });
+        async function fetchStats(isFirstTime = false) {
+            const user = document.getElementById('usernameInput').value.trim();
+            const errDiv = document.getElementById('errorMsg');
+            const statsBox = document.getElementById('statsBox');
+            const loader = document.getElementById('loader');
+
+            if (!user) return;
+
+            if (isFirstTime) {
+                loader.style.display = 'block';
+                statsBox.style.display = 'none';
+                errDiv.style.display = 'none';
+            }
+
+            try {
+                const res = await fetch('/api/stats?username=' + encodeURIComponent(user));
+                const data = await res.json();
+
+                loader.style.display = 'none';
+
+                if (!res.ok) {
+                    errDiv.innerText = data.error;
+                    errDiv.style.display = 'block';
+                    statsBox.style.display = 'none';
+                    return;
+                }
+
+                errDiv.style.display = 'none';
+                statsBox.style.display = 'block';
+                
+                document.getElementById('dispAvatar').src = data.avatarUrl;
+                document.getElementById('dispDisplayName').innerText = data.displayName;
+                document.getElementById('dispUsername').innerText = '@' + data.username;
+                
+                document.getElementById('dispLevel').innerText = Number(data.level).toLocaleString();
+                document.getElementById('dispSea').innerText = data.sea;
+                document.getElementById('dispBeli').innerText = '$' + Number(data.beli).toLocaleString();
+                document.getElementById('dispFrag').innerText = Number(data.fragments).toLocaleString();
+                document.getElementById('dispBounty').innerText = Number(data.bounty).toLocaleString();
+                document.getElementById('dispFruit').innerText = data.devilFruit;
+                
+                document.getElementById('dispTime').innerText = data.lastUpdated;
+
+                const statusBadge = document.getElementById('dispStatus');
+                statusBadge.innerText = data.status;
+                statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
+            } catch (e) {
+                loader.style.display = 'none';
+                errDiv.innerText = 'Lỗi kết nối tới máy chủ';
+                errDiv.style.display = 'block';
+            }
         }
 
-        const user = userData.data[0];
-        const userId = user.id;
-
-        const avatarRes = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=true`);
-        const avatarData = await avatarRes.json();
-        const avatarUrl = avatarData.data?.[0]?.imageUrl || "";
-
-        const live = liveData[username.toLowerCase()];
-
-        return res.json({
-            id: userId,
-            username: user.name,
-            displayName: user.displayName,
-            avatarUrl: avatarUrl,
-            game: live ? live.game : "Blox Fruits",
-            level: live ? live.level : 0,
-            beli: live ? live.beli : 0,
-            fragments: live ? live.fragments : 0,
-            bounty: live ? live.bounty : 0,
-            devilFruit: live ? live.devilFruit : "Không rõ",
-            sea: live ? live.sea : "Chưa vào game",
-            status: live ? live.status : "OFFLINE",
-            lastUpdated: live ? live.lastUpdated : "Chưa ghi nhận"
-        });
-    } catch (err) {
-        return res.status(500).json({ error: "Lỗi kết nối API" });
-    }
-});
-
-app.get('/', (req, res) => {
-    res.send(`
-    <!DOCTYPE html>
-    <html lang="vi">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blox Fruits Stats Tracker</title>
-        <style>
-            * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-            body { background-color: #0b0e14; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-            .card { background: #151922; border: 1px solid #282e3d; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; box-shadow: 0 16px 36px rgba(0,0,0,0.6); }
-            h2 { color: #38bdf8; text-align: center; margin: 0 0 18px 0; font-size: 22px; letter-spacing: 1.5px; }
-            .input-group { display: flex; gap: 8px; margin-bottom: 20px; }
-            input { flex: 1; background: #0b0e14; border: 1px solid #282e3d; border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px; outline: none; }
-            input:focus { border-color: #38bdf8; }
-            button { background: #38bdf8; color: #000; border: none; font-weight: bold; border-radius: 8px; padding: 0 20px; cursor: pointer; transition: 0.2s; }
-            button:hover { background: #0284c7; color: #fff; }
-            .loader { display: none; margin: 20px auto; border: 4px solid #202634; border-top: 4px solid #38bdf8; border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite; }
-            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-            .stats-box { display: none; background: #0b0e14; border-radius: 12px; padding: 16px; border: 1px solid #202634; margin-top: 10px; }
-            .user-header { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #202634; padding-bottom: 12px; margin-bottom: 14px; }
-            .avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #38bdf8; background: #202634; }
-            .user-meta { flex: 1; }
-            .display-name { font-weight: bold; font-size: 15px; color: #f0f6fc; }
-            .username { font-size: 13px; color: #8b949e; }
-            .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
-            .badge-online { background: #23863622; color: #3fb950; border: 1px solid #23863655; }
-            .badge-offline { background: #da363322; color: #f85149; border: 1px solid #da363355; }
-            .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-            .stat-card { background: #151922; padding: 10px 12px; border-radius: 8px; border: 1px solid #202634; }
-            .stat-label { font-size: 11px; color: #8b949e; text-transform: uppercase; margin-bottom: 4px; }
-            .stat-value { font-size: 15px; font-weight: bold; }
-            .val-level { color: #a78bfa; }
-            .val-beli { color: #4ade80; }
-            .val-frag { color: #c084fc; }
-            .val-bounty { color: #facc15; }
-            .val-fruit { color: #fb7185; }
-            .val-sea { color: #38bdf8; }
-            .footer-time { font-size: 11px; color: #64748b; text-align: right; margin-top: 6px; }
-            .error { color: #f85149; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
-        </style>
-    </head>
-    <body>
-        <div class="card">
-            <h2>BLOX FRUITS STATS</h2>
-            <div class="input-group">
-                <input type="text" id="usernameInput" placeholder="Nhập Roblox Username...">
-                <button onclick="startTracking()">Tra cứu</button>
-            </div>
-            <div id="loader" class="loader"></div>
-            <div id="errorMsg" class="error"></div>
-            <div id="statsBox" class="stats-box">
-                <div class="user-header">
-                    <img id="dispAvatar" class="avatar" src="" alt="avatar">
-                    <div class="user-meta">
-                        <div id="dispDisplayName" class="display-name">---</div>
-                        <div id="dispUsername" class="username">@---</div>
-                    </div>
-                    <span class="badge" id="dispStatus">OFFLINE</span>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-label">Level</div><div class="stat-value val-level" id="dispLevel">0</div></div>
-                    <div class="stat-card"><div class="stat-label">Map / Sea</div><div class="stat-value val-sea" id="dispSea">---</div></div>
-                    <div class="stat-card"><div class="stat-label">Beli (Tiền)</div><div class="stat-value val-beli" id="dispBeli">$0</div></div>
-                    <div class="stat-card"><div class="stat-label">Fragments (F)</div><div class="stat-value val-frag" id="dispFrag">0</div></div>
-                    <div class="stat-card"><div class="stat-label">Bounty / Honor</div><div class="stat-value val-bounty" id="dispBounty">0</div></div>
-                    <div class="stat-card"><div class="stat-label">Devil Fruit</div><div class="stat-value val-fruit" id="dispFruit">None</div></div>
-                </div>
-                <div class="footer-time">Cập nhật lúc: <span id="dispTime">--:--:--</span></div>
-            </div>
-        </div>
-        <script>
-            let loopId = null;
-            async function fetchStats(isFirstTime = false) {
-                const user = document.getElementById('usernameInput').value.trim();
-                const errDiv = document.getElementById('errorMsg');
-                const statsBox = document.getElementById('statsBox');
-                const loader = document.getElementById('loader');
-
-                if (!user) return;
-                if (isFirstTime) {
-                    loader.style.display = 'block';
-                    statsBox.style.display = 'none';
-                    errDiv.style.display = 'none';
-                }
-
-                try {
-                    const res = await fetch('/api/stats?username=' + encodeURIComponent(user));
-                    const data = await res.json();
-                    loader.style.display = 'none';
-
-                    if (!res.ok) {
-                        errDiv.innerText = data.error;
-                        errDiv.style.display = 'block';
-                        statsBox.style.display = 'none';
-                        return;
-                    }
-
-                    errDiv.style.display = 'none';
-                    statsBox.style.display = 'block';
-                    document.getElementById('dispAvatar').src = data.avatarUrl;
-                    document.getElementById('dispDisplayName').innerText = data.displayName;
-                    document.getElementById('dispUsername').innerText = '@' + data.username;
-                    document.getElementById('dispLevel').innerText = Number(data.level).toLocaleString();
-                    document.getElementById('dispSea').innerText = data.sea;
-                    document.getElementById('dispBeli').innerText = '$' + Number(data.beli).toLocaleString();
-                    document.getElementById('dispFrag').innerText = Number(data.fragments).toLocaleString();
-                    document.getElementById('dispBounty').innerText = Number(data.bounty).toLocaleString();
-                    document.getElementById('dispFruit').innerText = data.devilFruit;
-                    document.getElementById('dispTime').innerText = data.lastUpdated;
-
-                    const statusBadge = document.getElementById('dispStatus');
-                    statusBadge.innerText = data.status;
-                    statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
-                } catch (e) {
-                    loader.style.display = 'none';
-                    errDiv.innerText = 'Lỗi kết nối tới máy chủ';
-                    errDiv.style.display = 'block';
-                }
-            }
-
-            function startTracking() {
-                if (loopId) clearInterval(loopId);
-                fetchStats(true);
-                loopId = setInterval(() => fetchStats(false), 3000);
-            }
-        </script>
-    </body>
-    </html>
-    `);
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+        function startTracking() {
+            if (loopId) clearInterval(loopId);
+            fetchStats(true);
+            loopId = setInterval(() => fetchStats(false), 3000);
+        }
+    </script>
+</body>
+</html>
