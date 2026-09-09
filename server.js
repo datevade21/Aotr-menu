@@ -8,10 +8,8 @@ const PORT = process.env.PORT || 7000;
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Bộ nhớ lưu dữ liệu live của người dùng chạy Script
 const liveData = {};
 
-// Cấu hình Axios giả lập trình duyệt tránh Roblox rate-limit / 403
 const robloxAxios = axios.create({
     headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -21,7 +19,6 @@ const robloxAxios = axios.create({
     timeout: 5000
 });
 
-// API nhận dữ liệu từ Script Lua trong Game
 app.post('/api/update', (req, res) => {
     const { username, game, level, beli, fragments, bounty, devilFruit, sea, status } = req.body;
     if (!username) return res.status(400).json({ error: "Missing username" });
@@ -40,13 +37,11 @@ app.post('/api/update', (req, res) => {
     return res.json({ success: true });
 });
 
-// API Tra cứu: Tra cứu BẤT KỲ username nào
 app.get('/api/stats', async (req, res) => {
     const searchUser = (req.query.username || "").trim();
     if (!searchUser) return res.status(400).json({ error: "Vui lòng nhập Username" });
 
     try {
-        // 1. Lấy UserId từ Roblox
         const userRes = await robloxAxios.post("https://users.roblox.com/v1/usernames/users", {
             usernames: [searchUser],
             excludeBannedUsers: false
@@ -59,7 +54,6 @@ app.get('/api/stats', async (req, res) => {
         const user = userRes.data.data[0];
         const userId = user.id;
 
-        // 2. Lấy Avatar từ Roblox
         let avatarUrl = "https://tr.rbxcdn.com/30day-avatar-headshot";
         try {
             const avatarRes = await robloxAxios.get(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=true`);
@@ -68,9 +62,9 @@ app.get('/api/stats', async (req, res) => {
             }
         } catch (e) {}
 
-        // 3. Đọc dữ liệu Realtime (Nếu người này đang/đã chạy Script)
         const live = liveData[user.name.toLowerCase()];
 
+        // Mặc định không hiện câu nhắc nhở "Chưa bật Script" nữa
         return res.json({
             id: userId,
             username: user.name,
@@ -81,8 +75,8 @@ app.get('/api/stats', async (req, res) => {
             beli: live ? live.beli : 0,
             fragments: live ? live.fragments : 0,
             bounty: live ? live.bounty : 0,
-            devilFruit: live ? live.devilFruit : "Chưa bật Script",
-            sea: live ? live.sea : "Chưa vào game",
+            devilFruit: live ? live.devilFruit : "None",
+            sea: live ? live.sea : "Sea 1",
             status: live ? live.status : "OFFLINE",
             lastUpdated: live ? live.lastUpdated : "Chưa có dữ liệu"
         });
@@ -93,7 +87,6 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
-// Phục vụ trang HTML
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
