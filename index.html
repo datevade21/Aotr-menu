@@ -56,10 +56,10 @@
     <div class="card">
         <h2>BLOX FRUITS STATS</h2>
 
-        <!-- Khung chứa lệnh loadstring ngắn -->
+        <!-- Mã Lua chuẩn theo yêu cầu của bạn -->
         <div class="script-box">
             <div class="script-title">⚠️ CHẠY MÃ NÀY TRONG GAME ĐỂ CẬP NHẬT STATS:</div>
-            <div class="script-code" id="luaScriptText">loadstring(game:HttpGet("https://raw.githubusercontent.com/SCCV8/WhakizashiX/refs/heads/main/tracker.lua"))()</div>
+            <div class="script-code" id="luaScriptText">loadstring(game:HttpGet("https://raw.githubusercontent.com/dateva/datevade21/refs/heads/main/tracker.lua"))()</div>
             <button class="btn-copy" onclick="copyScript()">Sao chép Mã Lua</button>
         </div>
 
@@ -116,7 +116,7 @@
         function copyScript() {
             const scriptText = document.getElementById("luaScriptText").innerText;
             navigator.clipboard.writeText(scriptText).then(() => {
-                alert("Đã sao chép mã Lua ngắn! Hãy dán vào Executor trong game.");
+                alert("Đã sao chép mã Lua thành công!");
             });
         }
 
