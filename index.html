@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homeless Stats</title>
+    <title>Homeless Stats - Termux Host</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0d1117; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
@@ -12,7 +12,7 @@
         
         .script-box { background: #0d1117; border: 1px dashed #f59e0b; border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: center; }
         .script-title { font-size: 11px; color: #f59e0b; font-weight: bold; margin-bottom: 6px; }
-        .script-code { background: #161b22; color: #4ade80; font-family: monospace; font-size: 11px; padding: 6px; border-radius: 6px; border: 1px solid #30363d; word-break: break-all; margin-bottom: 6px; user-select: all; }
+        .script-code { background: #161b22; color: #4ade80; font-family: monospace; font-size: 10px; padding: 6px; border-radius: 6px; border: 1px solid #30363d; word-break: break-all; margin-bottom: 6px; user-select: all; text-align: left; max-height: 80px; overflow-y: auto;}
         .btn-copy { background: #238636; color: #fff; border: none; font-size: 11px; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
         .btn-copy:hover { background: #2ea043; }
 
@@ -21,7 +21,7 @@
         input:focus { border-color: #f59e0b; }
         button.btn-search { background: #f59e0b; color: #000; border: none; font-weight: bold; border-radius: 8px; padding: 0 20px; cursor: pointer; transition: 0.2s; }
         button.btn-search:hover { background: #d97706; }
-        
+
         .stats-box { display: none; background: #0d1117; border-radius: 12px; padding: 18px; border: 1px solid #21262d; margin-top: 10px; }
         .user-header { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #21262d; padding-bottom: 14px; margin-bottom: 14px; }
         .avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid #f59e0b; background: #21262d; }
@@ -43,7 +43,7 @@
         
         <div class="script-box">
             <div class="script-title">⚡ MÃ LUA CHẠY TRONG GAME:</div>
-            <div class="script-code" id="luaScriptText">loadstring(game:HttpGet("https://LINK_CLOUDFLARE_CUA_BAN/tracker.lua"))()</div>
+            <div class="script-code" id="luaScriptText">Đang tải mã...</div>
             <button class="btn-copy" onclick="copyScript()">Sao chép Mã Lua</button>
         </div>
 
@@ -83,7 +83,37 @@
     </div>
 
     <script>
-        let loopId = null;
+        // ⚠️ DÁN LINK CLOUDFLARE TỪ TERMUX CỦA BẠN VÀO ĐÂY
+        const CLOUDFLARE_URL = "https://ten-mien-cua-ban.trycloudflare.com";
+
+        // Tự động sinh mã Lua dựa trên link Cloudflare
+        function loadScriptTemplate() {
+            const luaCode = `local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local SERVER_URL = "${CLOUDFLARE_URL}/api/update"
+local sendRequest = (syn and syn.request) or (http and http.request) or http_request or request
+
+task.spawn(function()
+    while task.wait(3) do
+        pcall(function()
+            local level = 0
+            local beli = 0
+            if player:FindFirstChild("Data") then
+                if player.Data:FindFirstChild("Level") then level = player.Data.Level.Value end
+                if player.Data:FindFirstChild("Beli") then beli = player.Data.Beli.Value end
+            end
+            local payload = { username = player.Name, game = "Blox Fruits", level = level, beli = beli, status = "IN-GAME" }
+            if sendRequest then
+                sendRequest({ Url = SERVER_URL, Method = "POST", Headers = { ["Content-Type"] = "application/json" }, Body = HttpService:JSONEncode(payload) })
+            end
+        end)
+    end
+end)`;
+            document.getElementById('luaScriptText').innerText = luaCode;
+        }
+        loadScriptTemplate();
 
         function copyScript() {
             const scriptText = document.getElementById("luaScriptText").innerText;
@@ -91,6 +121,8 @@
                 alert("Đã sao chép mã Lua thành công!");
             });
         }
+
+        let loopId = null;
 
         async function fetchStats() {
             const user = document.getElementById('usernameInput').value.trim();
@@ -100,7 +132,8 @@
             if (!user) return;
 
             try {
-                const res = await fetch('/api/stats?username=' + encodeURIComponent(user));
+                // Gọi thẳng tới server Termux thông qua Cloudflare Tunnel
+                const res = await fetch(`${CLOUDFLARE_URL}/api/stats?username=` + encodeURIComponent(user));
                 const data = await res.json();
 
                 if (!res.ok) {
@@ -125,7 +158,7 @@
                 statusBadge.innerText = data.status;
                 statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
             } catch (e) {
-                errDiv.innerText = 'Lỗi kết nối tới máy chủ';
+                errDiv.innerText = 'Lỗi kết nối tới Termux Server (Kiểm tra lại link Cloudflare)';
                 errDiv.style.display = 'block';
             }
         }
