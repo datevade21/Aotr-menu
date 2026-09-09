@@ -1,14 +1,18 @@
 const express = require('express');
 const app = express();
-
-// Render sẽ tự cấp Port qua process.env.PORT, nếu chạy thử ở máy thì mặc định dùng 6000
 const PORT = process.env.PORT || 6000;
 
 app.use(express.json());
 
+// ==========================================
+// CẤU HÌNH LINK CLOUDFLARE TỪ TERMUX Ở ĐÂY
+// ==========================================
+const CLOUDFLARE_LUA_URL = "https://recommend-bloomberg-refrigerator-synopsis.trycloudflare.com";
+// ==========================================
+
 const liveData = {};
 
-// 1. Nhận dữ liệu từ script Lua trong game Roblox gửi về
+// 1. Nhận dữ liệu từ script Lua
 app.post('/api/update', (req, res) => {
     const { username, game, level, beli, status } = req.body;
     if (!username) return res.status(400).json({ error: "Missing username" });
@@ -23,13 +27,12 @@ app.post('/api/update', (req, res) => {
     return res.json({ success: true });
 });
 
-// 2. Lấy thông tin từ Roblox API kết hợp với dữ liệu live từ game
+// 2. Lấy thông tin từ Roblox API + Chỉ số live
 app.get('/api/stats', async (req, res) => {
     const username = (req.query.username || "").trim();
     if (!username) return res.status(400).json({ error: "Vui lòng nhập Username" });
 
     try {
-        // Lấy User ID từ Roblox API
         const userRes = await fetch("https://users.roblox.com/v1/usernames/users", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -44,12 +47,10 @@ app.get('/api/stats', async (req, res) => {
         const user = userData.data[0];
         const userId = user.id;
 
-        // Lấy ảnh Avatar đại diện
         const avatarRes = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=true`);
         const avatarData = await avatarRes.json();
         const avatarUrl = avatarData.data?.[0]?.imageUrl || "";
 
-        // Kiểm tra xem người chơi có đang treo script gửi dữ liệu về không
         const live = liveData[username.toLowerCase()];
 
         return res.json({
@@ -68,7 +69,7 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
-// 3. Giao diện Web HOMELESS STATS
+// 3. Giao diện Web HOMELESS STATS (Đã bổ sung khung lấy mã Lua trực tiếp từ Cloudflare)
 app.get('/', (req, res) => {
     res.send(`
     <!DOCTYPE html>
@@ -81,12 +82,19 @@ app.get('/', (req, res) => {
             * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
             body { background-color: #0d1117; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
             .card { background: #161b22; border: 1px solid #30363d; border-radius: 16px; width: 100%; max-width: 420px; padding: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); }
-            h2 { color: #f59e0b; text-align: center; margin: 0 0 18px 0; font-size: 24px; letter-spacing: 1.5px; }
+            h2 { color: #f59e0b; text-align: center; margin: 0 0 14px 0; font-size: 24px; letter-spacing: 1.5px; }
+            
+            .script-box { background: #0d1117; border: 1px dashed #f59e0b; border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: center; }
+            .script-title { font-size: 11px; color: #f59e0b; font-weight: bold; margin-bottom: 6px; }
+            .script-code { background: #161b22; color: #4ade80; font-family: monospace; font-size: 11px; padding: 6px; border-radius: 6px; border: 1px solid #30363d; word-break: break-all; margin-bottom: 6px; user-select: all; }
+            .btn-copy { background: #238636; color: #fff; border: none; font-size: 11px; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+            .btn-copy:hover { background: #2ea043; }
+
             .input-group { display: flex; gap: 8px; margin-bottom: 20px; }
             input { flex: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px; outline: none; }
             input:focus { border-color: #f59e0b; }
-            button { background: #f59e0b; color: #000; border: none; font-weight: bold; border-radius: 8px; padding: 0 20px; cursor: pointer; transition: 0.2s; }
-            button:hover { background: #d97706; }
+            button.btn-search { background: #f59e0b; color: #000; border: none; font-weight: bold; border-radius: 8px; padding: 0 20px; cursor: pointer; transition: 0.2s; }
+            button.btn-search:hover { background: #d97706; }
             .stats-box { display: none; background: #0d1117; border-radius: 12px; padding: 18px; border: 1px solid #21262d; margin-top: 10px; }
             .user-header { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #21262d; padding-bottom: 14px; margin-bottom: 14px; }
             .avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid #f59e0b; background: #21262d; }
@@ -105,9 +113,16 @@ app.get('/', (req, res) => {
     <body>
         <div class="card">
             <h2>HOMELESS STATS</h2>
+            
+            <div class="script-box">
+                <div class="script-title">⚡ MÃ LUA CHẠY TRONG GAME:</div>
+                <div class="script-code" id="luaScriptText">loadstring(game:HttpGet("${CLOUDFLARE_LUA_URL}"))()</div>
+                <button class="btn-copy" onclick="copyScript()">Sao chép Mã Lua</button>
+            </div>
+
             <div class="input-group">
                 <input type="text" id="usernameInput" placeholder="Nhập Roblox Username...">
-                <button onclick="startTracking()">Tra cứu</button>
+                <button class="btn-search" onclick="startTracking()">Tra cứu</button>
             </div>
             <div id="errorMsg" class="error"></div>
             <div id="statsBox" class="stats-box">
@@ -140,6 +155,13 @@ app.get('/', (req, res) => {
 
         <script>
             let loopId = null;
+
+            function copyScript() {
+                const scriptText = document.getElementById("luaScriptText").innerText;
+                navigator.clipboard.writeText(scriptText).then(() => {
+                    alert("Đã sao chép mã Lua thành công!");
+                });
+            }
 
             async function fetchStats() {
                 const user = document.getElementById('usernameInput').value.trim();
