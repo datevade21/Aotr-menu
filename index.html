@@ -3,85 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homeless Stats</title>
+    <title>Homeless Stats - Blox Fruits Live Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0d1117; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .card { background: #161b22; border: 1px solid #30363d; border-radius: 16px; width: 100%; max-width: 420px; padding: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); }
-        h2 { color: #f59e0b; text-align: center; margin: 0 0 14px 0; font-size: 24px; letter-spacing: 1.5px; }
+        :root {
+            --bg-color: #090d16;
+            --card-bg: rgba(22, 27, 34, 0.75);
+            --border-color: rgba(245, 158, 11, 0.2);
+            --primary: #f59e0b;
+            --primary-hover: #d97706;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        .script-box { background: #0d1117; border: 1px dashed #f59e0b; border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: center; }
-        .script-title { font-size: 11px; color: #f59e0b; font-weight: bold; margin-bottom: 6px; }
-        .script-code { background: #161b22; color: #4ade80; font-family: monospace; font-size: 10px; padding: 6px; border-radius: 6px; border: 1px solid #30363d; word-break: break-all; margin-bottom: 6px; user-select: all; text-align: left; max-height: 80px; overflow-y: auto;}
-        .btn-copy { background: #238636; color: #fff; border: none; font-size: 11px; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 460px;
+            padding: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.05);
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .admin-toggle a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .admin-toggle a:hover { color: var(--primary); border-color: var(--primary); }
+
+        .admin-panel {
+            display: none;
+            background: rgba(13, 17, 23, 0.95);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-panel input {
+            width: 100%;
+            background: #090d16;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            margin-bottom: 8px;
+            outline: none;
+        }
+        .admin-panel input:focus { border-color: var(--primary); }
+        .admin-panel button {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 13px;
+        }
+        .admin-panel button:hover { background: var(--primary-hover); }
+
+        .script-box {
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px dashed rgba(245, 158, 11, 0.4);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+        .script-title { font-size: 11px; color: var(--primary); font-weight: 700; margin-bottom: 6px; }
+        .script-code {
+            background: #05070a;
+            color: #4ade80;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #1f2937;
+            word-break: break-all;
+            margin-bottom: 8px;
+            max-height: 90px;
+            overflow-y: auto;
+        }
+        .btn-copy {
+            background: #238636;
+            color: #fff;
+            border: none;
+            font-size: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            width: 100%;
+            transition: 0.2s;
+        }
         .btn-copy:hover { background: #2ea043; }
 
-        .input-group { display: flex; gap: 8px; margin-bottom: 20px; }
-        input { flex: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px; outline: none; }
-        input:focus { border-color: #f59e0b; }
-        button.btn-search { background: #f59e0b; color: #000; border: none; font-weight: bold; border-radius: 8px; padding: 0 20px; cursor: pointer; transition: 0.2s; }
-        button.btn-search:hover { background: #d97706; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-group input {
+            flex: 1;
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+        button.btn-search {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 0 22px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button.btn-search:hover { background: var(--primary-hover); }
 
-        .stats-box { display: none; background: #0d1117; border-radius: 12px; padding: 18px; border: 1px solid #21262d; margin-top: 10px; }
-        .user-header { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #21262d; padding-bottom: 14px; margin-bottom: 14px; }
-        .avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid #f59e0b; background: #21262d; }
+        .stats-box {
+            display: none;
+            background: rgba(13, 17, 23, 0.8);
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid #1f2937;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .user-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid #1f2937;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+        }
+        .avatar { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--primary); background: #1f2937; }
         .user-meta { flex: 1; }
-        .display-name { font-weight: bold; font-size: 16px; color: #f0f6fc; }
-        .username { font-size: 13px; color: #8b949e; }
-        .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; text-align: center; }
-        .badge-online { background: #23863622; color: #3fb950; border: 1px solid #23863655; }
-        .badge-offline { background: #da363322; color: #f85149; border: 1px solid #da363355; }
-        .stat-row { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; color: #8b949e; }
-        .stat-val { font-weight: bold; color: #58a6ff; }
-        .beli-val { font-weight: bold; color: #3fb950; }
-        .error { color: #f85149; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+        .display-name { font-weight: 700; font-size: 16px; color: #fff; }
+        .username { font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
         
-        .admin-toggle { text-align: right; font-size: 11px; margin-bottom: 8px; }
-        .admin-toggle a { color: #8b949e; text-decoration: none; cursor: pointer; }
-        .admin-toggle a:hover { color: #f59e0b; }
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; text-align: center; text-transform: uppercase; }
+        .badge-online { background: rgba(35, 134, 54, 0.2); color: #3fb950; border: 1px solid rgba(35, 134, 54, 0.4); }
+        .badge-offline { background: rgba(218, 54, 51, 0.2); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.4); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .stat-card.full { grid-column: span 2; }
+        .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .stat-value { font-size: 14px; font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
         
-        .admin-panel { display: none; background: #0d1117; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
-        .admin-panel input { width: 100%; margin-bottom: 8px; font-size: 13px; padding: 8px; }
-        .admin-panel button { background: #238636; color: #fff; border: none; padding: 8px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
-        .error-pass { color: #f85149; font-size: 11px; text-align: center; margin-top: 4px; display: none; }
+        .error { color: #f85149; font-size: 13px; text-align: center; margin-top: 10px; display: none; font-weight: 600; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2>HOMELESS STATS</h2>
-        
-        <div class="admin-toggle">
-            <a onclick="toggleAdmin()">⚙️ Cài đặt Link Cloudflare</a>
+        <div class="header-flex">
+            <h2>Homeless Stats</h2>
+            <div class="admin-toggle">
+                <a onclick="toggleAdmin()">⚙️ Cài đặt Link</a>
+            </div>
         </div>
 
-        <!-- Bước 1: Nhập mật khẩu trước -->
-        <div id="passPanel" class="admin-panel" style="display: none;">
-            <div style="font-size: 12px; color: #f59e0b; font-weight: bold; margin-bottom: 6px;">🔐 NHẬP MẬT KHẨU QUẢN TRỊ</div>
+        <!-- Panel Mật khẩu -->
+        <div id="passPanel" class="admin-panel">
+            <div style="font-size: 12px; color: var(--primary); font-weight: 700; margin-bottom: 6px;">🔐 NHẬP MẬT KHẨU ADMIN</div>
             <input type="password" id="adminPass" placeholder="Nhập mật khẩu...">
             <button onclick="checkPassword()">Xác nhận</button>
-            <div id="errorPass" class="error-pass">Sai mật khẩu!</div>
+            <div id="errorPass" style="color: #f85149; font-size: 11px; margin-top: 6px; display: none;">Sai mật khẩu!</div>
         </div>
 
-        <!-- Bước 2: Chỉ hiện khi nhập đúng mật khẩu -->
-        <div id="configPanel" class="admin-panel" style="display: none;">
-            <div style="font-size: 12px; color: #3fb950; font-weight: bold; margin-bottom: 6px;">⚡ ĐỔI LINK CLOUDFLARE</div>
-            <input type="text" id="newUrl" placeholder="Dán link https://xxx.trycloudflare.com vào đây...">
-            <button onclick="saveConfig()" style="background: #f59e0b; color: #000;">Lưu cấu hình</button>
+        <!-- Panel Đổi Link Cloudflare -->
+        <div id="configPanel" class="admin-panel">
+            <div style="font-size: 12px; color: #3fb950; font-weight: 700; margin-bottom: 6px;">⚡ ĐỔI LINK CLOUDFLARE (PORT 6000)</div>
+            <input type="text" id="newUrl" placeholder="https://xxx.trycloudflare.com">
+            <button onclick="saveConfig()" style="background: var(--primary); color: #000;">Lưu Cấu Hình</button>
         </div>
         
+        <!-- Hộp mã Lua -->
         <div class="script-box">
-            <div class="script-title">⚡ MÃ LUA CHẠY TRONG GAME:</div>
+            <div class="script-title">⚡ MÃ LUA CHẠY TRONG GAME (AUTO CẬP NHẬT):</div>
             <div class="script-code" id="luaScriptText">Đang tải mã...</div>
             <button class="btn-copy" onclick="copyScript()">Sao chép Mã Lua</button>
         </div>
 
+        <!-- Khung tìm kiếm -->
         <div class="input-group">
-            <input type="text" id="usernameInput" placeholder="Nhập Roblox Username...">
+            <input type="text" id="usernameInput" placeholder="Nhập Roblox Username..." onkeypress="if(event.key === 'Enter') startTracking()">
             <button class="btn-search" onclick="startTracking()">Tra cứu</button>
         </div>
         
         <div id="errorMsg" class="error"></div>
         
+        <!-- Bảng hiển thị thông số chi tiết -->
         <div id="statsBox" class="stats-box">
             <div class="user-header">
                 <img id="dispAvatar" class="avatar" src="" alt="avatar">
@@ -91,21 +270,36 @@
                 </div>
                 <span class="badge" id="dispStatus">OFFLINE</span>
             </div>
-            <div class="stat-row">
-                <span>Trò chơi</span>
-                <span class="stat-val" id="dispGame" style="color:#c9d1d9;">---</span>
-            </div>
-            <div class="stat-row">
-                <span>LEVEL</span>
-                <span class="stat-val" id="dispLevel">---</span>
-            </div>
-            <div class="stat-row">
-                <span>TIỀN / BELI</span>
-                <span class="beli-val" id="dispBeli">$0</span>
-            </div>
-            <div class="stat-row" style="font-size: 11px; margin-bottom: 0;">
-                <span>Cập nhật lúc:</span>
-                <span id="dispTime" style="color: #8b949e;">--:--:--</span>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Khu vực (Sea)</span>
+                    <span class="stat-value" id="dispGame" style="color: #38bdf8;">---</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Chủng Tộc (Race)</span>
+                    <span class="stat-value" id="dispRace" style="color: #ec4899;">---</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Cấp Độ (Level)</span>
+                    <span class="stat-value" id="dispLevel" style="color: #4ade80;">---</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Tiền Beli</span>
+                    <span class="stat-value" id="dispBeli" style="color: #fbbf24;">$0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Mảnh (Fragments)</span>
+                    <span class="stat-value" id="dispFragments" style="color: #a855f7;">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Bounty / Honor</span>
+                    <span class="stat-value" id="dispBounty" style="color: #f43f5e;">0</span>
+                </div>
+                <div class="stat-card full">
+                    <span class="stat-label">Cập nhật lúc</span>
+                    <span class="stat-value" id="dispTime" style="color: var(--text-muted); font-size: 12px;">--:--:--</span>
+                </div>
             </div>
         </div>
     </div>
@@ -117,7 +311,6 @@
             const passPanel = document.getElementById('passPanel');
             const configPanel = document.getElementById('configPanel');
             
-            // Nếu bảng cấu hình đang mở thì ẩn đi, ngược lại thì hiện bảng nhập pass
             if (configPanel.style.display === 'block') {
                 configPanel.style.display = 'none';
             } else {
@@ -133,7 +326,7 @@
             if (pass === "27102012Dat@") {
                 document.getElementById('passPanel').style.display = 'none';
                 document.getElementById('configPanel').style.display = 'block';
-                document.getElementById('adminPass').value = ''; // Xóa pass cho bảo mật
+                document.getElementById('adminPass').value = '';
                 errDiv.style.display = 'none';
             } else {
                 errDiv.style.display = 'block';
@@ -164,18 +357,55 @@ local player = Players.LocalPlayer
 local SERVER_URL = "${CLOUDFLARE_URL}/api/update"
 local sendRequest = (syn and syn.request) or (http and http.request) or http_request or request
 
+local function getCurrentSea()
+    local placeId = game.PlaceId
+    if placeId == 2753915549 then return "Sea 1"
+    elseif placeId == 4442272183 then return "Sea 2"
+    elseif placeId == 7449423635 then return "Sea 3"
+    else return "Blox Fruits" end
+end
+
 task.spawn(function()
     while task.wait(3) do
         pcall(function()
             local level = 0
             local beli = 0
+            local fragments = 0
+            local bounty = 0
+            local race = "Human"
+            
             if player:FindFirstChild("Data") then
-                if player.Data:FindFirstChild("Level") then level = player.Data.Level.Value end
-                if player.Data:FindFirstChild("Beli") then beli = player.Data.Beli.Value end
+                local data = player.Data
+                if data:FindFirstChild("Level") then level = data.Level.Value end
+                if data:FindFirstChild("Beli") then beli = data.Beli.Value end
+                if data:FindFirstChild("Fragments") then fragments = data.Fragments.Value end
+                if data:FindFirstChild("Race") then race = data.Race.Value end
             end
-            local payload = { username = player.Name, game = "Blox Fruits", level = level, beli = beli, status = "IN-GAME" }
+            
+            if player:FindFirstChild("leaderstats") then
+                local ls = player.leaderstats
+                if ls:FindFirstChild("Bounty / Honor") then bounty = ls["Bounty / Honor"].Value
+                elseif ls:FindFirstChild("Bounty") then bounty = ls.Bounty.Value end
+            end
+
+            local payload = {
+                username = player.Name,
+                game = getCurrentSea(),
+                level = level,
+                beli = beli,
+                fragments = fragments,
+                bounty = bounty,
+                race = tostring(race),
+                status = "AUTO FARMING"
+            }
+            
             if sendRequest then
-                sendRequest({ Url = SERVER_URL, Method = "POST", Headers = { ["Content-Type"] = "application/json" }, Body = HttpService:JSONEncode(payload) })
+                sendRequest({
+                    Url = SERVER_URL,
+                    Method = "POST",
+                    Headers = { ["Content-Type"] = "application/json" },
+                    Body = HttpService:JSONEncode(payload)
+                })
             end
         end)
     end
@@ -218,15 +448,18 @@ end)`;
                 document.getElementById('dispDisplayName').innerText = data.displayName;
                 document.getElementById('dispUsername').innerText = '@' + data.username;
                 document.getElementById('dispGame').innerText = data.game;
-                document.getElementById('dispLevel').innerText = typeof data.level === 'number' ? 'Lv. ' + data.level.toLocaleString() : data.level;
+                document.getElementById('dispRace').innerText = data.race;
+                document.getElementById('dispLevel').innerText = 'Lv. ' + Number(data.level).toLocaleString();
                 document.getElementById('dispBeli').innerText = '$' + Number(data.beli).toLocaleString();
+                document.getElementById('dispFragments' ).innerText = Number(data.fragments).toLocaleString();
+                document.getElementById('dispBounty').innerText = Number(data.bounty).toLocaleString();
                 document.getElementById('dispTime').innerText = data.lastUpdated;
 
                 const statusBadge = document.getElementById('dispStatus');
                 statusBadge.innerText = data.status;
-                statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
+                statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'AUTO FARMING' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
             } catch (e) {
-                errDiv.innerText = 'Lỗi kết nối tới Termux Server (Kiểm tra lại link Cloudflare hoặc Termux đã tắt)';
+                errDiv.innerText = 'Lỗi kết nối tới Termux Server (Hãy chắc chắn Termux đang mở và Port 6000 đúng)';
                 errDiv.style.display = 'block';
             }
         }
