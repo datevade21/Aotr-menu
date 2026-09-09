@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homeless Stats - Termux Host</title>
+    <title>Homeless Stats</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0d1117; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
@@ -35,11 +35,29 @@
         .stat-val { font-weight: bold; color: #58a6ff; }
         .beli-val { font-weight: bold; color: #3fb950; }
         .error { color: #f85149; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+        
+        .admin-toggle { text-align: right; font-size: 11px; margin-bottom: 8px; }
+        .admin-toggle a { color: #8b949e; text-decoration: none; cursor: pointer; }
+        .admin-toggle a:hover { color: #f59e0b; }
+        .admin-panel { display: none; background: #0d1117; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+        .admin-panel input { width: 100%; margin-bottom: 8px; font-size: 13px; padding: 8px; }
+        .admin-panel button { background: #238636; color: #fff; border: none; padding: 8px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
     </style>
 </head>
 <body>
     <div class="card">
         <h2>HOMELESS STATS</h2>
+        
+        <div class="admin-toggle">
+            <a onclick="toggleAdmin()">⚙️ Cài đặt Link Cloudflare</a>
+        </div>
+
+        <div id="adminPanel" class="admin-panel">
+            <div style="font-size: 12px; color: #f59e0b; font-weight: bold; margin-bottom: 6px;">QUẢN TRỊ TÊN MIỀN</div>
+            <input type="password" id="adminPass" placeholder="Nhập mật khẩu (27102012Dat@)...">
+            <input type="text" id="newUrl" placeholder="Dán link https://xxx.trycloudflare.com vào đây...">
+            <button onclick="saveConfig()">Lưu cấu hình</button>
+        </div>
         
         <div class="script-box">
             <div class="script-title">⚡ MÃ LUA CHẠY TRONG GAME:</div>
@@ -83,10 +101,36 @@
     </div>
 
     <script>
-        // ⚠️ DÁN LINK CLOUDFLARE TỪ TERMUX CỦA BẠN VÀO ĐÂY
-        const CLOUDFLARE_URL = "https://ten-mien-cua-ban.trycloudflare.com";
+        // Link mặc định ban đầu (hoặc lấy từ trình duyệt nếu đã lưu)
+        let CLOUDFLARE_URL = localStorage.getItem('cf_url') || "https://speed-supervisors-reports-hotel.trycloudflare.com";
 
-        // Tự động sinh mã Lua dựa trên link Cloudflare
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function saveConfig() {
+            const pass = document.getElementById('adminPass').value;
+            const url = document.getElementById('newUrl').value.trim();
+
+            if (pass !== "27102012Dat@") {
+                alert("Sai mật khẩu quản trị!");
+                return;
+            }
+            if (!url) {
+                alert("Vui lòng nhập link Cloudflare!");
+                return;
+            }
+
+            // Lưu vào bộ nhớ trình duyệt (Lưu vĩnh viễn trên máy bạn)
+            CLOUDFLARE_URL = url.replace(/\/$/, ''); // Xóa dấu / ở cuối nếu có
+            localStorage.setItem('cf_url', CLOUDFLARE_URL);
+            
+            alert("Đã cập nhật link Cloudflare thành công!");
+            document.getElementById('adminPanel').style.display = 'none';
+            loadScriptTemplate();
+        }
+
         function loadScriptTemplate() {
             const luaCode = `local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
@@ -132,7 +176,6 @@ end)`;
             if (!user) return;
 
             try {
-                // Gọi thẳng tới server Termux thông qua Cloudflare Tunnel
                 const res = await fetch(`${CLOUDFLARE_URL}/api/stats?username=` + encodeURIComponent(user));
                 const data = await res.json();
 
@@ -158,7 +201,7 @@ end)`;
                 statusBadge.innerText = data.status;
                 statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
             } catch (e) {
-                errDiv.innerText = 'Lỗi kết nối tới Termux Server (Kiểm tra lại link Cloudflare)';
+                errDiv.innerText = 'Lỗi kết nối tới Termux Server (Kiểm tra lại link Cloudflare hoặc Termux đã tắt)';
                 errDiv.style.display = 'block';
             }
         }
