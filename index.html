@@ -2,24 +2,15 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Blox Fruits Stats Tracker</title>
-
-    <!-- =================================================================== -->
-    <!-- CHỈ CẦN THAY LINK CLOUDFLARE CỦA BẠN VÀO TRONG DẤU NGOẶC KÉP Ở DƯỚI -->
-    <!-- =================================================================== -->
-    <script>
-        const CLOUDFLARE_URL = "https://timely-contests-fires-anne.trycloudflare.com";
-    </script>
-    <!-- =================================================================== -->
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blox Fruits Stats Tracker</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0b0e14; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .card { background: #151922; border: 1px solid #282e3d; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; box-shadow: 0 16px 36px rgba(0,0,0,0.6); }
         h2 { color: #38bdf8; text-align: center; margin: 0 0 8px 0; font-size: 22px; letter-spacing: 1.5px; }
 
-        /* KHUNG HIỂN THỊ PORT */
+        /* KHUNG HIỂN THỊ PORT Ở ĐẦU TRANG */
         .port-tag { text-align: center; font-size: 13px; color: #a78bfa; font-weight: bold; background: #201b33; border: 1px solid #4c1d95; padding: 6px 12px; border-radius: 20px; margin: 0 auto 18px auto; width: fit-content; }
 
         /* Khung chứa Script Lua */
@@ -68,11 +59,13 @@
     <div class="card">
         <h2>BLOX FRUITS STATS</h2>
         
+        <!-- DÒNG HIỂN THỊ PORT Ở ĐẦU TRANG -->
         <div class="port-tag">⚡ Server Port: 3000</div>
 
+        <!-- Khung chứa Script Lua (Bạn sửa link trực tiếp vào đây) -->
         <div class="script-box">
             <div class="script-title">⚠️ CHẠY MÃ NÀY TRONG GAME ĐỂ CẬP NHẬT STATS:</div>
-            <div class="script-code" id="luaScriptText">Đang tải mã Lua...</div>
+            <div class="script-code" id="luaScriptText">loadstring(game:HttpGet("https://raw.githubusercontent.com/dateva/datevade21/refs/heads/main/tracker.lua"))()</div>
             <button class="btn-copy" onclick="copyScript()">Sao chép Mã Lua</button>
         </div>
 
@@ -124,9 +117,6 @@
     </div>
 
     <script>
-        // Tự động đưa link Cloudflare từ trên cùng vào khung mã Lua
-        document.getElementById("luaScriptText").innerText = `loadstring(game:HttpGet("${CLOUDFLARE_URL}/tracker.lua"))()`;
-
         let loopId = null;
 
         function copyScript() {
