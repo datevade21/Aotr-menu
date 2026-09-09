@@ -12,7 +12,6 @@ const CLOUDFLARE_LUA_URL = "https://recommend-bloomberg-refrigerator-synopsis.tr
 
 const liveData = {};
 
-// 1. Nhận dữ liệu từ script Lua
 app.post('/api/update', (req, res) => {
     const { username, game, level, beli, status } = req.body;
     if (!username) return res.status(400).json({ error: "Missing username" });
@@ -27,7 +26,6 @@ app.post('/api/update', (req, res) => {
     return res.json({ success: true });
 });
 
-// 2. Lấy thông tin từ Roblox API + Chỉ số live
 app.get('/api/stats', async (req, res) => {
     const username = (req.query.username || "").trim();
     if (!username) return res.status(400).json({ error: "Vui lòng nhập Username" });
@@ -69,7 +67,6 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
-// 3. Giao diện Web HOMELESS STATS (Đã bổ sung khung lấy mã Lua trực tiếp từ Cloudflare)
 app.get('/', (req, res) => {
     res.send(`
     <!DOCTYPE html>
@@ -83,13 +80,11 @@ app.get('/', (req, res) => {
             body { background-color: #0d1117; color: #c9d1d9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
             .card { background: #161b22; border: 1px solid #30363d; border-radius: 16px; width: 100%; max-width: 420px; padding: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.6); }
             h2 { color: #f59e0b; text-align: center; margin: 0 0 14px 0; font-size: 24px; letter-spacing: 1.5px; }
-            
             .script-box { background: #0d1117; border: 1px dashed #f59e0b; border-radius: 8px; padding: 10px; margin-bottom: 16px; text-align: center; }
             .script-title { font-size: 11px; color: #f59e0b; font-weight: bold; margin-bottom: 6px; }
             .script-code { background: #161b22; color: #4ade80; font-family: monospace; font-size: 11px; padding: 6px; border-radius: 6px; border: 1px solid #30363d; word-break: break-all; margin-bottom: 6px; user-select: all; }
             .btn-copy { background: #238636; color: #fff; border: none; font-size: 11px; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
             .btn-copy:hover { background: #2ea043; }
-
             .input-group { display: flex; gap: 8px; margin-bottom: 20px; }
             input { flex: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px; outline: none; }
             input:focus { border-color: #f59e0b; }
@@ -113,13 +108,11 @@ app.get('/', (req, res) => {
     <body>
         <div class="card">
             <h2>HOMELESS STATS</h2>
-            
             <div class="script-box">
                 <div class="script-title">⚡ MÃ LUA CHẠY TRONG GAME:</div>
                 <div class="script-code" id="luaScriptText">loadstring(game:HttpGet("${CLOUDFLARE_LUA_URL}"))()</div>
                 <button class="btn-copy" onclick="copyScript()">Sao chép Mã Lua</button>
             </div>
-
             <div class="input-group">
                 <input type="text" id="usernameInput" placeholder="Nhập Roblox Username...">
                 <button class="btn-search" onclick="startTracking()">Tra cứu</button>
@@ -152,38 +145,30 @@ app.get('/', (req, res) => {
                 </div>
             </div>
         </div>
-
         <script>
             let loopId = null;
-
             function copyScript() {
                 const scriptText = document.getElementById("luaScriptText").innerText;
                 navigator.clipboard.writeText(scriptText).then(() => {
                     alert("Đã sao chép mã Lua thành công!");
                 });
             }
-
             async function fetchStats() {
                 const user = document.getElementById('usernameInput').value.trim();
                 const errDiv = document.getElementById('errorMsg');
                 const statsBox = document.getElementById('statsBox');
-
                 if (!user) return;
-
                 try {
                     const res = await fetch('/api/stats?username=' + encodeURIComponent(user));
                     const data = await res.json();
-
                     if (!res.ok) {
                         errDiv.innerText = data.error;
                         errDiv.style.display = 'block';
                         statsBox.style.display = 'none';
                         return;
                     }
-
                     errDiv.style.display = 'none';
                     statsBox.style.display = 'block';
-                    
                     document.getElementById('dispAvatar').src = data.avatarUrl;
                     document.getElementById('dispDisplayName').innerText = data.displayName;
                     document.getElementById('dispUsername').innerText = '@' + data.username;
@@ -191,7 +176,6 @@ app.get('/', (req, res) => {
                     document.getElementById('dispLevel').innerText = typeof data.level === 'number' ? 'Lv. ' + data.level.toLocaleString() : data.level;
                     document.getElementById('dispBeli').innerText = '$' + Number(data.beli).toLocaleString();
                     document.getElementById('dispTime').innerText = data.lastUpdated;
-
                     const statusBadge = document.getElementById('dispStatus');
                     statusBadge.innerText = data.status;
                     statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
@@ -200,7 +184,6 @@ app.get('/', (req, res) => {
                     errDiv.style.display = 'block';
                 }
             }
-
             function startTracking() {
                 if (loopId) clearInterval(loopId);
                 fetchStats();
