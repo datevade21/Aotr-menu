@@ -1,883 +1,762 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THCS An Điền Community</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-        }
-
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            text-decoration: none;
-            color: white;
-            cursor: pointer;
-        }
-
-        .logo span {
-            font-size: 28px;
-        }
-
-        /* Navigation */
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 30px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.3s;
-            cursor: pointer;
-        }
-
-        nav a:hover {
-            opacity: 0.8;
-        }
-
-        .admin-btn {
-            background-color: rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .admin-btn:hover {
-            background-color: rgba(255,255,255,0.3);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Banner */
-        .banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .banner h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
-        }
-
-        .banner p {
-            font-size: 18px;
-            opacity: 0.9;
-        }
-
-        /* Main Content */
-        main {
-            min-height: 600px;
-            padding: 40px 0;
-        }
-
-        .section-title {
-            font-size: 32px;
-            color: #333;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-            display: inline-block;
-        }
-
-        /* News Grid */
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
-        }
-
-        .news-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-
-        .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-
-        .news-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            color: white;
-        }
-
-        .news-content {
-            padding: 20px;
-        }
-
-        .news-date {
-            color: #667eea;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .news-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .news-description {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        /* Student Section */
-        .students-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
-        .student-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-align: center;
-        }
-
-        .student-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
-        }
-
-        .student-image {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 80px;
-            overflow: hidden;
-            object-fit: cover;
-        }
-
-        .student-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .student-info {
-            padding: 20px;
-        }
-
-        .student-name {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .student-details {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .badge {
-            display: inline-block;
-            background-color: #667eea;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-
-        /* Info Section */
-        .info-section {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .info-section h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
-        .info-section p {
-            color: #666;
-            line-height: 1.8;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s;
-        }
-
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        }
-
-        .close-btn {
-            color: #999;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .close-btn:hover {
-            color: #333;
-        }
-
-        .modal h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            margin-top: 0;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-family: inherit;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .btn {
-            background-color: #667eea;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            width: 100%;
-        }
-
-        .btn:hover {
-            background-color: #764ba2;
-        }
-
-        .btn-secondary {
-            background-color: #999;
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            background-color: #666;
-        }
-
-        .btn-delete {
-            background-color: #e74c3c;
-            padding: 6px 12px;
-            font-size: 12px;
-            width: auto;
-        }
-
-        .btn-delete:hover {
-            background-color: #c0392b;
-        }
-
-        .image-preview {
-            width: 100%;
-            max-height: 300px;
-            border-radius: 5px;
-            object-fit: cover;
-            margin-top: 10px;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #333;
-            color: white;
-            padding: 40px 0 20px;
-            margin-top: 50px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .footer-section h4 {
-            margin-bottom: 15px;
-            color: #667eea;
-        }
-
-        .footer-section p, .footer-section li {
-            font-size: 14px;
-            color: #ccc;
-            margin-bottom: 8px;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section a {
-            color: #667eea;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-section a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #555;
-            padding-top: 20px;
-            text-align: center;
-            color: #999;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .student-card {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav ul {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .banner h1 {
-                font-size: 28px;
-            }
-
-            .section-title {
-                font-size: 24px;
-            }
-
-            .news-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .students-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            }
-
-            .modal-content {
-                width: 95%;
-            }
-        }
-
-        .success-message {
-            background-color: #4caf50;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-            font-size: 18px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9A5 THCS An Điền AI</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    :root{
+        --bg-sidebar:#1a1a1a;
+        --bg-sidebar-hover:#2a2a2a;
+        --bg-main:#212121;
+        --bg-input:#2f2f2f;
+        --text-primary:#ececec;
+        --text-secondary:#a0a0a0;
+        --accent:#10a37f;
+        --accent-hover:#0d8c6d;
+        --border:#3a3a3a;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg-main);
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+        color: var(--text-primary);
+    }
+
+    .container { display:flex; width:100%; height:100vh; }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+        width: 260px;
+        min-width: 260px;
+        background: var(--bg-sidebar);
+        display: flex;
+        flex-direction: column;
+        transition: margin-left .25s ease;
+    }
+    .sidebar.collapsed { margin-left: -260px; }
+
+    .sidebar-top { padding: 12px; }
+
+    .new-chat-btn {
+        width: 100%;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        padding: 12px 12px;
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background .2s;
+    }
+    .new-chat-btn:hover { background: var(--bg-sidebar-hover); }
+
+    .history-title {
+        font-size: 11px;
+        color: var(--text-secondary);
+        padding: 16px 16px 6px;
+        letter-spacing: .5px;
+    }
+
+    .history-items {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 8px;
+    }
+
+    .history-item {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap: 6px;
+        padding: 10px 10px;
+        margin-bottom: 2px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13.5px;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: background .15s;
+    }
+    .history-item:hover { background: var(--bg-sidebar-hover); }
+    .history-item.active { background: var(--bg-sidebar-hover); }
+    .history-item span.title { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+    .del-btn {
+        opacity:0;
+        background:none; border:none; color:var(--text-secondary);
+        cursor:pointer; font-size:13px; padding:2px 4px;
+    }
+    .history-item:hover .del-btn { opacity:1; }
+    .del-btn:hover { color:#ff6b6b; }
+
+    .sidebar-bottom {
+        padding: 12px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .api-key-status {
+        font-size: 11px;
+        color: var(--text-secondary);
+        text-align:center;
+    }
+
+    .api-key-btn {
+        width: 100%;
+        padding: 8px;
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background .2s, color .2s;
+    }
+    .api-key-btn:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+
+    /* ---------- MAIN ---------- */
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-main);
+        min-width: 0;
+    }
+
+    .top-bar {
+        display:flex;
+        align-items:center;
+        gap: 12px;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .toggle-btn {
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 20px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+    .toggle-btn:hover { background: var(--bg-sidebar-hover); }
+
+    .top-bar h1 {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .top-bar .subtitle {
+        font-size: 11px;
+        color: var(--text-secondary);
+        margin-top: 1px;
+    }
+
+    .chat-container {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-inner {
+        max-width: 780px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 24px 20px 40px;
+        flex: 1;
+    }
+
+    .message {
+        display: flex;
+        gap: 16px;
+        padding: 18px 0;
+        animation: fadeIn .25s ease-in;
+    }
+    @keyframes fadeIn {
+        from { opacity:0; transform: translateY(6px); }
+        to { opacity:1; transform: translateY(0); }
+    }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        border-radius: 6px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .message.user .avatar { background: #5a5a5a; color:#fff; }
+    .message.bot .avatar { background: var(--accent); color:#fff; }
+
+    .message-body {
+        flex: 1;
+        line-height: 1.7;
+        font-size: 15px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        padding-top: 4px;
+    }
+
+    .message.user .message-body { color: var(--text-primary); }
+    .message.bot .message-body { color: var(--text-primary); }
+
+    .typing-indicator {
+        display: flex;
+        gap: 5px;
+        padding-top: 8px;
+    }
+    .typing-indicator span {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--text-secondary);
+        animation: typing 1.4s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: .2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: .4s; }
+    @keyframes typing {
+        0%,60%,100% { opacity:.3; transform: translateY(0); }
+        30% { opacity:1; transform: translateY(-6px); }
+    }
+
+    .empty-state {
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        height: 100%;
+        text-align:center;
+        gap: 10px;
+    }
+    .empty-state .logo {
+        width: 56px; height: 56px;
+        border-radius: 14px;
+        background: var(--accent);
+        display:flex; align-items:center; justify-content:center;
+        font-size: 22px;
+        font-weight:bold;
+        color:#fff;
+        margin-bottom: 8px;
+    }
+    .empty-state h2 { font-size: 22px; font-weight:600; }
+    .empty-state p { color: var(--text-secondary); font-size: 14px; max-width: 320px; }
+
+    .suggestions {
+        display:flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+        justify-content:center;
+    }
+    .suggestion-chip {
+        padding: 10px 16px;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        font-size: 13px;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: background .2s;
+    }
+    .suggestion-chip:hover { background: var(--bg-sidebar-hover); }
+
+    /* ---------- INPUT AREA ---------- */
+    .input-area {
+        padding: 16px 20px 22px;
+        display:flex;
+        justify-content:center;
+    }
+
+    .input-wrapper {
+        max-width: 780px;
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 26px;
+        padding: 10px 10px 10px 20px;
+    }
+
+    #chatInput {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-primary);
+        font-size: 15px;
+        font-family: inherit;
+        resize: none;
+        max-height: 160px;
+        line-height: 1.5;
+        padding: 6px 0;
+    }
+    #chatInput::placeholder { color: var(--text-secondary); }
+
+    #sendBtn {
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        display:flex; align-items:center; justify-content:center;
+        font-size: 16px;
+        transition: background .2s, opacity .2s;
+        flex-shrink: 0;
+    }
+    #sendBtn:hover { background: var(--accent-hover); }
+    #sendBtn:disabled { opacity: .4; cursor: not-allowed; }
+
+    .footer-note {
+        text-align:center;
+        font-size: 11px;
+        color: var(--text-secondary);
+        margin-top: 10px;
+    }
+
+    /* ---------- MODAL API KEY ---------- */
+    .modal-overlay {
+        position: fixed;
+        top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+    }
+    .modal-overlay.hidden { display: none; }
+
+    .modal-box {
+        background: var(--bg-sidebar);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        max-width: 400px;
+        width: 90%;
+    }
+    .modal-box h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    .modal-box p {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        line-height: 1.6;
+    }
+    .modal-box a { color: var(--accent); }
+
+    #apiKeyInput {
+        width: 100%;
+        padding: 12px 14px;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 14px;
+        margin-bottom: 14px;
+        outline: none;
+    }
+    #apiKeyInput:focus { border-color: var(--accent); }
+
+    .modal-actions {
+        display: flex;
+        gap: 10px;
+    }
+    .modal-btn {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .modal-btn.primary { background: var(--accent); color: #fff; }
+    .modal-btn.primary:hover { background: var(--accent-hover); }
+    .modal-btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+    .modal-btn.secondary:hover { background: var(--bg-sidebar-hover); }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
+
+    @media (max-width: 768px) {
+        .sidebar { position: fixed; z-index: 10; height: 100vh; }
+        .sidebar.collapsed { margin-left: -260px; }
+        .sidebar:not(.collapsed) { margin-left: 0; }
+        .chat-inner { padding: 16px 14px 30px; }
+    }
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="header-content">
-            <a href="#" class="logo" onclick="goToHome()">
-                <span>📚</span> THCS An Điền
-            </a>
-            <nav>
-                <ul>
-                    <li><a onclick="goToHome()">Trang chủ</a></li>
-                    <li><a onclick="scrollToSection('news')">Tin tức</a></li>
-                    <li><a onclick="scrollToSection('students')">Học sinh nổi bật</a></li>
-                    <li><a onclick="scrollToSection('about')">Giới thiệu</a></li>
-                    <li><a class="admin-btn" onclick="openAdminPanel()">⚙️ Admin</a></li>
-                </ul>
-            </nav>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <button class="new-chat-btn" onclick="createNewChat()">
+                <span>➕</span> Cuộc trò chuyện mới
+            </button>
         </div>
-    </header>
-
-    <!-- Banner -->
-    <div class="banner" id="home">
-        <h1>🎓 Trung học cơ sở An Điền</h1>
-        <p>Community - Cộng đồng học tập tuyệt vời</p>
-    </div>
-
-    <!-- Main Content -->
-    <main class="container">
-        <!-- News Section -->
-        <section id="news">
-            <h2 class="section-title">📰 Tin Tức & Thông Báo</h2>
-            <div class="news-grid">
-                <div class="news-card">
-                    <div class="news-image">📣</div>
-                    <div class="news-content">
-                        <div class="news-date">14 Tháng 9, 2024</div>
-                        <h3 class="news-title">Khai Giảng Năm Học Mới 2024-2025</h3>
-                        <p class="news-description">Chào mừng các em học sinh quay trở lại trường. Năm học mới sẽ mang đến những điều mới lạ...</p>
-                    </div>
-                </div>
-
-                <div class="news-card">
-                    <div class="news-image">🏆</div>
-                    <div class="news-content">
-                        <div class="news-date">12 Tháng 9, 2024</div>
-                        <h3 class="news-title">Hội Khỏe Phù Đổng</h3>
-                        <p class="news-description">Trường sẽ tổ chức giải thể thao lớn vào cuối tháng 9...</p>
-                    </div>
-                </div>
-
-                <div class="news-card">
-                    <div class="news-image">📚</div>
-                    <div class="news-content">
-                        <div class="news-date">10 Tháng 9, 2024</div>
-                        <h3 class="news-title">Thư Viện Trường - Giờ Mở Cửa Mới</h3>
-                        <p class="news-description">Thư viện trường đã có giờ mở cửa mới thuận tiện cho học sinh...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Students Section -->
-        <section id="students" style="margin-top: 50px;">
-            <h2 class="section-title">⭐ Học Sinh Nổi Bật</h2>
-            <div class="students-grid" id="studentsContainer">
-                <div class="empty-message">Chưa có học sinh nổi bật. Admin vui lòng thêm dữ liệu.</div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" style="margin-top: 50px;">
-            <h2 class="section-title">ℹ️ Giới Thiệu Trường</h2>
-            <div class="info-section">
-                <h3>Về Trường THCS An Điền</h3>
-                <p>
-                    Trường Trung học cơ sở An Điền là một trường công lập với lịch sử phát triển lâu dài, luôn nỗ lực cung cấp 
-                    chất lượng giáo dục tốt nhất cho các em học sinh. Với đội ngũ giáo viên tâm huyết, cơ sở vật chất hiện đại, 
-                    trường tạo dựng môi trường học tập an toàn, thân thiện và năng động.
-                </p>
-            </div>
-
-            <div class="info-section">
-                <h3>Sứ Mệnh</h3>
-                <p>
-                    Cung cấp giáo dục chất lượng cao, giúp học sinh phát triển toàn diện về kiến thức, kỹ năng và phẩm chất, 
-                    để các em trở thành công dân có trách nhiệm.
-                </p>
-            </div>
-
-            <div class="info-section">
-                <h3>Tầm Nhìn</h3>
-                <p>
-                    Xây dựng một trường học văn minh, hiện đại, nơi mỗi học sinh được khuyến khích khám phá tiềm năng của mình.
-                </p>
-            </div>
-        </section>
-    </main>
-
-    <!-- Admin Modal -->
-    <div id="adminModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeAdminPanel()">&times;</span>
-            <h2>🔐 Admin Panel</h2>
-            
-            <div id="loginSection">
-                <div class="form-group">
-                    <label>Mật khẩu Admin:</label>
-                    <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
-                </div>
-                <button class="btn" onclick="loginAdmin()">Đăng Nhập</button>
-            </div>
-
-            <div id="adminSection" style="display: none;">
-                <button class="btn btn-secondary" onclick="logoutAdmin()">Đăng Xuất</button>
-                <hr style="margin: 20px 0;">
-                
-                <h3 style="color: #667eea; margin-bottom: 15px;">➕ Thêm Học Sinh Nổi Bật</h3>
-                
-                <div class="success-message" id="successMsg">✓ Thêm học sinh thành công!</div>
-
-                <div class="form-group">
-                    <label>Tên học sinh:</label>
-                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A">
-                </div>
-
-                <div class="form-group">
-                    <label>Lớp:</label>
-                    <input type="text" id="studentClass" placeholder="Ví dụ: 9A, 8B">
-                </div>
-
-                <div class="form-group">
-                    <label>Tuổi:</label>
-                    <input type="number" id="studentAge" placeholder="Ví dụ: 15" min="10" max="20">
-                </div>
-
-                <div class="form-group">
-                    <label>Ảnh đại diện (có thể upload hoặc chọn emoji):</label>
-                    <input type="file" id="studentImage" accept="image/*">
-                    <div id="imagePreviewContainer"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Thành tích / Mô tả:</label>
-                    <textarea id="studentAchievement" placeholder="Ví dụ: Học sinh giỏi, Đạt giải thể thao..."></textarea>
-                </div>
-
-                <button class="btn" onclick="addStudent()">Thêm Học Sinh</button>
-
-                <hr style="margin: 20px 0;">
-                <h3 style="color: #667eea; margin-bottom: 15px;">📋 Danh Sách Học Sinh Đã Thêm</h3>
-                <div id="studentsList"></div>
-            </div>
+        <div class="history-title">LỊCH SỬ TRÒ CHUYỆN</div>
+        <div class="history-items" id="historyItems"></div>
+        <div class="sidebar-bottom">
+            <div class="api-key-status" id="apiKeyStatus">Chưa có API key</div>
+            <button class="api-key-btn" onclick="openApiKeyModal()">🔑 Cài đặt API key</button>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>🎓 Về Trường</h4>
-                    <ul>
-                        <li><a href="#">Giới thiệu</a></li>
-                        <li><a href="#">Sứ mệnh & Tầm nhìn</a></li>
-                        <li><a href="#">Lịch sử</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>📚 Giáo Dục</h4>
-                    <ul>
-                        <li><a href="#">Chương trình học</a></li>
-                        <li><a href="#">Hoạt động ngoại khoá</a></li>
-                        <li><a href="#">Thư viện</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>👥 Cộng Đồng</h4>
-                    <ul>
-                        <li><a href="#">Tin tức</a></li>
-                        <li><a href="#">Sự kiện</a></li>
-                        <li><a href="#">Thành tích học sinh</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>📞 Liên Hệ</h4>
-                    <p>Email: <a href="#">andien@gmail.com</a></p>
-                    <p>Phone: <a href="#">0123 456 789</a></p>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2024 Trường THCS An Điền. All rights reserved.</p>
+    <!-- Main -->
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <div>
+                <h1>9A5 THCS An Điền AI</h1>
+                <div class="subtitle">Trợ lý học tập thông minh</div>
             </div>
         </div>
-    </footer>
 
-    <script>
-        const ADMIN_PASSWORD = "admin123"; // Đổi mật khẩu này
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-inner" id="chatInner">
+                <div class="empty-state">
+                    <div class="logo">9A5</div>
+                    <h2>9A5 THCS An Điền AI</h2>
+                    <p>Hỏi bất cứ điều gì — bài tập, kiến thức, hay chỉ để trò chuyện.</p>
+                    <div class="suggestions">
+                        <div class="suggestion-chip" onclick="fillSuggestion('Giải thích định lý Pytago')">📐 Giải thích định lý Pytago</div>
+                        <div class="suggestion-chip" onclick="fillSuggestion('Tóm tắt bài Rừng xà nu')">📖 Tóm tắt bài Rừng xà nu</div>
+                        <div class="suggestion-chip" onclick="fillSuggestion('Giúp mình lập kế hoạch ôn thi')">📝 Lập kế hoạch ôn thi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        // Load students when page loads
-        window.addEventListener('load', loadStudents);
+        <div class="input-area">
+            <div class="input-wrapper">
+                <textarea id="chatInput" rows="1" placeholder="Nhập câu hỏi của bạn..."></textarea>
+                <button id="sendBtn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+        <div class="footer-note">Trợ lý AI có thể mắc lỗi. Hãy kiểm tra lại thông tin quan trọng.</div>
+    </div>
+</div>
 
-        function openAdminPanel() {
-            document.getElementById('adminModal').classList.add('show');
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('adminSection').style.display = 'none';
+<!-- Modal nhập API key -->
+<div class="modal-overlay" id="apiKeyModal">
+    <div class="modal-box">
+        <h3>🔑 Cài đặt API key</h3>
+        <p>
+            Nhập API key của bạn để bắt đầu trò chuyện. Key chỉ được lưu trên trình duyệt của bạn (localStorage), không gửi lên bất kỳ máy chủ nào khác.
+            <br><br>
+            Chưa có key? Lấy miễn phí tại <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>.
+        </p>
+        <input type="password" id="apiKeyInput" placeholder="Dán API key vào đây..." />
+        <div class="modal-actions">
+            <button class="modal-btn secondary" onclick="closeApiKeyModal()">Đóng</button>
+            <button class="modal-btn primary" onclick="saveApiKey()">Lưu key</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // KHÔNG hardcode API key trong source code — người dùng tự nhập và lưu trong trình duyệt của họ
+    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
+    let chatHistory = [];
+    let conversations = [];
+    let currentConversationId = null;
+    let userApiKey = "";
+
+    function initializeApp() {
+        loadApiKey();
+        loadConversations();
+        loadHistory();
+        setupEventListeners();
+
+        if (!userApiKey) {
+            openApiKeyModal();
+        }
+    }
+
+    function setupEventListeners() {
+        const input = document.getElementById("chatInput");
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        input.addEventListener("input", () => {
+            input.style.height = "auto";
+            input.style.height = Math.min(input.scrollHeight, 160) + "px";
+        });
+
+        document.getElementById("apiKeyInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") saveApiKey();
+        });
+    }
+
+    /* ---------- API KEY ---------- */
+    function openApiKeyModal() {
+        document.getElementById("apiKeyInput").value = userApiKey;
+        document.getElementById("apiKeyModal").classList.remove("hidden");
+    }
+    function closeApiKeyModal() {
+        document.getElementById("apiKeyModal").classList.add("hidden");
+    }
+    function saveApiKey() {
+        const val = document.getElementById("apiKeyInput").value.trim();
+        if (!val) return;
+        userApiKey = val;
+        localStorage.setItem("user_api_key_9a5", val);
+        updateApiKeyStatus();
+        closeApiKeyModal();
+    }
+    function loadApiKey() {
+        userApiKey = localStorage.getItem("user_api_key_9a5") || "";
+        updateApiKeyStatus();
+    }
+    function updateApiKeyStatus() {
+        const el = document.getElementById("apiKeyStatus");
+        el.textContent = userApiKey ? "✅ Đã kết nối API key" : "⚠️ Chưa có API key";
+    }
+
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    function fillSuggestion(text) {
+        const input = document.getElementById("chatInput");
+        input.value = text;
+        input.focus();
+    }
+
+    function createNewChat() {
+        currentConversationId = Date.now().toString();
+        chatHistory = [];
+        conversations.unshift({
+            id: currentConversationId,
+            title: "Cuộc trò chuyện mới",
+            timestamp: new Date().toLocaleTimeString("vi-VN"),
+            messages: []
+        });
+        saveConversations();
+        renderChat();
+        updateHistorySidebar();
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById("chatInput");
+        const message = input.value.trim();
+        if (!message) return;
+
+        if (!userApiKey) {
+            openApiKeyModal();
+            return;
         }
 
-        function closeAdminPanel() {
-            document.getElementById('adminModal').classList.remove('show');
-            clearAdminForm();
+        if (!currentConversationId) createNewChat();
+
+        addMessage("user", message);
+        input.value = "";
+        input.style.height = "auto";
+        input.focus();
+
+        showTypingIndicator();
+
+        const sendBtn = document.getElementById("sendBtn");
+        sendBtn.disabled = true;
+
+        try {
+            const contents = chatHistory.map(m => ({
+                role: m.sender === "user" ? "user" : "model",
+                parts: [{ text: m.text }]
+            }));
+
+            const response = await fetch(`${API_URL}?key=${userApiKey}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents })
+            });
+
+            if (!response.ok) {
+                if (response.status === 400 || response.status === 403) {
+                    throw new Error("API key không hợp lệ. Vui lòng kiểm tra lại.");
+                }
+                throw new Error(`Lỗi API: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text
+                || "Xin lỗi, mình chưa thể trả lời câu này.";
+
+            removeTypingIndicator();
+            addMessage("bot", botResponse);
+            updateConversationTitle(message);
+
+        } catch (error) {
+            removeTypingIndicator();
+            console.error("Error:", error);
+            addMessage("bot", "❌ " + (error.message || "Có lỗi xảy ra. Vui lòng thử lại sau."));
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    function addMessage(sender, text) {
+        chatHistory.push({ sender, text, time: new Date().toLocaleTimeString("vi-VN") });
+        saveCurrentConversation();
+        renderChat();
+    }
+
+    function showTypingIndicator() {
+        const inner = document.getElementById("chatInner");
+        const typing = document.createElement("div");
+        typing.className = "message bot";
+        typing.id = "typingIndicator";
+        typing.innerHTML = `
+            <div class="avatar">AI</div>
+            <div class="message-body">
+                <div class="typing-indicator"><span></span><span></span><span></span></div>
+            </div>
+        `;
+        inner.appendChild(typing);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const typing = document.getElementById("typingIndicator");
+        if (typing) typing.remove();
+    }
+
+    function renderChat() {
+        const inner = document.getElementById("chatInner");
+
+        if (chatHistory.length === 0) {
+            inner.innerHTML = `
+                <div class="empty-state">
+                    <div class="logo">9A5</div>
+                    <h2>9A5 THCS An Điền AI</h2>
+                    <p>Hỏi bất cứ điều gì — bài tập, kiến thức, hay chỉ để trò chuyện.</p>
+                    <div class="suggestions">
+                        <div class="suggestion-chip" onclick="fillSuggestion('Giải thích định lý Pytago')">📐 Giải thích định lý Pytago</div>
+                        <div class="suggestion-chip" onclick="fillSuggestion('Tóm tắt bài Rừng xà nu')">📖 Tóm tắt bài Rừng xà nu</div>
+                        <div class="suggestion-chip" onclick="fillSuggestion('Giúp mình lập kế hoạch ôn thi')">📝 Lập kế hoạch ôn thi</div>
+                    </div>
+                </div>
+            `;
+            return;
         }
 
-        function loginAdmin() {
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('adminSection').style.display = 'block';
-                loadStudentsList();
+        inner.innerHTML = chatHistory.map(msg => `
+            <div class="message ${msg.sender}">
+                <div class="avatar">${msg.sender === 'user' ? '🧑' : 'AI'}</div>
+                <div class="message-body">${escapeHtml(msg.text)}</div>
+            </div>
+        `).join("");
+
+        scrollToBottom();
+    }
+
+    function scrollToBottom() {
+        const container = document.getElementById("chatContainer");
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+        const map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    function updateConversationTitle(message) {
+        const conv = conversations.find(c => c.id === currentConversationId);
+        if (conv && conv.title === "Cuộc trò chuyện mới") {
+            conv.title = message.substring(0, 32) + (message.length > 32 ? "..." : "");
+            saveConversations();
+            updateHistorySidebar();
+        }
+    }
+
+    function updateHistorySidebar() {
+        const historyItems = document.getElementById("historyItems");
+        historyItems.innerHTML = conversations.map(conv => `
+            <div class="history-item ${conv.id === currentConversationId ? 'active' : ''}" onclick="loadConversation('${conv.id}')">
+                <span class="title">${escapeHtml(conv.title)}</span>
+                <button class="del-btn" onclick="event.stopPropagation(); deleteConversation('${conv.id}')">✕</button>
+            </div>
+        `).join("");
+    }
+
+    function loadConversation(id) {
+        const conv = conversations.find(c => c.id === id);
+        if (conv) {
+            currentConversationId = id;
+            chatHistory = conv.messages || [];
+            renderChat();
+            updateHistorySidebar();
+        }
+    }
+
+    function deleteConversation(id) {
+        conversations = conversations.filter(c => c.id !== id);
+        saveConversations();
+        if (id === currentConversationId) {
+            if (conversations.length > 0) {
+                loadConversation(conversations[0].id);
             } else {
-                alert('❌ Mật khẩu không chính xác!');
+                createNewChat();
             }
         }
+        updateHistorySidebar();
+    }
 
-        function logoutAdmin() {
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('adminSection').style.display = 'none';
-            document.getElementById('adminPassword').value = '';
-            clearAdminForm();
+    function saveCurrentConversation() {
+        const conv = conversations.find(c => c.id === currentConversationId);
+        if (conv) {
+            conv.messages = chatHistory;
+            saveConversations();
         }
+    }
 
-        // Handle image upload
-        document.getElementById('studentImage').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const previewContainer = document.getElementById('imagePreviewContainer');
-                    previewContainer.innerHTML = `<img src="${event.target.result}" class="image-preview" alt="Preview">`;
-                    // Store the image data
-                    window.selectedImageData = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+    function saveConversations() {
+        localStorage.setItem("conversations_9a5", JSON.stringify(conversations));
+    }
 
-        function addStudent() {
-            const name = document.getElementById('studentName').value.trim();
-            const className = document.getElementById('studentClass').value.trim();
-            const age = document.getElementById('studentAge').value;
-            const achievement = document.getElementById('studentAchievement').value.trim();
+    function loadConversations() {
+        const saved = localStorage.getItem("conversations_9a5");
+        conversations = saved ? JSON.parse(saved) : [];
+    }
 
-            if (!name || !className || !age) {
-                alert('⚠️ Vui lòng điền đầy đủ thông tin!');
-                return;
-            }
-
-            const students = JSON.parse(localStorage.getItem('students') || '[]');
-            const student = {
-                id: Date.now(),
-                name: name,
-                className: className,
-                age: parseInt(age),
-                achievement: achievement,
-                image: window.selectedImageData || '👨‍🎓' // Default emoji if no image
-            };
-
-            students.push(student);
-            localStorage.setItem('students', JSON.stringify(students));
-
-            // Show success message
-            const successMsg = document.getElementById('successMsg');
-            successMsg.classList.add('show');
-            setTimeout(() => {
-                successMsg.classList.remove('show');
-            }, 3000);
-
-            clearAdminForm();
-            loadStudents();
-            loadStudentsList();
+    function loadHistory() {
+        if (conversations.length > 0) {
+            currentConversationId = conversations[0].id;
+            chatHistory = conversations[0].messages || [];
+        } else {
+            createNewChat();
         }
+        renderChat();
+        updateHistorySidebar();
+    }
 
-        function deleteStudent(id) {
-            if (confirm('Bạn chắc chắn muốn xóa học sinh này?')) {
-                let students = JSON.parse(localStorage.getItem('students') || '[]');
-                students = students.filter(s => s.id !== id);
-                localStorage.setItem('students', JSON.stringify(students));
-                loadStudents();
-                loadStudentsList();
-            }
-        }
-
-        function loadStudents() {
-            const students = JSON.parse(localStorage.getItem('students') || '[]');
-            const container = document.getElementById('studentsContainer');
-
-            if (students.length === 0) {
-                container.innerHTML = '<div class="empty-message">Chưa có học sinh nổi bật. Admin vui lòng thêm dữ liệu.</div>';
-                return;
-            }
-
-            container.innerHTML = students.map(student => `
-                <div class="student-card">
-                    <div class="student-image">
-                        ${typeof student.image === 'string' && student.image.includes('data:image') 
-                            ? `<img src="${student.image}" alt="${student.name}">` 
-                            : student.image}
-                    </div>
-                    <div class="student-info">
-                        <div class="student-name">${student.name}</div>
-                        <div class="student-details">📚 Lớp: ${student.className}</div>
-                        <div class="student-details">🎂 Tuổi: ${student.age}</div>
-                        <div class="badge">${student.achievement || 'Học sinh xuất sắc'}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function loadStudentsList() {
-            const students = JSON.parse(localStorage.getItem('students') || '[]');
-            const container = document.getElementById('studentsList');
-
-            if (students.length === 0) {
-                container.innerHTML = '<p style="color: #999; text-align: center;">Chưa có học sinh nào.</p>';
-                return;
-            }
-
-            container.innerHTML = students.map(student => `
-                <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <strong>${student.name}</strong><br>
-                        <small>Lớp: ${student.className} | Tuổi: ${student.age}</small><br>
-                        <small style="color: #667eea;">${student.achievement || 'Không có mô tả'}</small>
-                    </div>
-                    <button class="btn btn-delete" onclick="deleteStudent(${student.id})">🗑️ Xóa</button>
-                </div>
-            `).join('');
-        }
-
-        function clearAdminForm() {
-            document.getElementById('studentName').value = '';
-            document.getElementById('studentClass').value = '';
-            document.getElementById('studentAge').value = '';
-            document.getElementById('studentAchievement').value = '';
-            document.getElementById('studentImage').value = '';
-            document.getElementById('imagePreviewContainer').innerHTML = '';
-            window.selectedImageData = null;
-        }
-
-        function scrollToSection(sectionId) {
-            const element = document.getElementById(sectionId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function goToHome() {
-            document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('adminModal');
-            if (event.target === modal) {
-                closeAdminPanel();
-            }
-        });
-    </script>
+    initializeApp();
+</script>
 </body>
 </html>
