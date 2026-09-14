@@ -43,6 +43,7 @@
             font-weight: bold;
             text-decoration: none;
             color: white;
+            cursor: pointer;
         }
 
         .logo span {
@@ -61,10 +62,22 @@
             text-decoration: none;
             font-weight: 500;
             transition: opacity 0.3s;
+            cursor: pointer;
         }
 
         nav a:hover {
             opacity: 0.8;
+        }
+
+        .admin-btn {
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .admin-btn:hover {
+            background-color: rgba(255,255,255,0.3);
         }
 
         /* Container */
@@ -170,21 +183,71 @@
             margin-bottom: 15px;
         }
 
-        .news-author {
-            color: #999;
-            font-size: 12px;
+        /* Student Section */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .student-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .student-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
+        }
+
+        .student-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        .student-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .student-info {
+            padding: 20px;
+        }
+
+        .student-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
             margin-bottom: 10px;
         }
 
-        .read-more {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
+        .student-details {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
         }
 
-        .read-more:hover {
-            color: #764ba2;
+        .badge {
+            display: inline-block;
+            background-color: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
         }
 
         /* Info Section */
@@ -205,6 +268,133 @@
         .info-section p {
             color: #666;
             line-height: 1.8;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .close-btn {
+            color: #999;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background-color: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #764ba2;
+        }
+
+        .btn-secondary {
+            background-color: #999;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #666;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            padding: 6px 12px;
+            font-size: 12px;
+            width: auto;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-height: 300px;
+            border-radius: 5px;
+            object-fit: cover;
+            margin-top: 10px;
         }
 
         /* Footer */
@@ -254,6 +444,21 @@
             color: #999;
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .student-card {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             nav ul {
@@ -272,22 +477,35 @@
             .news-grid {
                 grid-template-columns: 1fr;
             }
-        }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+            .students-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .modal-content {
+                width: 95%;
             }
         }
 
-        .news-card {
-            animation: fadeIn 0.6s ease-out forwards;
+        .success-message {
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -295,15 +513,16 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <a href="#" class="logo">
+            <a href="#" class="logo" onclick="goToHome()">
                 <span>📚</span> THCS An Điền
             </a>
             <nav>
                 <ul>
-                    <li><a href="#home">Trang chủ</a></li>
-                    <li><a href="#news">Tin tức</a></li>
-                    <li><a href="#about">Giới thiệu</a></li>
-                    <li><a href="#contact">Liên hệ</a></li>
+                    <li><a onclick="goToHome()">Trang chủ</a></li>
+                    <li><a onclick="scrollToSection('news')">Tin tức</a></li>
+                    <li><a onclick="scrollToSection('students')">Học sinh nổi bật</a></li>
+                    <li><a onclick="scrollToSection('about')">Giới thiệu</a></li>
+                    <li><a class="admin-btn" onclick="openAdminPanel()">⚙️ Admin</a></li>
                 </ul>
             </nav>
         </div>
@@ -321,77 +540,40 @@
         <section id="news">
             <h2 class="section-title">📰 Tin Tức & Thông Báo</h2>
             <div class="news-grid">
-                <!-- News 1 -->
                 <div class="news-card">
                     <div class="news-image">📣</div>
                     <div class="news-content">
                         <div class="news-date">14 Tháng 9, 2024</div>
                         <h3 class="news-title">Khai Giảng Năm Học Mới 2024-2025</h3>
-                        <div class="news-author">Đăng bởi: Admin</div>
-                        <p class="news-description">Chào mừng các em học sinh quay trở lại trường. Năm học mới sẽ mang đến những điều mới lạ và bổ ích...</p>
-                        <a href="#" class="read-more">Đọc thêm →</a>
+                        <p class="news-description">Chào mừng các em học sinh quay trở lại trường. Năm học mới sẽ mang đến những điều mới lạ...</p>
                     </div>
                 </div>
 
-                <!-- News 2 -->
                 <div class="news-card">
                     <div class="news-image">🏆</div>
                     <div class="news-content">
                         <div class="news-date">12 Tháng 9, 2024</div>
-                        <h3 class="news-title">Hội Khỏe Phù Đổng - Cuộc Thi Thể Thao Toàn Trường</h3>
-                        <div class="news-author">Đăng bởi: Admin</div>
-                        <p class="news-description">Trường sẽ tổ chức giải thể thao lớn vào cuối tháng 9. Các em có cơ hội khoe tài năng thể thao...</p>
-                        <a href="#" class="read-more">Đọc thêm →</a>
+                        <h3 class="news-title">Hội Khỏe Phù Đổng</h3>
+                        <p class="news-description">Trường sẽ tổ chức giải thể thao lớn vào cuối tháng 9...</p>
                     </div>
                 </div>
 
-                <!-- News 3 -->
                 <div class="news-card">
                     <div class="news-image">📚</div>
                     <div class="news-content">
                         <div class="news-date">10 Tháng 9, 2024</div>
                         <h3 class="news-title">Thư Viện Trường - Giờ Mở Cửa Mới</h3>
-                        <div class="news-author">Đăng bởi: Admin</div>
-                        <p class="news-description">Thư viện trường đã có giờ mở cửa mới thuận tiện cho học sinh tìm kiếm tài liệu học tập...</p>
-                        <a href="#" class="read-more">Đọc thêm →</a>
+                        <p class="news-description">Thư viện trường đã có giờ mở cửa mới thuận tiện cho học sinh...</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- News 4 -->
-                <div class="news-card">
-                    <div class="news-image">🎨</div>
-                    <div class="news-content">
-                        <div class="news-date">8 Tháng 9, 2024</div>
-                        <h3 class="news-title">Cuộc Thi Vẽ Tranh - Chủ Đề "Tương Lai Xanh"</h3>
-                        <div class="news-author">Đăng bởi: Admin</div>
-                        <p class="news-description">Cơ hội để các em thể hiện sáng tạo của mình qua các tác phẩm tranh vẽ ý nghĩa...</p>
-                        <a href="#" class="read-more">Đọc thêm →</a>
-                    </div>
-                </div>
-
-                <!-- News 5 -->
-                <div class="news-card">
-                    <div class="news-image">💻</div>
-                    <div class="news-content">
-                        <div class="news-date">5 Tháng 9, 2024</div>
-                        <h3 class="news-title">Khai Giảng Lớp Tin Học - Công Nghệ Thông Tin</h3>
-                        <div class="news-author">Đăng bởi: Admin</div>
-                        <p class="news-description">Các khóa học tin học mới với chương trình hiện đại, giúp em làm quen với công nghệ...</p>
-                        <a href="#" class="read-more">Đọc thêm →</a>
-                    </div>
-                </div>
-
-                <!-- News 6 -->
-                <div class="news-card">
-                    <div class="news-image">🌟</div>
-                    <div class="news-content">
-                        <div class="news-date">3 Tháng 9, 2024</div>
-                        <h3 class="news-title">Danh Sách Học Sinh Xuất Sắc Năm Học Trước</h3>
-                        <div class="news-author">Đăng bởi: Admin</div>
-                        <p class="news-description">Tôn vinh những em học sinh đã có thành tích xuất sắc trong năm học 2023-2024...</p>
-                        <a href="#" class="read-more">Đọc thêm →</a>
-                    </div>
-                </div>
+        <!-- Students Section -->
+        <section id="students" style="margin-top: 50px;">
+            <h2 class="section-title">⭐ Học Sinh Nổi Bật</h2>
+            <div class="students-grid" id="studentsContainer">
+                <div class="empty-message">Chưa có học sinh nổi bật. Admin vui lòng thêm dữ liệu.</div>
             </div>
         </section>
 
@@ -411,35 +593,75 @@
                 <h3>Sứ Mệnh</h3>
                 <p>
                     Cung cấp giáo dục chất lượng cao, giúp học sinh phát triển toàn diện về kiến thức, kỹ năng và phẩm chất, 
-                    để các em trở thành công dân có trách nhiệm, tôn trọng pháp luật và yêu nước.
+                    để các em trở thành công dân có trách nhiệm.
                 </p>
             </div>
 
             <div class="info-section">
                 <h3>Tầm Nhìn</h3>
                 <p>
-                    Xây dựng một trường học văn minh, hiện đại, nơi mỗi học sinh được khuyến khích khám phá tiềm năng của mình 
-                    và phát triển thành những cá nhân tự tin, sáng tạo và có ích cho xã hội.
+                    Xây dựng một trường học văn minh, hiện đại, nơi mỗi học sinh được khuyến khích khám phá tiềm năng của mình.
                 </p>
             </div>
         </section>
-
-        <!-- Contact Section -->
-        <section id="contact" style="margin-top: 50px;">
-            <h2 class="section-title">📞 Thông Tin Liên Hệ</h2>
-            <div class="info-section">
-                <h3>Địa Chỉ</h3>
-                <p>📍 Thôn An Điền, Xã [Tên Xã], Huyện [Tên Huyện], Tỉnh [Tên Tỉnh]</p>
-            </div>
-
-            <div class="info-section">
-                <h3>Thông Tin Liên Hệ</h3>
-                <p>📧 Email: <a href="mailto:andien@gmail.com" style="color: #667eea;">andien@gmail.com</a></p>
-                <p>📱 Điện Thoại: <a href="tel:0123456789" style="color: #667eea;">0123 456 789</a></p>
-                <p>⏰ Giờ làm việc: Thứ Hai - Thứ Sáu (7:00 - 17:00)</p>
-            </div>
-        </section>
     </main>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAdminPanel()">&times;</span>
+            <h2>🔐 Admin Panel</h2>
+            
+            <div id="loginSection">
+                <div class="form-group">
+                    <label>Mật khẩu Admin:</label>
+                    <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
+                </div>
+                <button class="btn" onclick="loginAdmin()">Đăng Nhập</button>
+            </div>
+
+            <div id="adminSection" style="display: none;">
+                <button class="btn btn-secondary" onclick="logoutAdmin()">Đăng Xuất</button>
+                <hr style="margin: 20px 0;">
+                
+                <h3 style="color: #667eea; margin-bottom: 15px;">➕ Thêm Học Sinh Nổi Bật</h3>
+                
+                <div class="success-message" id="successMsg">✓ Thêm học sinh thành công!</div>
+
+                <div class="form-group">
+                    <label>Tên học sinh:</label>
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A">
+                </div>
+
+                <div class="form-group">
+                    <label>Lớp:</label>
+                    <input type="text" id="studentClass" placeholder="Ví dụ: 9A, 8B">
+                </div>
+
+                <div class="form-group">
+                    <label>Tuổi:</label>
+                    <input type="number" id="studentAge" placeholder="Ví dụ: 15" min="10" max="20">
+                </div>
+
+                <div class="form-group">
+                    <label>Ảnh đại diện (có thể upload hoặc chọn emoji):</label>
+                    <input type="file" id="studentImage" accept="image/*">
+                    <div id="imagePreviewContainer"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Thành tích / Mô tả:</label>
+                    <textarea id="studentAchievement" placeholder="Ví dụ: Học sinh giỏi, Đạt giải thể thao..."></textarea>
+                </div>
+
+                <button class="btn" onclick="addStudent()">Thêm Học Sinh</button>
+
+                <hr style="margin: 20px 0;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">📋 Danh Sách Học Sinh Đã Thêm</h3>
+                <div id="studentsList"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -451,7 +673,6 @@
                         <li><a href="#">Giới thiệu</a></li>
                         <li><a href="#">Sứ mệnh & Tầm nhìn</a></li>
                         <li><a href="#">Lịch sử</a></li>
-                        <li><a href="#">Đội ngũ giáo viên</a></li>
                     </ul>
                 </div>
 
@@ -460,7 +681,6 @@
                     <ul>
                         <li><a href="#">Chương trình học</a></li>
                         <li><a href="#">Hoạt động ngoại khoá</a></li>
-                        <li><a href="#">Kết quả học tập</a></li>
                         <li><a href="#">Thư viện</a></li>
                     </ul>
                 </div>
@@ -471,14 +691,11 @@
                         <li><a href="#">Tin tức</a></li>
                         <li><a href="#">Sự kiện</a></li>
                         <li><a href="#">Thành tích học sinh</a></li>
-                        <li><a href="#">Thư từ phụ huynh</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h4>📞 Liên Hệ</h4>
-                    <p>Thôn An Điền</p>
-                    <p>Huyện [Tên Huyện]</p>
                     <p>Email: <a href="#">andien@gmail.com</a></p>
                     <p>Phone: <a href="#">0123 456 789</a></p>
                 </div>
@@ -489,5 +706,178 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const ADMIN_PASSWORD = "admin123"; // Đổi mật khẩu này
+
+        // Load students when page loads
+        window.addEventListener('load', loadStudents);
+
+        function openAdminPanel() {
+            document.getElementById('adminModal').classList.add('show');
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('adminSection').style.display = 'none';
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminModal').classList.remove('show');
+            clearAdminForm();
+        }
+
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminSection').style.display = 'block';
+                loadStudentsList();
+            } else {
+                alert('❌ Mật khẩu không chính xác!');
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('adminSection').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            clearAdminForm();
+        }
+
+        // Handle image upload
+        document.getElementById('studentImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const previewContainer = document.getElementById('imagePreviewContainer');
+                    previewContainer.innerHTML = `<img src="${event.target.result}" class="image-preview" alt="Preview">`;
+                    // Store the image data
+                    window.selectedImageData = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function addStudent() {
+            const name = document.getElementById('studentName').value.trim();
+            const className = document.getElementById('studentClass').value.trim();
+            const age = document.getElementById('studentAge').value;
+            const achievement = document.getElementById('studentAchievement').value.trim();
+
+            if (!name || !className || !age) {
+                alert('⚠️ Vui lòng điền đầy đủ thông tin!');
+                return;
+            }
+
+            const students = JSON.parse(localStorage.getItem('students') || '[]');
+            const student = {
+                id: Date.now(),
+                name: name,
+                className: className,
+                age: parseInt(age),
+                achievement: achievement,
+                image: window.selectedImageData || '👨‍🎓' // Default emoji if no image
+            };
+
+            students.push(student);
+            localStorage.setItem('students', JSON.stringify(students));
+
+            // Show success message
+            const successMsg = document.getElementById('successMsg');
+            successMsg.classList.add('show');
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 3000);
+
+            clearAdminForm();
+            loadStudents();
+            loadStudentsList();
+        }
+
+        function deleteStudent(id) {
+            if (confirm('Bạn chắc chắn muốn xóa học sinh này?')) {
+                let students = JSON.parse(localStorage.getItem('students') || '[]');
+                students = students.filter(s => s.id !== id);
+                localStorage.setItem('students', JSON.stringify(students));
+                loadStudents();
+                loadStudentsList();
+            }
+        }
+
+        function loadStudents() {
+            const students = JSON.parse(localStorage.getItem('students') || '[]');
+            const container = document.getElementById('studentsContainer');
+
+            if (students.length === 0) {
+                container.innerHTML = '<div class="empty-message">Chưa có học sinh nổi bật. Admin vui lòng thêm dữ liệu.</div>';
+                return;
+            }
+
+            container.innerHTML = students.map(student => `
+                <div class="student-card">
+                    <div class="student-image">
+                        ${typeof student.image === 'string' && student.image.includes('data:image') 
+                            ? `<img src="${student.image}" alt="${student.name}">` 
+                            : student.image}
+                    </div>
+                    <div class="student-info">
+                        <div class="student-name">${student.name}</div>
+                        <div class="student-details">📚 Lớp: ${student.className}</div>
+                        <div class="student-details">🎂 Tuổi: ${student.age}</div>
+                        <div class="badge">${student.achievement || 'Học sinh xuất sắc'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadStudentsList() {
+            const students = JSON.parse(localStorage.getItem('students') || '[]');
+            const container = document.getElementById('studentsList');
+
+            if (students.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Chưa có học sinh nào.</p>';
+                return;
+            }
+
+            container.innerHTML = students.map(student => `
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>${student.name}</strong><br>
+                        <small>Lớp: ${student.className} | Tuổi: ${student.age}</small><br>
+                        <small style="color: #667eea;">${student.achievement || 'Không có mô tả'}</small>
+                    </div>
+                    <button class="btn btn-delete" onclick="deleteStudent(${student.id})">🗑️ Xóa</button>
+                </div>
+            `).join('');
+        }
+
+        function clearAdminForm() {
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentClass').value = '';
+            document.getElementById('studentAge').value = '';
+            document.getElementById('studentAchievement').value = '';
+            document.getElementById('studentImage').value = '';
+            document.getElementById('imagePreviewContainer').innerHTML = '';
+            window.selectedImageData = null;
+        }
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function goToHome() {
+            document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('adminModal');
+            if (event.target === modal) {
+                closeAdminPanel();
+            }
+        });
+    </script>
 </body>
 </html>
