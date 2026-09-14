@@ -49,10 +49,31 @@
     }
     .sidebar.collapsed { margin-left: -260px; }
 
-    .sidebar-top { padding: 12px; }
+    .sidebar-top { padding: 12px; display: flex; align-items: center; gap: 8px; }
+
+    .close-sidebar-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background .2s;
+    }
+    .close-sidebar-btn:hover { background: var(--bg-sidebar-hover); }
+    /* Chỉ hiện nút đóng khi sidebar đang ở chế độ overlay (màn hình hẹp) */
+    @media (min-width: 769px) {
+        .close-sidebar-btn { display: none; }
+    }
 
     .new-chat-btn {
-        width: 100%;
+        flex: 1;
         display:flex;
         align-items:center;
         gap:8px;
@@ -120,19 +141,6 @@
         color: var(--text-secondary);
         text-align:center;
     }
-
-    .admin-btn {
-        width: 100%;
-        padding: 8px;
-        background: transparent;
-        color: var(--text-secondary);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 12px;
-        transition: background .2s, color .2s;
-    }
-    .admin-btn:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
 
     /* ---------- MAIN ---------- */
     .main-content {
@@ -305,57 +313,6 @@
 
     .footer-note { text-align:center; font-size: 11px; color: var(--text-secondary); margin-top: 10px; }
 
-    /* ---------- MODAL (dùng chung cho Admin) ---------- */
-    .modal-overlay {
-        position: fixed; top:0; left:0; right:0; bottom:0;
-        background: rgba(0,0,0,0.6);
-        display: flex; align-items: center; justify-content: center;
-        z-index: 100;
-    }
-    .modal-overlay.hidden { display: none; }
-
-    .modal-box {
-        background: var(--bg-sidebar);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 28px;
-        max-width: 400px;
-        width: 90%;
-    }
-    .modal-box h3 { font-size: 18px; margin-bottom: 8px; }
-    .modal-box p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; }
-    .modal-box label {
-        font-size: 12px; color: var(--text-secondary);
-        display:block; margin-bottom: 6px; margin-top: 12px;
-    }
-    .modal-box label:first-of-type { margin-top: 0; }
-
-    #adminPassword, #adminGeminiKey, #backendUrlInput {
-        width: 100%;
-        padding: 12px 14px;
-        background: var(--bg-input);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        color: var(--text-primary);
-        font-size: 14px;
-        outline: none;
-    }
-    #adminPassword:focus, #adminGeminiKey:focus, #backendUrlInput:focus { border-color: var(--accent); }
-
-    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-    .modal-btn {
-        flex: 1; padding: 10px; border-radius: 10px; border: none;
-        cursor: pointer; font-size: 14px; font-weight: 600;
-    }
-    .modal-btn.primary { background: var(--accent); color: #fff; }
-    .modal-btn.primary:hover { background: var(--accent-hover); }
-    .modal-btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
-    .modal-btn.secondary:hover { background: var(--bg-sidebar-hover); }
-
-    .admin-feedback { font-size: 12.5px; margin-top: 10px; min-height: 16px; }
-    .admin-feedback.ok { color: #6bdc9c; }
-    .admin-feedback.err { color: #ff6b6b; }
-
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 4px; }
@@ -374,6 +331,7 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-top">
+            <button class="close-sidebar-btn" onclick="toggleSidebar()">✕</button>
             <button class="new-chat-btn" onclick="createNewChat()">
                 <span>➕</span> Cuộc trò chuyện mới
             </button>
@@ -382,7 +340,6 @@
         <div class="history-items" id="historyItems"></div>
         <div class="sidebar-bottom">
             <div class="status-line" id="statusLine">Đang kết nối...</div>
-            <button class="admin-btn" onclick="openAdminModal()">⚙️ Quản trị (Admin)</button>
         </div>
     </div>
 
@@ -424,27 +381,6 @@
             </div>
         </div>
         <div class="footer-note">Trợ lý AI có thể mắc lỗi. Hãy kiểm tra lại thông tin quan trọng.</div>
-    </div>
-</div>
-
-<!-- Modal Admin: chỉ đổi link server (cloudflared tunnel) -->
-<div class="modal-overlay hidden" id="adminModal">
-    <div class="modal-box">
-        <h3>⚙️ Địa chỉ máy chủ</h3>
-        <p>
-            Link của lệnh <code>cloudflared tunnel --url http://localhost:3000</code> chạy trong Termux.
-            Link này đổi mỗi khi bạn tắt/chạy lại cloudflared, nên cần cập nhật lại ở đây khi đó.
-        </p>
-
-        <label for="backendUrlInput">Link Cloudflare Tunnel</label>
-        <input type="text" id="backendUrlInput" placeholder="https://tu-nhien-random.trycloudflare.com" />
-
-        <div class="admin-feedback" id="adminFeedback"></div>
-
-        <div class="modal-actions">
-            <button class="modal-btn secondary" onclick="closeAdminModal()">Đóng</button>
-            <button class="modal-btn primary" onclick="saveAdminSettings()">Lưu</button>
-        </div>
     </div>
 </div>
 
@@ -517,40 +453,13 @@
                 body: JSON.stringify({ contents: [] }),
             });
             if (resp.status === 503) {
-                el.textContent = "⚠️ Admin chưa gắn API key";
+                el.textContent = "⚠️ Chưa gắn API key";
             } else {
                 el.textContent = "✅ Hệ thống sẵn sàng";
             }
         } catch {
             el.textContent = "❌ Không kết nối được backend";
         }
-    }
-
-    /* ---------- ADMIN MODAL ---------- */
-    function openAdminModal() {
-        document.getElementById("backendUrlInput").value = BACKEND_URL;
-        document.getElementById("adminFeedback").textContent = "";
-        document.getElementById("adminModal").classList.remove("hidden");
-    }
-    function closeAdminModal() {
-        document.getElementById("adminModal").classList.add("hidden");
-    }
-
-    function saveAdminSettings() {
-        const feedback = document.getElementById("adminFeedback");
-        const backendUrl = document.getElementById("backendUrlInput").value.trim().replace(/\/$/, "");
-
-        if (!backendUrl) {
-            feedback.textContent = "Vui lòng nhập link.";
-            feedback.className = "admin-feedback err";
-            return;
-        }
-
-        BACKEND_URL = backendUrl;
-        localStorage.setItem("backend_url_9a5", backendUrl);
-        feedback.textContent = "✅ Đã lưu (chỉ trên trình duyệt này).";
-        feedback.className = "admin-feedback ok";
-        checkBackendStatus();
     }
 
     function toggleSidebar() {
