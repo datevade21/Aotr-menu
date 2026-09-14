@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<!-- ============================================================
+     👉 SỬA LINK CLOUDFLARE Ở DÒNG NGAY DƯỚI ĐÂY (dòng tiếp theo)
+     Lấy link từ lệnh: cloudflared tunnel --url http://localhost:3000
+     Dán vào giữa 2 dấu ngoặc kép, giữ nguyên "https://" ở đầu.
+     ============================================================ -->
+<script>
+    window.BACKEND_URL = "https://honolulu-accompanying-symantec-issn.trycloudflare.com";
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>9A5 THCS An Điền AI</title>
@@ -133,6 +141,49 @@
         flex-direction: column;
         background: var(--bg-main);
         min-width: 0;
+    }
+
+    .link-bar {
+        display:flex;
+        align-items:center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: #12261f;
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+    }
+    .link-bar-label {
+        font-size: 12px;
+        color: var(--text-secondary);
+        white-space: nowrap;
+    }
+    #topBackendInput {
+        flex: 1;
+        min-width: 180px;
+        padding: 7px 10px;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-size: 12.5px;
+        outline: none;
+    }
+    #topBackendInput:focus { border-color: var(--accent); }
+    .link-bar-save {
+        padding: 7px 14px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .link-bar-save:hover { background: var(--accent-hover); }
+    .link-bar-status {
+        font-size: 11.5px;
+        color: var(--text-secondary);
+        white-space: nowrap;
     }
 
     .top-bar {
@@ -337,6 +388,12 @@
 
     <!-- Main -->
     <div class="main-content">
+        <div class="link-bar">
+            <span class="link-bar-label">🔗 Link Cloudflare:</span>
+            <input type="text" id="topBackendInput" placeholder="https://xxx-yyy-zzz.trycloudflare.com" />
+            <button class="link-bar-save" onclick="saveTopBackendUrl()">Lưu</button>
+            <span class="link-bar-status" id="topBackendStatus"></span>
+        </div>
         <div class="top-bar">
             <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
             <div>
@@ -370,23 +427,17 @@
     </div>
 </div>
 
-<!-- Modal Admin: gắn URL backend + API key Gemini (chỉ admin dùng) -->
+<!-- Modal Admin: chỉ đổi link server (cloudflared tunnel) -->
 <div class="modal-overlay hidden" id="adminModal">
     <div class="modal-box">
-        <h3>⚙️ Quản trị hệ thống</h3>
+        <h3>⚙️ Địa chỉ máy chủ</h3>
         <p>
-            Khu vực dành cho admin. Người dùng thường không cần và không nên vào đây.
-            API key Gemini được lưu <b>vĩnh viễn trên server (Cloudflare)</b>, không lưu ở trình duyệt người dùng.
+            Link của lệnh <code>cloudflared tunnel --url http://localhost:3000</code> chạy trong Termux.
+            Link này đổi mỗi khi bạn tắt/chạy lại cloudflared, nên cần cập nhật lại ở đây khi đó.
         </p>
 
-        <label for="backendUrlInput">Địa chỉ Backend (Worker URL)</label>
-        <input type="text" id="backendUrlInput" placeholder="https://9a5-ai-backend.xxx.workers.dev" />
-
-        <label for="adminPassword">Mật khẩu Admin</label>
-        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu admin..." />
-
-        <label for="adminGeminiKey">API key Gemini (chỉ nhập khi muốn gắn/đổi key)</label>
-        <input type="password" id="adminGeminiKey" placeholder="Dán API key Gemini vào đây..." />
+        <label for="backendUrlInput">Link Cloudflare Tunnel</label>
+        <input type="text" id="backendUrlInput" placeholder="https://tu-nhien-random.trycloudflare.com" />
 
         <div class="admin-feedback" id="adminFeedback"></div>
 
@@ -401,15 +452,13 @@
     /**
      * QUAN TRỌNG:
      * - File này KHÔNG chứa bất kỳ API key nào.
-     * - Mọi request AI đều đi qua BACKEND_URL (Cloudflare Worker), nơi key Gemini
-     *   được admin gắn và lưu vĩnh viễn ở phía server.
-     * - Người dùng thường chỉ cần địa chỉ BACKEND_URL đã được cấu hình sẵn bên dưới
-     *   (hoặc lưu 1 lần trong trình duyệt của họ) — họ không cần và không thấy key.
+     * - Server thật (có key) chạy trong Termux ở máy khác (server.js, cổng 3000),
+     *   được đưa ra Internet qua: cloudflared tunnel --url http://localhost:3000
+     * - Link được cấu hình Ở ĐẦU FILE này (trong thẻ <head>, xem dòng ~10) —
+     *   sửa ở đó, không sửa ở đây.
      */
 
-    // Đổi giá trị này thành URL Worker thật của bạn sau khi deploy,
-    // để người dùng không phải tự nhập backend URL mỗi lần.
-    let BACKEND_URL = "https://9a5-ai-backend.YOUR-SUBDOMAIN.workers.dev";
+    let BACKEND_URL = window.BACKEND_URL;
 
     let chatHistory = [];
     let conversations = [];
@@ -417,6 +466,7 @@
 
     function initializeApp() {
         loadBackendUrl();
+        document.getElementById("topBackendInput").value = BACKEND_URL.includes("DÁN-LINK") ? "" : BACKEND_URL;
         loadConversations();
         loadHistory();
         setupEventListeners();
@@ -443,6 +493,20 @@
         if (saved) BACKEND_URL = saved;
     }
 
+    function saveTopBackendUrl() {
+        const status = document.getElementById("topBackendStatus");
+        const val = document.getElementById("topBackendInput").value.trim().replace(/\/$/, "");
+        if (!val) {
+            status.textContent = "⚠️ Chưa nhập link";
+            return;
+        }
+        BACKEND_URL = val;
+        localStorage.setItem("backend_url_9a5", val);
+        status.textContent = "✅ Đã lưu";
+        checkBackendStatus();
+        setTimeout(() => { status.textContent = ""; }, 3000);
+    }
+
     async function checkBackendStatus() {
         const el = document.getElementById("statusLine");
         try {
@@ -465,8 +529,6 @@
     /* ---------- ADMIN MODAL ---------- */
     function openAdminModal() {
         document.getElementById("backendUrlInput").value = BACKEND_URL;
-        document.getElementById("adminPassword").value = "";
-        document.getElementById("adminGeminiKey").value = "";
         document.getElementById("adminFeedback").textContent = "";
         document.getElementById("adminModal").classList.remove("hidden");
     }
@@ -474,50 +536,21 @@
         document.getElementById("adminModal").classList.add("hidden");
     }
 
-    async function saveAdminSettings() {
+    function saveAdminSettings() {
         const feedback = document.getElementById("adminFeedback");
         const backendUrl = document.getElementById("backendUrlInput").value.trim().replace(/\/$/, "");
-        const password = document.getElementById("adminPassword").value.trim();
-        const apiKey = document.getElementById("adminGeminiKey").value.trim();
 
-        if (backendUrl) {
-            BACKEND_URL = backendUrl;
-            localStorage.setItem("backend_url_9a5", backendUrl);
-        }
-
-        // Nếu admin không nhập key mới, chỉ lưu backend URL rồi thôi.
-        if (!apiKey) {
-            feedback.textContent = "Đã lưu địa chỉ backend.";
-            feedback.className = "admin-feedback ok";
-            checkBackendStatus();
-            return;
-        }
-
-        if (!password) {
-            feedback.textContent = "Vui lòng nhập mật khẩu admin để gắn API key.";
+        if (!backendUrl) {
+            feedback.textContent = "Vui lòng nhập link.";
             feedback.className = "admin-feedback err";
             return;
         }
 
-        feedback.textContent = "Đang lưu...";
-        feedback.className = "admin-feedback";
-
-        try {
-            const resp = await fetch(`${BACKEND_URL}/admin/set-key`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password, apiKey }),
-            });
-            const data = await resp.json();
-            if (!resp.ok) throw new Error(data.error || "Có lỗi xảy ra.");
-
-            feedback.textContent = "✅ Đã lưu API key vĩnh viễn trên server.";
-            feedback.className = "admin-feedback ok";
-            checkBackendStatus();
-        } catch (err) {
-            feedback.textContent = "❌ " + err.message;
-            feedback.className = "admin-feedback err";
-        }
+        BACKEND_URL = backendUrl;
+        localStorage.setItem("backend_url_9a5", backendUrl);
+        feedback.textContent = "✅ Đã lưu (chỉ trên trình duyệt này).";
+        feedback.className = "admin-feedback ok";
+        checkBackendStatus();
     }
 
     function toggleSidebar() {
