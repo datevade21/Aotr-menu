@@ -2,11 +2,11 @@
 <html lang="vi">
 <head>
 <!-- ============================================================
-     👉 SỬA LINK CLOUDFLARE Ở DÒNG NGAY DƯỚI ĐÂY (dòng tiếp theo)
+     👉 SỬA LINK CLOUDFLARE NGAY DƯỚI ĐÂY.
      Lấy link từ lệnh: cloudflared tunnel --url http://localhost:3000
      Dán vào giữa 2 dấu ngoặc kép, giữ nguyên "https://" ở đầu.
-     (Thanh nhập link này đã được ẨN khỏi giao diện — chỉ sửa ở đây,
-     hoặc mở Console trình duyệt và gõ: localStorage.setItem('backend_url_9a5','https://...'))
+     (Thanh nhập link đã bị ẨN khỏi giao diện — sửa ở đây, hoặc mở
+     Console trình duyệt và gõ: localStorage.setItem('backend_url_9a5','https://...'))
      ============================================================ -->
 <script>
     window.BACKEND_URL = "https://honolulu-accompanying-symantec-issn.trycloudflare.com";
@@ -14,371 +14,385 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>9A5 THCS An Điền AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-
     :root{
-        --bg-sidebar:#1a1a1a;
-        --bg-sidebar-hover:#2a2a2a;
-        --bg-main:#212121;
-        --bg-input:#2f2f2f;
-        --text-primary:#ececec;
-        --text-secondary:#a0a0a0;
-        --accent:#10a37f;
-        --accent-hover:#0d8c6d;
-        --border:#3a3a3a;
+        --ink:#0b0512;
+        --dusk:#1c0e2c;
+        --dusk-2:#2c1440;
+        --dusk-3:#3a1a4d;
+        --bloom:#ff7aa2;
+        --bloom-deep:#e0507f;
+        --ember:#ffb85c;
+        --mist:#cbb0dd;
+        --paper:#f7eef7;
+        --line: rgba(247,238,247,0.14);
         --danger:#ff6b6b;
+        --serif: "Shippori Mincho", serif;
+        --sans: "Zen Kaku Gothic New", sans-serif;
     }
-
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background: var(--bg-main);
+        font-family: var(--sans);
+        background: var(--ink);
         height: 100vh;
         display: flex;
         overflow: hidden;
-        color: var(--text-primary);
+        color: var(--paper);
+        -webkit-font-smoothing:antialiased;
     }
+    a{ color:inherit; }
 
     .container { display:flex; width:100%; height:100vh; }
     .container.hidden { display:none; }
 
     /* ---------- SIDEBAR ---------- */
     .sidebar {
-        width: 260px;
-        min-width: 260px;
-        background: var(--bg-sidebar);
+        width: 268px;
+        min-width: 268px;
+        background: var(--dusk);
+        border-right: 1px solid var(--line);
         display: flex;
         flex-direction: column;
         transition: margin-left .25s ease;
     }
-    .sidebar.collapsed { margin-left: -260px; }
+    .sidebar.collapsed { margin-left: -268px; }
 
-    .sidebar-top { padding: 12px; display: flex; align-items: center; gap: 8px; }
+    .sidebar-top { padding: 14px 14px 10px; display: flex; align-items: center; gap: 8px; }
 
     .close-sidebar-btn {
-        width: 38px;
-        min-width: 38px;
-        height: 38px;
-        background: transparent;
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 38px; min-width: 38px; height: 38px;
+        background: transparent; color: var(--paper);
+        border: 1px solid var(--line); border-radius: 10px;
+        cursor: pointer; font-size: 16px;
+        display: flex; align-items: center; justify-content: center;
         transition: background .2s;
     }
-    .close-sidebar-btn:hover { background: var(--bg-sidebar-hover); }
-    @media (min-width: 769px) {
-        .close-sidebar-btn { display: none; }
-    }
+    .close-sidebar-btn:hover { background: var(--dusk-2); }
+    @media (min-width: 769px) { .close-sidebar-btn { display: none; } }
 
     .new-chat-btn {
-        flex: 1;
-        display:flex;
-        align-items:center;
-        gap:8px;
+        flex: 1; display:flex; align-items:center; gap:8px;
         padding: 12px 12px;
-        background: transparent;
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background .2s;
+        background: transparent; color: var(--paper);
+        border: 1px solid var(--line); border-radius: 10px;
+        cursor: pointer; font-size: 13.5px; font-family: var(--sans);
+        transition: background .2s, border-color .2s;
     }
-    .new-chat-btn:hover { background: var(--bg-sidebar-hover); }
+    .new-chat-btn:hover { background: var(--dusk-2); border-color: var(--bloom); }
 
     .history-title {
-        font-size: 11px;
-        color: var(--text-secondary);
-        padding: 16px 16px 6px;
-        letter-spacing: .5px;
+        font-size: 11px; color: var(--mist);
+        padding: 18px 16px 6px; letter-spacing: .12em;
     }
 
-    .history-items {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0 8px;
-    }
+    .history-items { flex: 1; overflow-y: auto; padding: 0 8px; }
 
     .history-item {
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap: 6px;
-        padding: 10px 10px;
-        margin-bottom: 2px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 13.5px;
-        color: var(--text-primary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        display:flex; align-items:center; justify-content:space-between; gap: 6px;
+        padding: 10px 10px; margin-bottom: 2px; border-radius: 8px;
+        cursor: pointer; font-size: 13px; color: var(--paper);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         transition: background .15s;
     }
-    .history-item:hover { background: var(--bg-sidebar-hover); }
-    .history-item.active { background: var(--bg-sidebar-hover); }
+    .history-item:hover { background: var(--dusk-2); }
+    .history-item.active { background: var(--dusk-2); box-shadow: inset 2px 0 0 var(--bloom); }
     .history-item span.title { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
     .del-btn {
-        opacity:0;
-        background:none; border:none; color:var(--text-secondary);
+        opacity:0; background:none; border:none; color:var(--mist);
         cursor:pointer; font-size:13px; padding:2px 4px;
     }
     .history-item:hover .del-btn { opacity:1; }
     .del-btn:hover { color:var(--danger); }
 
     .sidebar-bottom {
-        padding: 12px;
-        border-top: 1px solid var(--border);
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+        padding: 12px; border-top: 1px solid var(--line);
+        display: flex; flex-direction: column; gap: 8px;
     }
-
-    .status-line {
-        font-size: 11px;
-        color: var(--text-secondary);
-        text-align:center;
-    }
+    .status-line { font-size: 11px; color: var(--mist); text-align:center; }
 
     .account-line {
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-        padding: 8px 10px;
-        background: var(--bg-sidebar-hover);
-        border-radius: 10px;
-        font-size: 12.5px;
+        display:flex; align-items:center; justify-content:space-between; gap:8px;
+        padding: 8px 10px; background: var(--dusk-2); border-radius: 10px; font-size: 12px;
     }
-    .account-email { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color: var(--text-primary); }
+    .account-email { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color: var(--paper); }
     .logout-btn {
-        background:none; border:1px solid var(--border); color: var(--text-secondary);
-        padding: 5px 9px; border-radius: 7px; cursor:pointer; font-size: 11.5px; white-space:nowrap;
+        background:none; border:1px solid var(--line); color: var(--mist);
+        padding: 5px 9px; border-radius: 7px; cursor:pointer; font-size: 11px; white-space:nowrap;
         transition: background .15s, color .15s;
     }
-    .logout-btn:hover { background: var(--bg-main); color: var(--danger); }
+    .logout-btn:hover { background: var(--ink); color: var(--danger); }
 
     /* ---------- MAIN ---------- */
     .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        background: var(--bg-main);
+        flex: 1; display: flex; flex-direction: column;
+        background:
+            radial-gradient(ellipse 70% 40% at 82% 0%, rgba(255,150,180,0.10), transparent 60%),
+            var(--ink);
         min-width: 0;
     }
 
-    /* Thanh cấu hình link Cloudflare: ẨN khỏi giao diện theo yêu cầu.
-       Chức năng lưu link vẫn còn trong JS, chỉ không hiển thị trên web. */
-    .link-bar { display: none; }
+    .link-bar{ display:none; }
 
     .top-bar {
-        display:flex;
-        align-items:center;
-        gap: 12px;
-        padding: 14px 20px;
-        border-bottom: 1px solid var(--border);
+        display:flex; align-items:center; gap: 12px;
+        padding: 16px 22px; border-bottom: 1px solid var(--line);
     }
-
     .toggle-btn {
-        background: none;
-        border: none;
-        color: var(--text-primary);
-        font-size: 20px;
-        cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 6px;
+        background: none; border: none; color: var(--paper);
+        font-size: 20px; cursor: pointer; padding: 4px 8px; border-radius: 6px;
     }
-    .toggle-btn:hover { background: var(--bg-sidebar-hover); }
-
-    .top-bar h1 { font-size: 16px; font-weight: 600; }
-    .top-bar .subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+    .toggle-btn:hover { background: var(--dusk-2); }
+    .top-bar h1 { font-family: var(--serif); font-weight:600; font-size: 17px; letter-spacing:.01em; }
+    .top-bar .subtitle { font-size: 11px; color: var(--mist); margin-top: 2px; }
 
     .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+    .chat-inner { max-width: 780px; width: 100%; margin: 0 auto; padding: 28px 20px 40px; flex: 1; }
 
-    .chat-inner {
-        max-width: 780px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 24px 20px 40px;
-        flex: 1;
-    }
-
-    .message { display: flex; gap: 16px; padding: 18px 0; animation: fadeIn .25s ease-in; }
-    @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+    .message { display: flex; gap: 14px; padding: 16px 0; animation: fadeIn .3s ease-in; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 
     .avatar {
-        width: 30px; height: 30px; min-width: 30px;
-        border-radius: 6px;
+        width: 30px; height: 30px; min-width: 30px; border-radius: 8px;
         display:flex; align-items:center; justify-content:center;
-        font-size: 13px; font-weight: bold;
+        font-size: 12.5px; font-weight:600; font-family: var(--sans);
+        color: var(--ink);
     }
-    .message.user .avatar { background: #5a5a5a; color:#fff; }
-    .message.bot .avatar { background: var(--accent); color:#fff; }
+    .message.user .avatar { background: var(--mist); }
+    .message.bot .avatar { background: linear-gradient(135deg, var(--ember), var(--bloom)); color:#2a0e1c; }
 
-    .message-body {
-        flex: 1;
-        line-height: 1.7;
-        font-size: 15px;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        padding-top: 4px;
+    .message-body { flex: 1; line-height: 1.75; font-size: 15px; white-space: pre-wrap; word-wrap: break-word; padding-top: 4px; }
+    .message.bot .message-body { color: rgba(247,238,247,0.92); }
+
+    .attach-thumbs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 8px; }
+    .attach-thumb {
+        width: 84px; height: 84px; border-radius: 10px; overflow:hidden;
+        border: 1px solid var(--line); position:relative; background: var(--dusk-2);
     }
+    .attach-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .attach-thumb .file-chip {
+        width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+        gap:4px; font-size:10px; color: var(--mist); padding:6px; text-align:center;
+    }
+    .attach-thumb .file-chip .file-icon{ font-size:20px; }
+
+    .msg-image { max-width: 320px; border-radius: 12px; margin-top: 10px; display:block; border: 1px solid var(--line); }
 
     .typing-indicator { display: flex; gap: 5px; padding-top: 8px; }
     .typing-indicator span {
         width: 7px; height: 7px; border-radius: 50%;
-        background: var(--text-secondary);
+        background: var(--bloom);
         animation: typing 1.4s infinite;
     }
     .typing-indicator span:nth-child(2) { animation-delay: .2s; }
     .typing-indicator span:nth-child(3) { animation-delay: .4s; }
     @keyframes typing { 0%,60%,100% { opacity:.3; transform: translateY(0); } 30% { opacity:1; transform: translateY(-6px); } }
 
-    .empty-state {
-        display:flex; flex-direction:column; align-items:center; justify-content:center;
-        height: 100%; text-align:center; gap: 10px;
-    }
-    .empty-state .logo {
-        width: 56px; height: 56px; border-radius: 14px;
-        background: var(--accent);
-        display:flex; align-items:center; justify-content:center;
-        font-size: 18px; font-weight:bold; color:#fff; margin-bottom: 8px;
-    }
-    .empty-state h2 { font-size: 22px; font-weight:600; }
-    .empty-state p { color: var(--text-secondary); font-size: 14px; max-width: 320px; }
+    .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; height: 100%; text-align:center; gap: 10px; }
+    .empty-state .torii-mini{ width:88px; height:88px; margin-bottom:6px; opacity:.9; }
+    .empty-state h2 { font-family: var(--serif); font-size: 21px; font-weight:600; }
+    .empty-state p { color: var(--mist); font-size: 13.5px; max-width: 320px; }
 
     .suggestions { display:flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content:center; }
     .suggestion-chip {
-        padding: 10px 16px;
-        background: var(--bg-input);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        font-size: 13px;
-        color: var(--text-primary);
-        cursor: pointer;
-        transition: background .2s;
+        padding: 10px 16px; background: var(--dusk); border: 1px solid var(--line); border-radius: 12px;
+        font-size: 12.5px; color: var(--paper); cursor: pointer; transition: background .2s, border-color .2s;
     }
-    .suggestion-chip:hover { background: var(--bg-sidebar-hover); }
+    .suggestion-chip:hover { background: var(--dusk-2); border-color: var(--bloom); }
 
     /* ---------- INPUT AREA ---------- */
-    .input-area { padding: 16px 20px 22px; display:flex; justify-content:center; }
+    .input-area { padding: 14px 20px 20px; display:flex; justify-content:center; }
+    .input-shell { max-width: 780px; width: 100%; }
+
+    .preview-strip { display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 8px; }
+    .preview-chip {
+        position:relative; width: 60px; height: 60px; border-radius: 10px; overflow:hidden;
+        border: 1px solid var(--line); background: var(--dusk-2);
+    }
+    .preview-chip img{ width:100%; height:100%; object-fit:cover; }
+    .preview-chip .file-mini { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .preview-chip .remove-chip {
+        position:absolute; top:2px; right:2px; width:18px; height:18px; border-radius:50%;
+        background: rgba(11,5,18,0.85); color: var(--paper); border:none; cursor:pointer;
+        font-size:11px; display:flex; align-items:center; justify-content:center; line-height:1;
+    }
+    .preview-chip .remove-chip:hover { background: var(--danger); }
 
     .input-wrapper {
-        max-width: 780px; width: 100%;
-        display: flex; align-items: flex-end; gap: 10px;
-        background: var(--bg-input);
-        border: 1px solid var(--border);
-        border-radius: 26px;
-        padding: 10px 10px 10px 20px;
+        width: 100%; display: flex; align-items: flex-end; gap: 8px;
+        background: var(--dusk); border: 1px solid var(--line); border-radius: 24px;
+        padding: 9px 9px 9px 10px;
+        transition: border-color .2s;
     }
+    .input-wrapper:focus-within{ border-color: var(--bloom-deep); }
+
+    .attach-btn {
+        width: 36px; height: 36px; min-width:36px; border-radius: 50%;
+        background: transparent; border: 1px solid var(--line); color: var(--mist);
+        cursor: pointer; font-size: 16px; display:flex; align-items:center; justify-content:center;
+        transition: background .2s, color .2s;
+    }
+    .attach-btn:hover { background: var(--dusk-2); color: var(--paper); }
 
     #chatInput {
         flex: 1; background: transparent; border: none; outline: none;
-        color: var(--text-primary); font-size: 15px; font-family: inherit;
-        resize: none; max-height: 160px; line-height: 1.5; padding: 6px 0;
+        color: var(--paper); font-size: 15px; font-family: var(--sans);
+        resize: none; max-height: 160px; line-height: 1.5; padding: 8px 4px;
     }
-    #chatInput::placeholder { color: var(--text-secondary); }
+    #chatInput::placeholder { color: var(--mist); }
 
     #sendBtn {
-        width: 34px; height: 34px; border-radius: 50%;
-        background: var(--accent); border: none; color: #fff;
+        width: 36px; height: 36px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--ember), var(--bloom-deep));
+        border: none; color: #2a0e1c;
         cursor: pointer; display:flex; align-items:center; justify-content:center;
-        font-size: 16px; transition: background .2s, opacity .2s; flex-shrink: 0;
+        font-size: 16px; transition: opacity .2s, transform .15s; flex-shrink: 0;
     }
-    #sendBtn:hover { background: var(--accent-hover); }
-    #sendBtn:disabled { opacity: .4; cursor: not-allowed; }
+    #sendBtn:hover { transform: scale(1.05); }
+    #sendBtn:disabled { opacity: .4; cursor: not-allowed; transform:none; }
 
-    .footer-note { text-align:center; font-size: 11px; color: var(--text-secondary); margin-top: 10px; }
+    .footer-note { text-align:center; font-size: 11px; color: var(--mist); margin-top: 10px; }
 
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #4a4a4a; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; }
+    ::-webkit-scrollbar-thumb { background: var(--dusk-3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--bloom-deep); }
 
     @media (max-width: 768px) {
         .sidebar { position: fixed; z-index: 10; height: 100vh; }
-        .sidebar.collapsed { margin-left: -260px; }
+        .sidebar.collapsed { margin-left: -268px; }
         .sidebar:not(.collapsed) { margin-left: 0; }
-        .chat-inner { padding: 16px 14px 30px; }
+        .chat-inner { padding: 18px 14px 30px; }
     }
 
-    /* ---------- AUTH SCREEN ---------- */
-    .auth-screen {
-        width: 100%; height: 100vh;
+    /* ---------- AUTH SCREEN (Ngưỡng Cửa) ---------- */
+    .auth-screen{
+        position:relative;
+        width: 100%; height: 100vh; overflow:hidden;
         display:flex; align-items:center; justify-content:center;
-        background: var(--bg-main);
         padding: 20px;
+        background:
+            radial-gradient(ellipse 60% 45% at 72% 62%, rgba(255,150,180,0.35), transparent 60%),
+            linear-gradient(200deg, #4a1d5e 0%, #2c1240 38%, #170a28 68%, #0b0512 100%);
     }
-    .auth-screen.hidden { display:none; }
+    .auth-screen.hidden{ display:none; }
+
+    .sky-glow{
+        position:absolute; inset:0;
+        background: radial-gradient(circle at 74% 58%, rgba(255,205,150,0.5) 0%, rgba(255,140,170,0.25) 18%, transparent 45%);
+        filter:blur(2px);
+        animation: pulseGlow 7s ease-in-out infinite;
+    }
+    @keyframes pulseGlow{ 0%,100%{opacity:.85;} 50%{opacity:1;} }
+
+    .water{
+        position:absolute; left:0; right:0; bottom:0; height:34%;
+        background:linear-gradient(180deg, rgba(20,8,32,0) 0%, rgba(15,6,26,0.55) 40%, rgba(8,3,16,0.92) 100%);
+    }
+
+    svg.torii-bg{
+        position:absolute; left:50%; bottom:6%;
+        width:min(40vw,460px);
+        transform:translateX(-8%);
+        filter:drop-shadow(0 0 18px rgba(255,180,150,0.3));
+        opacity:.5;
+    }
+
+    .petals{ position:absolute; inset:0; pointer-events:none; z-index:1; }
+    .petal{
+        position:absolute; top:-5%; width:9px; height:9px;
+        background:linear-gradient(135deg, var(--bloom), var(--bloom-deep));
+        border-radius:70% 5% 70% 5%; opacity:.85; will-change:transform;
+        animation-name:fall, sway; animation-timing-function:linear, ease-in-out;
+        animation-iteration-count:infinite, infinite;
+    }
+    @keyframes fall{ 0%{ top:-5%; } 100%{ top:105%; } }
+    @keyframes sway{ 0%,100%{ transform:translateX(0) rotate(0deg); } 50%{ transform:translateX(24px) rotate(180deg); } }
 
     .auth-card {
-        width: 100%; max-width: 360px;
-        background: var(--bg-sidebar);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 32px 28px;
+        position:relative; z-index: 5;
+        width: 100%; max-width: 380px;
+        background: rgba(20,9,32,0.72);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 36px 30px;
     }
-    .auth-logo {
-        width: 52px; height: 52px; border-radius: 14px;
-        background: var(--accent);
-        display:flex; align-items:center; justify-content:center;
-        font-size: 16px; font-weight:bold; color:#fff;
-        margin: 0 auto 16px;
-    }
-    .auth-card h2 { text-align:center; font-size: 19px; font-weight:600; margin-bottom: 4px; }
-    .auth-card .auth-sub { text-align:center; font-size: 13px; color: var(--text-secondary); margin-bottom: 22px; }
+    .auth-mark{ font-family: var(--serif); font-size: 1rem; letter-spacing:.06em; color: var(--mist); text-align:center; margin-bottom: 14px; }
+    .auth-card h2 { font-family: var(--serif); text-align:center; font-size: 21px; font-weight:600; margin-bottom: 6px; color: var(--paper); }
+    .auth-card .auth-sub { text-align:center; font-size: 12.5px; color: var(--mist); margin-bottom: 24px; }
 
-    .auth-tabs { display:flex; background: var(--bg-input); border-radius: 10px; padding: 3px; margin-bottom: 20px; }
+    .auth-tabs { display:flex; background: rgba(11,5,18,0.5); border-radius: 10px; padding: 3px; margin-bottom: 22px; }
     .auth-tab {
-        flex:1; text-align:center; padding: 8px 0; font-size: 13.5px; border-radius: 8px;
-        cursor:pointer; color: var(--text-secondary); transition: background .15s, color .15s;
+        flex:1; text-align:center; padding: 9px 0; font-size: 13px; border-radius: 8px;
+        cursor:pointer; color: var(--mist); transition: background .15s, color .15s;
     }
-    .auth-tab.active { background: var(--accent); color:#fff; }
+    .auth-tab.active { background: linear-gradient(135deg, var(--ember), var(--bloom-deep)); color:#2a0e1c; font-weight:600; }
 
-    .auth-field { margin-bottom: 14px; }
-    .auth-field label { display:block; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 6px; }
+    .auth-field { margin-bottom: 15px; }
+    .auth-field label { display:block; font-size: 12px; color: var(--mist); margin-bottom: 6px; letter-spacing:.02em; }
     .auth-field input {
         width: 100%; padding: 11px 13px;
-        background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px;
-        color: var(--text-primary); font-size: 14px; outline: none;
+        background: rgba(11,5,18,0.5); border: 1px solid var(--line); border-radius: 10px;
+        color: var(--paper); font-size: 14px; outline: none; font-family: var(--sans);
         transition: border-color .15s;
     }
-    .auth-field input:focus { border-color: var(--accent); }
+    .auth-field input:focus { border-color: var(--bloom); }
 
     .auth-error {
-        font-size: 12.5px; color: var(--danger);
-        background: rgba(255,107,107,0.1);
-        border: 1px solid rgba(255,107,107,0.3);
-        border-radius: 8px;
-        padding: 8px 10px;
-        margin-bottom: 14px;
-        display:none;
+        font-size: 12px; color: var(--danger);
+        background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3);
+        border-radius: 8px; padding: 8px 10px; margin-bottom: 15px; display:none;
     }
     .auth-error.show { display:block; }
 
     .auth-submit {
         width: 100%; padding: 12px 0;
-        background: var(--accent); color:#fff; border:none; border-radius: 10px;
-        font-size: 14.5px; font-weight:600; cursor:pointer;
-        transition: background .2s;
+        background: linear-gradient(135deg, var(--ember), var(--bloom-deep));
+        color:#2a0e1c; border:none; border-radius: 10px;
+        font-size: 14.5px; font-weight:700; cursor:pointer; font-family: var(--sans);
+        transition: filter .2s;
     }
-    .auth-submit:hover { background: var(--accent-hover); }
-    .auth-note { text-align:center; font-size: 11.5px; color: var(--text-secondary); margin-top: 16px; line-height:1.5; }
+    .auth-submit:hover { filter: brightness(1.08); }
+    .auth-note { text-align:center; font-size: 11px; color: var(--mist); margin-top: 18px; line-height:1.6; }
+
+    @media (prefers-reduced-motion: reduce){
+        *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+    }
+    :focus-visible{ outline:2px solid var(--bloom); outline-offset:2px; }
 </style>
 </head>
 <body>
 
 <!-- ================= AUTH SCREEN ================= -->
-<div class="auth-screen" id="authScreen">
+<div class="auth-screen" id="authScreen" aria-label="Cổng torii dưới mưa hoa">
+    <div class="sky-glow"></div>
+    <div class="water"></div>
+    <svg class="torii-bg" viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="toriiGlow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffe3c4"/>
+                <stop offset="100%" stop-color="#ff9db8"/>
+            </linearGradient>
+        </defs>
+        <rect x="30" y="40" width="340" height="26" rx="4" fill="url(#toriiGlow)" opacity="0.95"/>
+        <rect x="30" y="78" width="340" height="10" fill="url(#toriiGlow)" opacity="0.8"/>
+        <rect x="150" y="66" width="12" height="16" fill="url(#toriiGlow)" opacity="0.9"/>
+        <rect x="238" y="66" width="12" height="16" fill="url(#toriiGlow)" opacity="0.9"/>
+        <rect x="185" y="88" width="30" height="14" fill="url(#toriiGlow)" opacity="0.85"/>
+        <rect x="90" y="88" width="20" height="360" fill="url(#toriiGlow)" opacity="0.9"/>
+        <rect x="290" y="88" width="20" height="360" fill="url(#toriiGlow)" opacity="0.9"/>
+        <rect x="80" y="200" width="240" height="12" fill="url(#toriiGlow)" opacity="0.6"/>
+    </svg>
+    <div class="petals" id="petals"></div>
+
     <div class="auth-card">
-        <div class="auth-logo">9A5</div>
+        <div class="auth-mark">閾 · 9A5 THCS An Điền</div>
         <h2>9A5 THCS An Điền AI</h2>
-        <div class="auth-sub">Đăng nhập để bắt đầu trò chuyện</div>
+        <div class="auth-sub">Đăng nhập để bước qua ngưỡng cửa tri thức</div>
 
         <div class="auth-tabs">
             <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Đăng nhập</div>
@@ -401,13 +415,12 @@
         </div>
 
         <button class="auth-submit" id="authSubmitBtn" onclick="handleAuthSubmit()">Đăng nhập</button>
-        <div class="auth-note">Tài khoản được lưu ngay trên trình duyệt này (localStorage), dùng cho lớp 9A5 — không dùng mật khẩu quan trọng ở nơi khác cho tài khoản này.</div>
+        <div class="auth-note">Tài khoản &amp; lịch sử chat được lưu riêng cho từng người, ngay trên trình duyệt này — đăng nhập lại vẫn còn nguyên.</div>
     </div>
 </div>
 
 <!-- ================= MAIN APP ================= -->
 <div class="container hidden" id="appContainer">
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-top">
             <button class="close-sidebar-btn" onclick="toggleSidebar()">✕</button>
@@ -426,13 +439,11 @@
         </div>
     </div>
 
-    <!-- Main -->
     <div class="main-content">
         <div class="link-bar">
-            <span class="link-bar-label">🔗 Link Cloudflare:</span>
             <input type="text" id="topBackendInput" placeholder="https://xxx-yyy-zzz.trycloudflare.com" />
-            <button class="link-bar-save" onclick="saveTopBackendUrl()">Lưu</button>
-            <span class="link-bar-status" id="topBackendStatus"></span>
+            <button onclick="saveTopBackendUrl()">Lưu</button>
+            <span id="topBackendStatus"></span>
         </div>
         <div class="top-bar">
             <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
@@ -445,22 +456,36 @@
         <div class="chat-container" id="chatContainer">
             <div class="chat-inner" id="chatInner">
                 <div class="empty-state">
-                    <div class="logo">9A5</div>
+                    <svg class="torii-mini" viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="30" y="40" width="340" height="26" rx="4" fill="#ff7aa2" opacity="0.95"/>
+                        <rect x="30" y="78" width="340" height="10" fill="#ff7aa2" opacity="0.8"/>
+                        <rect x="150" y="66" width="12" height="16" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="238" y="66" width="12" height="16" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="185" y="88" width="30" height="14" fill="#ff7aa2" opacity="0.85"/>
+                        <rect x="90" y="88" width="20" height="360" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="290" y="88" width="20" height="360" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="80" y="200" width="240" height="12" fill="#ff7aa2" opacity="0.6"/>
+                    </svg>
                     <h2>9A5 THCS An Điền AI</h2>
-                    <p>Hỏi bất cứ điều gì — bài tập, kiến thức, hay chỉ để trò chuyện.</p>
+                    <p>Hỏi bất cứ điều gì — bài tập, kiến thức, tạo ảnh, hay chỉ để trò chuyện.</p>
                     <div class="suggestions">
                         <div class="suggestion-chip" onclick="fillSuggestion('Giải thích định lý Pytago')">📐 Giải thích định lý Pytago</div>
                         <div class="suggestion-chip" onclick="fillSuggestion('Tóm tắt bài Rừng xà nu')">📖 Tóm tắt bài Rừng xà nu</div>
-                        <div class="suggestion-chip" onclick="fillSuggestion('Giúp mình lập kế hoạch ôn thi')">📝 Lập kế hoạch ôn thi</div>
+                        <div class="suggestion-chip" onclick="fillSuggestion('Vẽ một cổng torii dưới mưa hoa anh đào')">🎨 Vẽ một cổng torii dưới hoa anh đào</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="input-area">
-            <div class="input-wrapper">
-                <textarea id="chatInput" rows="1" placeholder="Nhập câu hỏi của bạn..."></textarea>
-                <button id="sendBtn" onclick="sendMessage()">➤</button>
+            <div class="input-shell">
+                <div class="preview-strip" id="previewStrip"></div>
+                <div class="input-wrapper">
+                    <input type="file" id="fileInput" accept="image/*,.txt,.md,.csv,.json,.pdf" multiple style="display:none;" onchange="handleFileSelect(event)">
+                    <button class="attach-btn" title="Đính kèm ảnh / file" onclick="document.getElementById('fileInput').click()">📎</button>
+                    <textarea id="chatInput" rows="1" placeholder="Nhập câu hỏi của bạn... (vd: hãy vẽ / tạo ảnh...)"></textarea>
+                    <button id="sendBtn" onclick="sendMessage()">➤</button>
+                </div>
             </div>
         </div>
         <div class="footer-note">Trợ lý AI có thể mắc lỗi. Hãy kiểm tra lại thông tin quan trọng.</div>
@@ -473,11 +498,16 @@
      * - File này KHÔNG chứa bất kỳ API key nào.
      * - Server thật (có key) chạy trong Termux ở máy khác (server.js, cổng 3000),
      *   được đưa ra Internet qua: cloudflared tunnel --url http://localhost:3000
-     * - Link Cloudflare được cấu hình Ở ĐẦU FILE này (trong thẻ <head>) và KHÔNG
-     *   còn hiển thị trên giao diện — sửa trực tiếp trong code hoặc qua Console:
+     * - Link Cloudflare được cấu hình Ở ĐẦU FILE (trong <head>) và không hiển thị
+     *   trên giao diện. Sửa trực tiếp trong code hoặc qua Console:
      *   localStorage.setItem('backend_url_9a5','https://...')
-     * - Tài khoản (email/mật khẩu) chỉ được lưu trong trình duyệt (localStorage),
-     *   đây là đăng nhập đơn giản cho lớp học, KHÔNG phải hệ thống bảo mật thật.
+     * - Tài khoản (email/mật khẩu) và lịch sử chat được lưu trong localStorage của
+     *   trình duyệt, theo từng email — đây là đăng nhập đơn giản cho lớp học,
+     *   KHÔNG phải hệ thống bảo mật thật.
+     * - Ảnh/file đính kèm được gửi lên backend dưới dạng base64 (inline_data),
+     *   backend (Gemini-style API) có thể trả lời kèm ảnh do AI tạo ra qua
+     *   trường "images" (mảng base64) trong JSON trả về, ví dụ:
+     *   { "text": "...", "images": ["<base64>", ...] }
      */
 
     let BACKEND_URL = window.BACKEND_URL;
@@ -487,14 +517,19 @@
     let currentConversationId = null;
     let currentUser = null;
     let authMode = "login";
+    let pendingAttachments = []; // { name, mimeType, dataUrl, base64, kind: 'image'|'file' }
 
     const USERS_KEY = "users_9a5";
     const SESSION_KEY = "current_user_9a5";
+    const MAX_ATTACHMENTS = 4;
+    const MAX_FILE_BYTES = 6 * 1024 * 1024; // ~6MB mỗi file
 
     function initializeApp() {
         loadBackendUrl();
         const savedTopInput = document.getElementById("topBackendInput");
         if (savedTopInput) savedTopInput.value = BACKEND_URL.includes("DÁN-LINK") ? "" : BACKEND_URL;
+
+        generatePetals();
 
         const session = localStorage.getItem(SESSION_KEY);
         if (session) {
@@ -507,18 +542,34 @@
         setupEventListeners();
     }
 
-    /* ---------- AUTH ---------- */
-    function getUsers() {
-        try {
-            return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-        } catch {
-            return [];
+    function generatePetals() {
+        const container = document.getElementById("petals");
+        if (!container) return;
+        const count = window.innerWidth < 640 ? 16 : 28;
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement("div");
+            p.className = "petal";
+            const left = Math.random() * 100;
+            const size = 6 + Math.random() * 8;
+            const fallDur = 8 + Math.random() * 10;
+            const swayDur = 3 + Math.random() * 3;
+            const delay = Math.random() * -fallDur;
+            p.style.left = left + "vw";
+            p.style.width = size + "px";
+            p.style.height = size * 0.9 + "px";
+            p.style.opacity = (0.5 + Math.random() * 0.45).toFixed(2);
+            p.style.animationDuration = fallDur + "s, " + swayDur + "s";
+            p.style.animationDelay = delay + "s, " + (Math.random() * -swayDur) + "s";
+            container.appendChild(p);
         }
     }
 
-    function saveUsers(users) {
-        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    /* ---------- AUTH ---------- */
+    function getUsers() {
+        try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
+        catch { return []; }
     }
+    function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
 
     function switchAuthTab(mode) {
         authMode = mode;
@@ -534,50 +585,29 @@
         el.textContent = msg;
         el.classList.add("show");
     }
-
-    function hideAuthError() {
-        document.getElementById("authError").classList.remove("show");
-    }
+    function hideAuthError() { document.getElementById("authError").classList.remove("show"); }
 
     function handleAuthSubmit() {
         hideAuthError();
         const email = document.getElementById("authEmail").value.trim().toLowerCase();
         const password = document.getElementById("authPassword").value;
 
-        if (!email || !password) {
-            showAuthError("Vui lòng nhập đầy đủ email và mật khẩu.");
-            return;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showAuthError("Email không hợp lệ.");
-            return;
-        }
+        if (!email || !password) { showAuthError("Vui lòng nhập đầy đủ email và mật khẩu."); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAuthError("Email không hợp lệ."); return; }
 
         const users = getUsers();
 
         if (authMode === "signup") {
-            const confirm = document.getElementById("authConfirm").value;
-            if (password.length < 6) {
-                showAuthError("Mật khẩu cần ít nhất 6 ký tự.");
-                return;
-            }
-            if (password !== confirm) {
-                showAuthError("Mật khẩu nhập lại không khớp.");
-                return;
-            }
-            if (users.some(u => u.email === email)) {
-                showAuthError("Email này đã có tài khoản. Hãy đăng nhập.");
-                return;
-            }
+            const confirmVal = document.getElementById("authConfirm").value;
+            if (password.length < 6) { showAuthError("Mật khẩu cần ít nhất 6 ký tự."); return; }
+            if (password !== confirmVal) { showAuthError("Mật khẩu nhập lại không khớp."); return; }
+            if (users.some(u => u.email === email)) { showAuthError("Email này đã có tài khoản. Hãy đăng nhập."); return; }
             users.push({ email, password });
             saveUsers(users);
             loginAs(email);
         } else {
             const found = users.find(u => u.email === email && u.password === password);
-            if (!found) {
-                showAuthError("Email hoặc mật khẩu không đúng.");
-                return;
-            }
+            if (!found) { showAuthError("Email hoặc mật khẩu không đúng."); return; }
             loginAs(email);
         }
     }
@@ -598,6 +628,7 @@
         chatHistory = [];
         conversations = [];
         currentConversationId = null;
+        clearAttachments();
         document.getElementById("appContainer").classList.add("hidden");
         showAuth();
     }
@@ -618,53 +649,38 @@
         checkBackendStatus();
     }
 
-    /* ---------- CHAT / CONVERSATIONS ---------- */
-    function convKey() {
-        return `conversations_9a5_${currentUser}`;
-    }
+    /* ---------- CHAT / CONVERSATIONS (lưu riêng theo từng tài khoản) ---------- */
+    function convKey() { return `conversations_9a5_${currentUser}`; }
 
     function setupEventListeners() {
         const input = document.getElementById("chatInput");
         input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
         });
         input.addEventListener("input", () => {
             input.style.height = "auto";
             input.style.height = Math.min(input.scrollHeight, 160) + "px";
         });
 
-        document.getElementById("authPassword").addEventListener("keydown", (e) => {
-            if (e.key === "Enter") handleAuthSubmit();
-        });
+        const authPw = document.getElementById("authPassword");
+        if (authPw) authPw.addEventListener("keydown", (e) => { if (e.key === "Enter") handleAuthSubmit(); });
         const confirmField = document.getElementById("authConfirm");
-        if (confirmField) {
-            confirmField.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") handleAuthSubmit();
-            });
-        }
+        if (confirmField) confirmField.addEventListener("keydown", (e) => { if (e.key === "Enter") handleAuthSubmit(); });
     }
 
-    /* ---------- BACKEND URL (không phải secret, chỉ là địa chỉ API; thanh nhập đã bị ẩn) ---------- */
+    /* ---------- BACKEND URL (thanh nhập đã ẩn, chức năng vẫn còn) ---------- */
     function loadBackendUrl() {
         const saved = localStorage.getItem("backend_url_9a5");
         if (saved) BACKEND_URL = saved;
     }
-
     function saveTopBackendUrl() {
         const status = document.getElementById("topBackendStatus");
         const val = document.getElementById("topBackendInput").value.trim().replace(/\/$/, "");
-        if (!val) {
-            status.textContent = "⚠️ Chưa nhập link";
-            return;
-        }
+        if (!val) { if (status) status.textContent = "⚠️ Chưa nhập link"; return; }
         BACKEND_URL = val;
         localStorage.setItem("backend_url_9a5", val);
-        status.textContent = "✅ Đã lưu";
+        if (status) status.textContent = "✅ Đã lưu";
         checkBackendStatus();
-        setTimeout(() => { status.textContent = ""; }, 3000);
     }
 
     async function checkBackendStatus() {
@@ -675,19 +691,13 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ contents: [] }),
             });
-            if (resp.status === 503) {
-                el.textContent = "⚠️ Chưa gắn API key";
-            } else {
-                el.textContent = "✅ Hệ thống sẵn sàng";
-            }
+            el.textContent = resp.status === 503 ? "⚠️ Chưa gắn API key" : "✅ Hệ thống sẵn sàng";
         } catch {
             el.textContent = "❌ Không kết nối được backend";
         }
     }
 
-    function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("collapsed");
-    }
+    function toggleSidebar() { document.getElementById("sidebar").classList.toggle("collapsed"); }
 
     function fillSuggestion(text) {
         const input = document.getElementById("chatInput");
@@ -696,11 +706,8 @@
     }
 
     function loadConversations() {
-        try {
-            conversations = JSON.parse(localStorage.getItem(convKey())) || [];
-        } catch {
-            conversations = [];
-        }
+        try { conversations = JSON.parse(localStorage.getItem(convKey())) || []; }
+        catch { conversations = []; }
         if (conversations.length > 0) {
             currentConversationId = conversations[0].id;
             chatHistory = conversations[0].messages || [];
@@ -711,22 +718,23 @@
     }
 
     function saveConversations() {
-        localStorage.setItem(convKey(), JSON.stringify(conversations));
+        try {
+            localStorage.setItem(convKey(), JSON.stringify(conversations));
+        } catch (e) {
+            console.error("Không thể lưu lịch sử (có thể do ảnh đính kèm quá lớn):", e);
+        }
     }
 
     function saveCurrentConversation() {
         const conv = conversations.find(c => c.id === currentConversationId);
-        if (conv) {
-            conv.messages = chatHistory;
-            saveConversations();
-            updateHistorySidebar();
-        }
+        if (conv) { conv.messages = chatHistory; saveConversations(); updateHistorySidebar(); }
     }
 
     function updateConversationTitle(firstMessage) {
         const conv = conversations.find(c => c.id === currentConversationId);
         if (conv && conv.title === "Cuộc trò chuyện mới") {
-            conv.title = firstMessage.length > 40 ? firstMessage.slice(0, 40) + "…" : firstMessage;
+            const base = firstMessage || "Đính kèm tệp";
+            conv.title = base.length > 40 ? base.slice(0, 40) + "…" : base;
             saveConversations();
             updateHistorySidebar();
         }
@@ -744,7 +752,6 @@
         saveConversations();
         renderChat();
         updateHistorySidebar();
-        document.getElementById("sidebar").classList.remove("collapsed");
         if (window.innerWidth <= 768) document.getElementById("sidebar").classList.add("collapsed");
     }
 
@@ -778,7 +785,7 @@
     function updateHistorySidebar() {
         const container = document.getElementById("historyItems");
         if (conversations.length === 0) {
-            container.innerHTML = `<div style="padding:10px;font-size:12.5px;color:var(--text-secondary);">Chưa có cuộc trò chuyện nào.</div>`;
+            container.innerHTML = `<div style="padding:10px;font-size:12px;color:var(--mist);">Chưa có cuộc trò chuyện nào.</div>`;
             return;
         }
         container.innerHTML = conversations.map(c => `
@@ -789,16 +796,73 @@
         `).join("");
     }
 
+    /* ---------- ĐÍNH KÈM ẢNH / FILE ---------- */
+    function handleFileSelect(event) {
+        const files = Array.from(event.target.files || []);
+        event.target.value = "";
+        if (pendingAttachments.length + files.length > MAX_ATTACHMENTS) {
+            alert(`Chỉ được đính kèm tối đa ${MAX_ATTACHMENTS} tệp mỗi lần gửi.`);
+            return;
+        }
+        files.forEach(file => {
+            if (file.size > MAX_FILE_BYTES) {
+                alert(`Tệp "${file.name}" quá lớn (tối đa 6MB).`);
+                return;
+            }
+            const isImage = file.type.startsWith("image/");
+            const reader = new FileReader();
+            reader.onload = () => {
+                const dataUrl = reader.result;
+                const base64 = dataUrl.split(",")[1];
+                pendingAttachments.push({
+                    name: file.name,
+                    mimeType: file.type || "application/octet-stream",
+                    dataUrl: isImage ? dataUrl : null,
+                    base64,
+                    kind: isImage ? "image" : "file"
+                });
+                renderPreviewStrip();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeAttachment(index) {
+        pendingAttachments.splice(index, 1);
+        renderPreviewStrip();
+    }
+
+    function clearAttachments() {
+        pendingAttachments = [];
+        renderPreviewStrip();
+    }
+
+    function renderPreviewStrip() {
+        const strip = document.getElementById("previewStrip");
+        if (!strip) return;
+        strip.innerHTML = pendingAttachments.map((att, i) => `
+            <div class="preview-chip" title="${escapeHtml(att.name)}">
+                ${att.kind === "image"
+                    ? `<img src="${att.dataUrl}" alt="${escapeHtml(att.name)}">`
+                    : `<div class="file-mini">📄</div>`}
+                <button class="remove-chip" onclick="removeAttachment(${i})">✕</button>
+            </div>
+        `).join("");
+    }
+
+    /* ---------- GỬI / NHẬN TIN NHẮN ---------- */
     async function sendMessage() {
         const input = document.getElementById("chatInput");
         const message = input.value.trim();
-        if (!message) return;
+        const attachments = pendingAttachments.slice();
+        if (!message && attachments.length === 0) return;
 
         if (!currentConversationId) createNewChat();
 
-        addMessage("user", message);
+        addMessage("user", message, attachments);
         input.value = "";
         input.style.height = "auto";
+        clearAttachments();
         input.focus();
 
         showTypingIndicator();
@@ -806,10 +870,17 @@
         sendBtn.disabled = true;
 
         try {
-            const contents = chatHistory.map(m => ({
-                role: m.sender === "user" ? "user" : "model",
-                parts: [{ text: m.text }]
-            }));
+            const contents = chatHistory.map(m => {
+                const parts = [];
+                if (m.text) parts.push({ text: m.text });
+                (m.attachments || []).forEach(att => {
+                    if (att.base64) {
+                        parts.push({ inline_data: { mime_type: att.mimeType, data: att.base64 } });
+                    }
+                });
+                if (parts.length === 0) parts.push({ text: "" });
+                return { role: m.sender === "user" ? "user" : "model", parts };
+            });
 
             const response = await fetch(`${BACKEND_URL}/api/chat`, {
                 method: "POST",
@@ -821,7 +892,10 @@
             if (!response.ok) throw new Error(data.error || `Lỗi API: ${response.status}`);
 
             removeTypingIndicator();
-            addMessage("bot", data.text);
+            // data.text: câu trả lời văn bản
+            // data.images: mảng ảnh do AI tạo ra, dạng base64 (không kèm prefix data:), mặc định coi là PNG
+            const botImages = Array.isArray(data.images) ? data.images : (data.image ? [data.image] : []);
+            addMessage("bot", data.text || (botImages.length ? "" : "(Không có nội dung trả về)"), [], botImages);
             updateConversationTitle(message);
 
         } catch (error) {
@@ -833,8 +907,14 @@
         }
     }
 
-    function addMessage(sender, text) {
-        chatHistory.push({ sender, text, time: new Date().toLocaleTimeString("vi-VN") });
+    function addMessage(sender, text, attachments, generatedImages) {
+        chatHistory.push({
+            sender,
+            text,
+            time: new Date().toLocaleTimeString("vi-VN"),
+            attachments: attachments || [],
+            generatedImages: generatedImages || []
+        });
         saveCurrentConversation();
         renderChat();
     }
@@ -866,7 +946,7 @@
 
     function escapeHtml(text) {
         const div = document.createElement("div");
-        div.textContent = text;
+        div.textContent = text == null ? "" : text;
         return div.innerHTML;
     }
 
@@ -876,25 +956,51 @@
         if (chatHistory.length === 0) {
             inner.innerHTML = `
                 <div class="empty-state">
-                    <div class="logo">9A5</div>
+                    <svg class="torii-mini" viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="30" y="40" width="340" height="26" rx="4" fill="#ff7aa2" opacity="0.95"/>
+                        <rect x="30" y="78" width="340" height="10" fill="#ff7aa2" opacity="0.8"/>
+                        <rect x="150" y="66" width="12" height="16" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="238" y="66" width="12" height="16" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="185" y="88" width="30" height="14" fill="#ff7aa2" opacity="0.85"/>
+                        <rect x="90" y="88" width="20" height="360" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="290" y="88" width="20" height="360" fill="#ff7aa2" opacity="0.9"/>
+                        <rect x="80" y="200" width="240" height="12" fill="#ff7aa2" opacity="0.6"/>
+                    </svg>
                     <h2>9A5 THCS An Điền AI</h2>
-                    <p>Hỏi bất cứ điều gì — bài tập, kiến thức, hay chỉ để trò chuyện.</p>
+                    <p>Hỏi bất cứ điều gì — bài tập, kiến thức, tạo ảnh, hay chỉ để trò chuyện.</p>
                     <div class="suggestions">
                         <div class="suggestion-chip" onclick="fillSuggestion('Giải thích định lý Pytago')">📐 Giải thích định lý Pytago</div>
                         <div class="suggestion-chip" onclick="fillSuggestion('Tóm tắt bài Rừng xà nu')">📖 Tóm tắt bài Rừng xà nu</div>
-                        <div class="suggestion-chip" onclick="fillSuggestion('Giúp mình lập kế hoạch ôn thi')">📝 Lập kế hoạch ôn thi</div>
+                        <div class="suggestion-chip" onclick="fillSuggestion('Vẽ một cổng torii dưới mưa hoa anh đào')">🎨 Vẽ một cổng torii dưới hoa anh đào</div>
                     </div>
                 </div>
             `;
             return;
         }
 
-        inner.innerHTML = chatHistory.map(m => `
-            <div class="message ${m.sender}">
-                <div class="avatar">${m.sender === "user" ? "Bạn" : "AI"}</div>
-                <div class="message-body">${escapeHtml(m.text)}</div>
-            </div>
-        `).join("");
+        inner.innerHTML = chatHistory.map(m => {
+            const thumbs = (m.attachments && m.attachments.length) ? `
+                <div class="attach-thumbs">
+                    ${m.attachments.map(att => att.kind === "image"
+                        ? `<div class="attach-thumb"><img src="${att.dataUrl}" alt="${escapeHtml(att.name)}"></div>`
+                        : `<div class="attach-thumb"><div class="file-chip"><span class="file-icon">📄</span><span>${escapeHtml(att.name)}</span></div></div>`
+                    ).join("")}
+                </div>` : "";
+
+            const genImages = (m.generatedImages && m.generatedImages.length) ?
+                m.generatedImages.map(b64 => `<img class="msg-image" src="data:image/png;base64,${b64}" alt="Ảnh do AI tạo">`).join("") : "";
+
+            return `
+                <div class="message ${m.sender}">
+                    <div class="avatar">${m.sender === "user" ? "Bạn" : "AI"}</div>
+                    <div class="message-body">
+                        ${thumbs}
+                        ${m.text ? escapeHtml(m.text) : ""}
+                        ${genImages}
+                    </div>
+                </div>
+            `;
+        }).join("");
 
         scrollToBottom();
     }
