@@ -3,472 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homeless Stats - Blox Fruits Live Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <title>THCS An Điền Community</title>
     <style>
-        :root {
-            --bg-color: #090d16;
-            --card-bg: rgba(22, 27, 34, 0.75);
-            --border-color: rgba(245, 158, 11, 0.2);
-            --primary: #f59e0b;
-            --primary-hover: #d97706;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-        }
-
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        body {
-            background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 10% 20%, rgba(245, 158, 11, 0.08) 0px, transparent 50%),
-                radial-gradient(at 90% 80%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 460px;
-            padding: 28px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.05);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
         }
 
-        .header-flex {
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
         }
 
-        h2 {
-            color: var(--primary);
-            margin: 0;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
-        }
-
-        .admin-toggle a {
-            color: var(--text-muted);
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
             text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .admin-toggle a:hover { color: var(--primary); border-color: var(--primary); }
-
-        .admin-panel {
-            display: none;
-            background: rgba(13, 17, 23, 0.95);
-            border: 1px solid var(--primary);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 20px;
-            animation: fadeIn 0.3s ease;
+            color: white;
         }
 
-        .admin-panel input {
-            width: 100%;
-            background: #090d16;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 10px 12px;
-            color: #fff;
-            font-size: 13px;
-            margin-bottom: 8px;
-            outline: none;
+        .logo span {
+            font-size: 28px;
         }
-        .admin-panel input:focus { border-color: var(--primary); }
-        .admin-panel button {
-            background: var(--primary);
-            color: #000;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 13px;
-        }
-        .admin-panel button:hover { background: var(--primary-hover); }
 
-        .script-box {
-            background: rgba(13, 17, 23, 0.6);
-            border: 1px dashed rgba(245, 158, 11, 0.4);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 20px;
+        /* Navigation */
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
         }
-        .script-title { font-size: 11px; color: var(--primary); font-weight: 700; margin-bottom: 6px; }
-        .script-code {
-            background: #05070a;
-            color: #4ade80;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #1f2937;
-            word-break: break-all;
-            margin-bottom: 8px;
-            max-height: 90px;
-            overflow-y: auto;
-        }
-        .btn-copy {
-            background: #238636;
-            color: #fff;
-            border: none;
-            font-size: 12px;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            width: 100%;
-            transition: 0.2s;
-        }
-        .btn-copy:hover { background: #2ea043; }
 
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .input-group input {
-            flex: 1;
-            background: rgba(13, 17, 23, 0.8);
-            border: 1px solid #30363d;
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin: 20px 0;
             border-radius: 10px;
-            padding: 12px 16px;
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
-        button.btn-search {
-            background: var(--primary);
-            color: #000;
-            border: none;
-            font-weight: 700;
-            border-radius: 10px;
-            padding: 0 22px;
+
+        .banner h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .banner p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        main {
+            min-height: 600px;
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
-            transition: 0.2s;
-        }
-        button.btn-search:hover { background: var(--primary-hover); }
-
-        .stats-box {
-            display: none;
-            background: rgba(13, 17, 23, 0.8);
-            border-radius: 14px;
-            padding: 18px;
-            border: 1px solid #1f2937;
-            animation: fadeIn 0.4s ease;
         }
 
-        .user-header {
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
-            gap: 14px;
-            border-bottom: 1px solid #1f2937;
-            padding-bottom: 14px;
-            margin-bottom: 14px;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
         }
-        .avatar { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--primary); background: #1f2937; }
-        .user-meta { flex: 1; }
-        .display-name { font-weight: 700; font-size: 16px; color: #fff; }
-        .username { font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
-        
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; text-align: center; text-transform: uppercase; }
-        .badge-online { background: rgba(35, 134, 54, 0.2); color: #3fb950; border: 1px solid rgba(35, 134, 54, 0.4); }
-        .badge-offline { background: rgba(218, 54, 51, 0.2); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.4); }
 
-        .stats-grid {
+        .news-content {
+            padding: 20px;
+        }
+
+        .news-date {
+            color: #667eea;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .news-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .news-author {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .read-more {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .read-more:hover {
+            color: #764ba2;
+        }
+
+        /* Info Section */
+        .info-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .info-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .info-section p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
         }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            padding: 10px 12px;
+        .footer-section h4 {
+            margin-bottom: 15px;
+            color: #667eea;
         }
-        .stat-card.full { grid-column: span 2; }
-        .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .stat-value { font-size: 14px; font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
-        
-        .error { color: #f85149; font-size: 13px; text-align: center; margin-top: 10px; display: none; font-weight: 600; }
-        
+
+        .footer-section p, .footer-section li {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #555;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .banner h1 {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .news-card {
+            animation: fadeIn 0.6s ease-out forwards;
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="header-flex">
-            <h2>Homeless Stats</h2>
-            <div class="admin-toggle">
-                <a onclick="toggleAdmin()">⚙️ Cài đặt Link</a>
-            </div>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <span>📚</span> THCS An Điền
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#home">Trang chủ</a></li>
+                    <li><a href="#news">Tin tức</a></li>
+                    <li><a href="#about">Giới thiệu</a></li>
+                    <li><a href="#contact">Liên hệ</a></li>
+                </ul>
+            </nav>
         </div>
+    </header>
 
-        <!-- Panel Mật khẩu -->
-        <div id="passPanel" class="admin-panel">
-            <div style="font-size: 12px; color: var(--primary); font-weight: 700; margin-bottom: 6px;">🔐 NHẬP MẬT KHẨU ADMIN</div>
-            <input type="password" id="adminPass" placeholder="Nhập mật khẩu...">
-            <button onclick="checkPassword()">Xác nhận</button>
-            <div id="errorPass" style="color: #f85149; font-size: 11px; margin-top: 6px; display: none;">Sai mật khẩu!</div>
-        </div>
-
-        <!-- Panel Đổi Link Cloudflare -->
-        <div id="configPanel" class="admin-panel">
-            <div style="font-size: 12px; color: #3fb950; font-weight: 700; margin-bottom: 6px;">⚡ ĐỔI LINK CLOUDFLARE (PORT 6000)</div>
-            <input type="text" id="newUrl" placeholder="https://xxx.trycloudflare.com">
-            <button onclick="saveConfig()" style="background: var(--primary); color: #000;">Lưu Cấu Hình</button>
-        </div>
-        
-        <!-- Hộp mã Lua -->
-        <div class="script-box">
-            <div class="script-title">⚡ MÃ LUA CHẠY TRONG GAME (AUTO CẬP NHẬT):</div>
-            <div class="script-code" id="luaScriptText">Đang tải mã...</div>
-            <button class="btn-copy" onclick="copyScript()">Sao chép Mã Lua</button>
-        </div>
-
-        <!-- Khung tìm kiếm -->
-        <div class="input-group">
-            <input type="text" id="usernameInput" placeholder="Nhập Roblox Username..." onkeypress="if(event.key === 'Enter') startTracking()">
-            <button class="btn-search" onclick="startTracking()">Tra cứu</button>
-        </div>
-        
-        <div id="errorMsg" class="error"></div>
-        
-        <!-- Bảng hiển thị thông số chi tiết -->
-        <div id="statsBox" class="stats-box">
-            <div class="user-header">
-                <img id="dispAvatar" class="avatar" src="" alt="avatar">
-                <div class="user-meta">
-                    <div id="dispDisplayName" class="display-name">---</div>
-                    <div id="dispUsername" class="username">@---</div>
-                </div>
-                <span class="badge" id="dispStatus">OFFLINE</span>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-label">Khu vực (Sea)</span>
-                    <span class="stat-value" id="dispGame" style="color: #38bdf8;">---</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Chủng Tộc (Race)</span>
-                    <span class="stat-value" id="dispRace" style="color: #ec4899;">---</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Cấp Độ (Level)</span>
-                    <span class="stat-value" id="dispLevel" style="color: #4ade80;">---</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Tiền Beli</span>
-                    <span class="stat-value" id="dispBeli" style="color: #fbbf24;">$0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Mảnh (Fragments)</span>
-                    <span class="stat-value" id="dispFragments" style="color: #a855f7;">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Bounty / Honor</span>
-                    <span class="stat-value" id="dispBounty" style="color: #f43f5e;">0</span>
-                </div>
-                <div class="stat-card full">
-                    <span class="stat-label">Cập nhật lúc</span>
-                    <span class="stat-value" id="dispTime" style="color: var(--text-muted); font-size: 12px;">--:--:--</span>
-                </div>
-            </div>
-        </div>
+    <!-- Banner -->
+    <div class="banner" id="home">
+        <h1>🎓 Trung học cơ sở An Điền</h1>
+        <p>Community - Cộng đồng học tập tuyệt vời</p>
     </div>
 
-    <script>
-        let CLOUDFLARE_URL = localStorage.getItem('cf_url') || "https://recommend-bloomberg-refrigerator-synopsis.trycloudflare.com";
+    <!-- Main Content -->
+    <main class="container">
+        <!-- News Section -->
+        <section id="news">
+            <h2 class="section-title">📰 Tin Tức & Thông Báo</h2>
+            <div class="news-grid">
+                <!-- News 1 -->
+                <div class="news-card">
+                    <div class="news-image">📣</div>
+                    <div class="news-content">
+                        <div class="news-date">14 Tháng 9, 2024</div>
+                        <h3 class="news-title">Khai Giảng Năm Học Mới 2024-2025</h3>
+                        <div class="news-author">Đăng bởi: Admin</div>
+                        <p class="news-description">Chào mừng các em học sinh quay trở lại trường. Năm học mới sẽ mang đến những điều mới lạ và bổ ích...</p>
+                        <a href="#" class="read-more">Đọc thêm →</a>
+                    </div>
+                </div>
 
-        function toggleAdmin() {
-            const passPanel = document.getElementById('passPanel');
-            const configPanel = document.getElementById('configPanel');
-            
-            if (configPanel.style.display === 'block') {
-                configPanel.style.display = 'none';
-            } else {
-                passPanel.style.display = passPanel.style.display === 'block' ? 'none' : 'block';
-            }
-            document.getElementById('errorPass').style.display = 'none';
-        }
+                <!-- News 2 -->
+                <div class="news-card">
+                    <div class="news-image">🏆</div>
+                    <div class="news-content">
+                        <div class="news-date">12 Tháng 9, 2024</div>
+                        <h3 class="news-title">Hội Khỏe Phù Đổng - Cuộc Thi Thể Thao Toàn Trường</h3>
+                        <div class="news-author">Đăng bởi: Admin</div>
+                        <p class="news-description">Trường sẽ tổ chức giải thể thao lớn vào cuối tháng 9. Các em có cơ hội khoe tài năng thể thao...</p>
+                        <a href="#" class="read-more">Đọc thêm →</a>
+                    </div>
+                </div>
 
-        function checkPassword() {
-            const pass = document.getElementById('adminPass').value;
-            const errDiv = document.getElementById('errorPass');
+                <!-- News 3 -->
+                <div class="news-card">
+                    <div class="news-image">📚</div>
+                    <div class="news-content">
+                        <div class="news-date">10 Tháng 9, 2024</div>
+                        <h3 class="news-title">Thư Viện Trường - Giờ Mở Cửa Mới</h3>
+                        <div class="news-author">Đăng bởi: Admin</div>
+                        <p class="news-description">Thư viện trường đã có giờ mở cửa mới thuận tiện cho học sinh tìm kiếm tài liệu học tập...</p>
+                        <a href="#" class="read-more">Đọc thêm →</a>
+                    </div>
+                </div>
 
-            if (pass === "27102012Dat@") {
-                document.getElementById('passPanel').style.display = 'none';
-                document.getElementById('configPanel').style.display = 'block';
-                document.getElementById('adminPass').value = '';
-                errDiv.style.display = 'none';
-            } else {
-                errDiv.style.display = 'block';
-            }
-        }
+                <!-- News 4 -->
+                <div class="news-card">
+                    <div class="news-image">🎨</div>
+                    <div class="news-content">
+                        <div class="news-date">8 Tháng 9, 2024</div>
+                        <h3 class="news-title">Cuộc Thi Vẽ Tranh - Chủ Đề "Tương Lai Xanh"</h3>
+                        <div class="news-author">Đăng bởi: Admin</div>
+                        <p class="news-description">Cơ hội để các em thể hiện sáng tạo của mình qua các tác phẩm tranh vẽ ý nghĩa...</p>
+                        <a href="#" class="read-more">Đọc thêm →</a>
+                    </div>
+                </div>
 
-        function saveConfig() {
-            const url = document.getElementById('newUrl').value.trim();
-            if (!url) {
-                alert("Vui lòng nhập link Cloudflare!");
-                return;
-            }
+                <!-- News 5 -->
+                <div class="news-card">
+                    <div class="news-image">💻</div>
+                    <div class="news-content">
+                        <div class="news-date">5 Tháng 9, 2024</div>
+                        <h3 class="news-title">Khai Giảng Lớp Tin Học - Công Nghệ Thông Tin</h3>
+                        <div class="news-author">Đăng bởi: Admin</div>
+                        <p class="news-description">Các khóa học tin học mới với chương trình hiện đại, giúp em làm quen với công nghệ...</p>
+                        <a href="#" class="read-more">Đọc thêm →</a>
+                    </div>
+                </div>
 
-            CLOUDFLARE_URL = url.replace(/\/$/, '');
-            localStorage.setItem('cf_url', CLOUDFLARE_URL);
-            
-            alert("Đã cập nhật link Cloudflare thành công!");
-            document.getElementById('configPanel').style.display = 'none';
-            document.getElementById('newUrl').value = '';
-            loadScriptTemplate();
-        }
+                <!-- News 6 -->
+                <div class="news-card">
+                    <div class="news-image">🌟</div>
+                    <div class="news-content">
+                        <div class="news-date">3 Tháng 9, 2024</div>
+                        <h3 class="news-title">Danh Sách Học Sinh Xuất Sắc Năm Học Trước</h3>
+                        <div class="news-author">Đăng bởi: Admin</div>
+                        <p class="news-description">Tôn vinh những em học sinh đã có thành tích xuất sắc trong năm học 2023-2024...</p>
+                        <a href="#" class="read-more">Đọc thêm →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        function loadScriptTemplate() {
-            const luaCode = `local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+        <!-- About Section -->
+        <section id="about" style="margin-top: 50px;">
+            <h2 class="section-title">ℹ️ Giới Thiệu Trường</h2>
+            <div class="info-section">
+                <h3>Về Trường THCS An Điền</h3>
+                <p>
+                    Trường Trung học cơ sở An Điền là một trường công lập với lịch sử phát triển lâu dài, luôn nỗ lực cung cấp 
+                    chất lượng giáo dục tốt nhất cho các em học sinh. Với đội ngũ giáo viên tâm huyết, cơ sở vật chất hiện đại, 
+                    trường tạo dựng môi trường học tập an toàn, thân thiện và năng động.
+                </p>
+            </div>
 
-local SERVER_URL = "${CLOUDFLARE_URL}/api/update"
-local sendRequest = (syn and syn.request) or (http and http.request) or http_request or request
+            <div class="info-section">
+                <h3>Sứ Mệnh</h3>
+                <p>
+                    Cung cấp giáo dục chất lượng cao, giúp học sinh phát triển toàn diện về kiến thức, kỹ năng và phẩm chất, 
+                    để các em trở thành công dân có trách nhiệm, tôn trọng pháp luật và yêu nước.
+                </p>
+            </div>
 
-local function getCurrentSea()
-    local placeId = game.PlaceId
-    if placeId == 2753915549 then return "Sea 1"
-    elseif placeId == 4442272183 then return "Sea 2"
-    elseif placeId == 7449423635 then return "Sea 3"
-    else return "Blox Fruits" end
-end
+            <div class="info-section">
+                <h3>Tầm Nhìn</h3>
+                <p>
+                    Xây dựng một trường học văn minh, hiện đại, nơi mỗi học sinh được khuyến khích khám phá tiềm năng của mình 
+                    và phát triển thành những cá nhân tự tin, sáng tạo và có ích cho xã hội.
+                </p>
+            </div>
+        </section>
 
-task.spawn(function()
-    while task.wait(3) do
-        pcall(function()
-            local level = 0
-            local beli = 0
-            local fragments = 0
-            local bounty = 0
-            local race = "Human"
-            
-            if player:FindFirstChild("Data") then
-                local data = player.Data
-                if data:FindFirstChild("Level") then level = data.Level.Value end
-                if data:FindFirstChild("Beli") then beli = data.Beli.Value end
-                if data:FindFirstChild("Fragments") then fragments = data.Fragments.Value end
-                if data:FindFirstChild("Race") then race = data.Race.Value end
-            end
-            
-            if player:FindFirstChild("leaderstats") then
-                local ls = player.leaderstats
-                if ls:FindFirstChild("Bounty / Honor") then bounty = ls["Bounty / Honor"].Value
-                elseif ls:FindFirstChild("Bounty") then bounty = ls.Bounty.Value end
-            end
+        <!-- Contact Section -->
+        <section id="contact" style="margin-top: 50px;">
+            <h2 class="section-title">📞 Thông Tin Liên Hệ</h2>
+            <div class="info-section">
+                <h3>Địa Chỉ</h3>
+                <p>📍 Thôn An Điền, Xã [Tên Xã], Huyện [Tên Huyện], Tỉnh [Tên Tỉnh]</p>
+            </div>
 
-            local payload = {
-                username = player.Name,
-                game = getCurrentSea(),
-                level = level,
-                beli = beli,
-                fragments = fragments,
-                bounty = bounty,
-                race = tostring(race),
-                status = "AUTO FARMING"
-            }
-            
-            if sendRequest then
-                sendRequest({
-                    Url = SERVER_URL,
-                    Method = "POST",
-                    Headers = { ["Content-Type"] = "application/json" },
-                    Body = HttpService:JSONEncode(payload)
-                })
-            end
-        end)
-    end
-end)`;
-            document.getElementById('luaScriptText').innerText = luaCode;
-        }
-        loadScriptTemplate();
+            <div class="info-section">
+                <h3>Thông Tin Liên Hệ</h3>
+                <p>📧 Email: <a href="mailto:andien@gmail.com" style="color: #667eea;">andien@gmail.com</a></p>
+                <p>📱 Điện Thoại: <a href="tel:0123456789" style="color: #667eea;">0123 456 789</a></p>
+                <p>⏰ Giờ làm việc: Thứ Hai - Thứ Sáu (7:00 - 17:00)</p>
+            </div>
+        </section>
+    </main>
 
-        function copyScript() {
-            const scriptText = document.getElementById("luaScriptText").innerText;
-            navigator.clipboard.writeText(scriptText).then(() => {
-                alert("Đã sao chép mã Lua thành công!");
-            });
-        }
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>🎓 Về Trường</h4>
+                    <ul>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Sứ mệnh & Tầm nhìn</a></li>
+                        <li><a href="#">Lịch sử</a></li>
+                        <li><a href="#">Đội ngũ giáo viên</a></li>
+                    </ul>
+                </div>
 
-        let loopId = null;
+                <div class="footer-section">
+                    <h4>📚 Giáo Dục</h4>
+                    <ul>
+                        <li><a href="#">Chương trình học</a></li>
+                        <li><a href="#">Hoạt động ngoại khoá</a></li>
+                        <li><a href="#">Kết quả học tập</a></li>
+                        <li><a href="#">Thư viện</a></li>
+                    </ul>
+                </div>
 
-        async function fetchStats() {
-            const user = document.getElementById('usernameInput').value.trim();
-            const errDiv = document.getElementById('errorMsg');
-            const statsBox = document.getElementById('statsBox');
+                <div class="footer-section">
+                    <h4>👥 Cộng Đồng</h4>
+                    <ul>
+                        <li><a href="#">Tin tức</a></li>
+                        <li><a href="#">Sự kiện</a></li>
+                        <li><a href="#">Thành tích học sinh</a></li>
+                        <li><a href="#">Thư từ phụ huynh</a></li>
+                    </ul>
+                </div>
 
-            if (!user) return;
+                <div class="footer-section">
+                    <h4>📞 Liên Hệ</h4>
+                    <p>Thôn An Điền</p>
+                    <p>Huyện [Tên Huyện]</p>
+                    <p>Email: <a href="#">andien@gmail.com</a></p>
+                    <p>Phone: <a href="#">0123 456 789</a></p>
+                </div>
+            </div>
 
-            try {
-                const res = await fetch(`${CLOUDFLARE_URL}/api/stats?username=` + encodeURIComponent(user));
-                const data = await res.json();
-
-                if (!res.ok) {
-                    errDiv.innerText = data.error;
-                    errDiv.style.display = 'block';
-                    statsBox.style.display = 'none';
-                    return;
-                }
-
-                errDiv.style.display = 'none';
-                statsBox.style.display = 'block';
-                
-                document.getElementById('dispAvatar').src = data.avatarUrl;
-                document.getElementById('dispDisplayName').innerText = data.displayName;
-                document.getElementById('dispUsername').innerText = '@' + data.username;
-                document.getElementById('dispGame').innerText = data.game;
-                document.getElementById('dispRace').innerText = data.race;
-                document.getElementById('dispLevel').innerText = 'Lv. ' + Number(data.level).toLocaleString();
-                document.getElementById('dispBeli').innerText = '$' + Number(data.beli).toLocaleString();
-                document.getElementById('dispFragments' ).innerText = Number(data.fragments).toLocaleString();
-                document.getElementById('dispBounty').innerText = Number(data.bounty).toLocaleString();
-                document.getElementById('dispTime').innerText = data.lastUpdated;
-
-                const statusBadge = document.getElementById('dispStatus');
-                statusBadge.innerText = data.status;
-                statusBadge.className = 'badge ' + (data.status === 'ONLINE' || data.status === 'AUTO FARMING' || data.status === 'IN-GAME' ? 'badge-online' : 'badge-offline');
-            } catch (e) {
-                errDiv.innerText = 'Lỗi kết nối tới Termux Server (Hãy chắc chắn Termux đang mở và Port 6000 đúng)';
-                errDiv.style.display = 'block';
-            }
-        }
-
-        function startTracking() {
-            if (loopId) clearInterval(loopId);
-            fetchStats();
-            loopId = setInterval(fetchStats, 3000);
-        }
-    </script>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Trường THCS An Điền. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
