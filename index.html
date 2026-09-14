@@ -5,6 +5,8 @@
      👉 SỬA LINK CLOUDFLARE Ở DÒNG NGAY DƯỚI ĐÂY (dòng tiếp theo)
      Lấy link từ lệnh: cloudflared tunnel --url http://localhost:3000
      Dán vào giữa 2 dấu ngoặc kép, giữ nguyên "https://" ở đầu.
+     (Thanh nhập link này đã được ẨN khỏi giao diện — chỉ sửa ở đây,
+     hoặc mở Console trình duyệt và gõ: localStorage.setItem('backend_url_9a5','https://...'))
      ============================================================ -->
 <script>
     window.BACKEND_URL = "https://honolulu-accompanying-symantec-issn.trycloudflare.com";
@@ -25,6 +27,7 @@
         --accent:#10a37f;
         --accent-hover:#0d8c6d;
         --border:#3a3a3a;
+        --danger:#ff6b6b;
     }
 
     body {
@@ -37,6 +40,7 @@
     }
 
     .container { display:flex; width:100%; height:100vh; }
+    .container.hidden { display:none; }
 
     /* ---------- SIDEBAR ---------- */
     .sidebar {
@@ -67,7 +71,6 @@
         transition: background .2s;
     }
     .close-sidebar-btn:hover { background: var(--bg-sidebar-hover); }
-    /* Chỉ hiện nút đóng khi sidebar đang ở chế độ overlay (màn hình hẹp) */
     @media (min-width: 769px) {
         .close-sidebar-btn { display: none; }
     }
@@ -126,7 +129,7 @@
         cursor:pointer; font-size:13px; padding:2px 4px;
     }
     .history-item:hover .del-btn { opacity:1; }
-    .del-btn:hover { color:#ff6b6b; }
+    .del-btn:hover { color:var(--danger); }
 
     .sidebar-bottom {
         padding: 12px;
@@ -142,6 +145,24 @@
         text-align:center;
     }
 
+    .account-line {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        padding: 8px 10px;
+        background: var(--bg-sidebar-hover);
+        border-radius: 10px;
+        font-size: 12.5px;
+    }
+    .account-email { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color: var(--text-primary); }
+    .logout-btn {
+        background:none; border:1px solid var(--border); color: var(--text-secondary);
+        padding: 5px 9px; border-radius: 7px; cursor:pointer; font-size: 11.5px; white-space:nowrap;
+        transition: background .15s, color .15s;
+    }
+    .logout-btn:hover { background: var(--bg-main); color: var(--danger); }
+
     /* ---------- MAIN ---------- */
     .main-content {
         flex: 1;
@@ -151,48 +172,9 @@
         min-width: 0;
     }
 
-    .link-bar {
-        display:flex;
-        align-items:center;
-        gap: 8px;
-        padding: 8px 14px;
-        background: #12261f;
-        border-bottom: 1px solid var(--border);
-        flex-wrap: wrap;
-    }
-    .link-bar-label {
-        font-size: 12px;
-        color: var(--text-secondary);
-        white-space: nowrap;
-    }
-    #topBackendInput {
-        flex: 1;
-        min-width: 180px;
-        padding: 7px 10px;
-        background: var(--bg-input);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        color: var(--text-primary);
-        font-size: 12.5px;
-        outline: none;
-    }
-    #topBackendInput:focus { border-color: var(--accent); }
-    .link-bar-save {
-        padding: 7px 14px;
-        background: var(--accent);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-size: 12.5px;
-        font-weight: 600;
-        cursor: pointer;
-    }
-    .link-bar-save:hover { background: var(--accent-hover); }
-    .link-bar-status {
-        font-size: 11.5px;
-        color: var(--text-secondary);
-        white-space: nowrap;
-    }
+    /* Thanh cấu hình link Cloudflare: ẨN khỏi giao diện theo yêu cầu.
+       Chức năng lưu link vẫn còn trong JS, chỉ không hiển thị trên web. */
+    .link-bar { display: none; }
 
     .top-bar {
         display:flex;
@@ -233,7 +215,7 @@
         width: 30px; height: 30px; min-width: 30px;
         border-radius: 6px;
         display:flex; align-items:center; justify-content:center;
-        font-size: 15px; font-weight: bold;
+        font-size: 13px; font-weight: bold;
     }
     .message.user .avatar { background: #5a5a5a; color:#fff; }
     .message.bot .avatar { background: var(--accent); color:#fff; }
@@ -265,7 +247,7 @@
         width: 56px; height: 56px; border-radius: 14px;
         background: var(--accent);
         display:flex; align-items:center; justify-content:center;
-        font-size: 22px; font-weight:bold; color:#fff; margin-bottom: 8px;
+        font-size: 18px; font-weight:bold; color:#fff; margin-bottom: 8px;
     }
     .empty-state h2 { font-size: 22px; font-weight:600; }
     .empty-state p { color: var(--text-secondary); font-size: 14px; max-width: 320px; }
@@ -324,10 +306,107 @@
         .sidebar:not(.collapsed) { margin-left: 0; }
         .chat-inner { padding: 16px 14px 30px; }
     }
+
+    /* ---------- AUTH SCREEN ---------- */
+    .auth-screen {
+        width: 100%; height: 100vh;
+        display:flex; align-items:center; justify-content:center;
+        background: var(--bg-main);
+        padding: 20px;
+    }
+    .auth-screen.hidden { display:none; }
+
+    .auth-card {
+        width: 100%; max-width: 360px;
+        background: var(--bg-sidebar);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 32px 28px;
+    }
+    .auth-logo {
+        width: 52px; height: 52px; border-radius: 14px;
+        background: var(--accent);
+        display:flex; align-items:center; justify-content:center;
+        font-size: 16px; font-weight:bold; color:#fff;
+        margin: 0 auto 16px;
+    }
+    .auth-card h2 { text-align:center; font-size: 19px; font-weight:600; margin-bottom: 4px; }
+    .auth-card .auth-sub { text-align:center; font-size: 13px; color: var(--text-secondary); margin-bottom: 22px; }
+
+    .auth-tabs { display:flex; background: var(--bg-input); border-radius: 10px; padding: 3px; margin-bottom: 20px; }
+    .auth-tab {
+        flex:1; text-align:center; padding: 8px 0; font-size: 13.5px; border-radius: 8px;
+        cursor:pointer; color: var(--text-secondary); transition: background .15s, color .15s;
+    }
+    .auth-tab.active { background: var(--accent); color:#fff; }
+
+    .auth-field { margin-bottom: 14px; }
+    .auth-field label { display:block; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 6px; }
+    .auth-field input {
+        width: 100%; padding: 11px 13px;
+        background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px;
+        color: var(--text-primary); font-size: 14px; outline: none;
+        transition: border-color .15s;
+    }
+    .auth-field input:focus { border-color: var(--accent); }
+
+    .auth-error {
+        font-size: 12.5px; color: var(--danger);
+        background: rgba(255,107,107,0.1);
+        border: 1px solid rgba(255,107,107,0.3);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin-bottom: 14px;
+        display:none;
+    }
+    .auth-error.show { display:block; }
+
+    .auth-submit {
+        width: 100%; padding: 12px 0;
+        background: var(--accent); color:#fff; border:none; border-radius: 10px;
+        font-size: 14.5px; font-weight:600; cursor:pointer;
+        transition: background .2s;
+    }
+    .auth-submit:hover { background: var(--accent-hover); }
+    .auth-note { text-align:center; font-size: 11.5px; color: var(--text-secondary); margin-top: 16px; line-height:1.5; }
 </style>
 </head>
 <body>
-<div class="container">
+
+<!-- ================= AUTH SCREEN ================= -->
+<div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+        <div class="auth-logo">9A5</div>
+        <h2>9A5 THCS An Điền AI</h2>
+        <div class="auth-sub">Đăng nhập để bắt đầu trò chuyện</div>
+
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Đăng nhập</div>
+            <div class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Tạo tài khoản</div>
+        </div>
+
+        <div class="auth-error" id="authError"></div>
+
+        <div class="auth-field">
+            <label for="authEmail">Email</label>
+            <input type="email" id="authEmail" placeholder="ten@gmail.com" autocomplete="username" />
+        </div>
+        <div class="auth-field">
+            <label for="authPassword">Mật khẩu</label>
+            <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <div class="auth-field" id="authConfirmWrap" style="display:none;">
+            <label for="authConfirm">Nhập lại mật khẩu</label>
+            <input type="password" id="authConfirm" placeholder="••••••••" autocomplete="new-password" />
+        </div>
+
+        <button class="auth-submit" id="authSubmitBtn" onclick="handleAuthSubmit()">Đăng nhập</button>
+        <div class="auth-note">Tài khoản được lưu ngay trên trình duyệt này (localStorage), dùng cho lớp 9A5 — không dùng mật khẩu quan trọng ở nơi khác cho tài khoản này.</div>
+    </div>
+</div>
+
+<!-- ================= MAIN APP ================= -->
+<div class="container hidden" id="appContainer">
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-top">
@@ -339,6 +418,10 @@
         <div class="history-title">LỊCH SỬ TRÒ CHUYỆN</div>
         <div class="history-items" id="historyItems"></div>
         <div class="sidebar-bottom">
+            <div class="account-line">
+                <span class="account-email" id="accountEmail"></span>
+                <button class="logout-btn" onclick="logout()">Đăng xuất</button>
+            </div>
             <div class="status-line" id="statusLine">Đang kết nối...</div>
         </div>
     </div>
@@ -390,8 +473,11 @@
      * - File này KHÔNG chứa bất kỳ API key nào.
      * - Server thật (có key) chạy trong Termux ở máy khác (server.js, cổng 3000),
      *   được đưa ra Internet qua: cloudflared tunnel --url http://localhost:3000
-     * - Link được cấu hình Ở ĐẦU FILE này (trong thẻ <head>, xem dòng ~10) —
-     *   sửa ở đó, không sửa ở đây.
+     * - Link Cloudflare được cấu hình Ở ĐẦU FILE này (trong thẻ <head>) và KHÔNG
+     *   còn hiển thị trên giao diện — sửa trực tiếp trong code hoặc qua Console:
+     *   localStorage.setItem('backend_url_9a5','https://...')
+     * - Tài khoản (email/mật khẩu) chỉ được lưu trong trình duyệt (localStorage),
+     *   đây là đăng nhập đơn giản cho lớp học, KHÔNG phải hệ thống bảo mật thật.
      */
 
     let BACKEND_URL = window.BACKEND_URL;
@@ -399,14 +485,142 @@
     let chatHistory = [];
     let conversations = [];
     let currentConversationId = null;
+    let currentUser = null;
+    let authMode = "login";
+
+    const USERS_KEY = "users_9a5";
+    const SESSION_KEY = "current_user_9a5";
 
     function initializeApp() {
         loadBackendUrl();
-        document.getElementById("topBackendInput").value = BACKEND_URL.includes("DÁN-LINK") ? "" : BACKEND_URL;
-        loadConversations();
-        loadHistory();
+        const savedTopInput = document.getElementById("topBackendInput");
+        if (savedTopInput) savedTopInput.value = BACKEND_URL.includes("DÁN-LINK") ? "" : BACKEND_URL;
+
+        const session = localStorage.getItem(SESSION_KEY);
+        if (session) {
+            currentUser = session;
+            showApp();
+        } else {
+            showAuth();
+        }
+
         setupEventListeners();
+    }
+
+    /* ---------- AUTH ---------- */
+    function getUsers() {
+        try {
+            return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+
+    function switchAuthTab(mode) {
+        authMode = mode;
+        document.getElementById("tabLogin").classList.toggle("active", mode === "login");
+        document.getElementById("tabSignup").classList.toggle("active", mode === "signup");
+        document.getElementById("authConfirmWrap").style.display = mode === "signup" ? "block" : "none";
+        document.getElementById("authSubmitBtn").textContent = mode === "signup" ? "Tạo tài khoản" : "Đăng nhập";
+        hideAuthError();
+    }
+
+    function showAuthError(msg) {
+        const el = document.getElementById("authError");
+        el.textContent = msg;
+        el.classList.add("show");
+    }
+
+    function hideAuthError() {
+        document.getElementById("authError").classList.remove("show");
+    }
+
+    function handleAuthSubmit() {
+        hideAuthError();
+        const email = document.getElementById("authEmail").value.trim().toLowerCase();
+        const password = document.getElementById("authPassword").value;
+
+        if (!email || !password) {
+            showAuthError("Vui lòng nhập đầy đủ email và mật khẩu.");
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showAuthError("Email không hợp lệ.");
+            return;
+        }
+
+        const users = getUsers();
+
+        if (authMode === "signup") {
+            const confirm = document.getElementById("authConfirm").value;
+            if (password.length < 6) {
+                showAuthError("Mật khẩu cần ít nhất 6 ký tự.");
+                return;
+            }
+            if (password !== confirm) {
+                showAuthError("Mật khẩu nhập lại không khớp.");
+                return;
+            }
+            if (users.some(u => u.email === email)) {
+                showAuthError("Email này đã có tài khoản. Hãy đăng nhập.");
+                return;
+            }
+            users.push({ email, password });
+            saveUsers(users);
+            loginAs(email);
+        } else {
+            const found = users.find(u => u.email === email && u.password === password);
+            if (!found) {
+                showAuthError("Email hoặc mật khẩu không đúng.");
+                return;
+            }
+            loginAs(email);
+        }
+    }
+
+    function loginAs(email) {
+        currentUser = email;
+        localStorage.setItem(SESSION_KEY, email);
+        document.getElementById("authEmail").value = "";
+        document.getElementById("authPassword").value = "";
+        const confirmField = document.getElementById("authConfirm");
+        if (confirmField) confirmField.value = "";
+        showApp();
+    }
+
+    function logout() {
+        localStorage.removeItem(SESSION_KEY);
+        currentUser = null;
+        chatHistory = [];
+        conversations = [];
+        currentConversationId = null;
+        document.getElementById("appContainer").classList.add("hidden");
+        showAuth();
+    }
+
+    function showAuth() {
+        document.getElementById("appContainer").classList.add("hidden");
+        document.getElementById("authScreen").classList.remove("hidden");
+        switchAuthTab("login");
+    }
+
+    function showApp() {
+        document.getElementById("authScreen").classList.add("hidden");
+        document.getElementById("appContainer").classList.remove("hidden");
+        document.getElementById("accountEmail").textContent = currentUser;
+        loadConversations();
+        renderChat();
+        updateHistorySidebar();
         checkBackendStatus();
+    }
+
+    /* ---------- CHAT / CONVERSATIONS ---------- */
+    function convKey() {
+        return `conversations_9a5_${currentUser}`;
     }
 
     function setupEventListeners() {
@@ -421,9 +635,19 @@
             input.style.height = "auto";
             input.style.height = Math.min(input.scrollHeight, 160) + "px";
         });
+
+        document.getElementById("authPassword").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") handleAuthSubmit();
+        });
+        const confirmField = document.getElementById("authConfirm");
+        if (confirmField) {
+            confirmField.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") handleAuthSubmit();
+            });
+        }
     }
 
-    /* ---------- BACKEND URL (không phải secret, chỉ là địa chỉ API) ---------- */
+    /* ---------- BACKEND URL (không phải secret, chỉ là địa chỉ API; thanh nhập đã bị ẩn) ---------- */
     function loadBackendUrl() {
         const saved = localStorage.getItem("backend_url_9a5");
         if (saved) BACKEND_URL = saved;
@@ -446,7 +670,6 @@
     async function checkBackendStatus() {
         const el = document.getElementById("statusLine");
         try {
-            // Gọi thử 1 request rỗng để kiểm tra kết nối (sẽ báo thiếu contents, vẫn coi là "kết nối được")
             const resp = await fetch(`${BACKEND_URL}/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -472,6 +695,43 @@
         input.focus();
     }
 
+    function loadConversations() {
+        try {
+            conversations = JSON.parse(localStorage.getItem(convKey())) || [];
+        } catch {
+            conversations = [];
+        }
+        if (conversations.length > 0) {
+            currentConversationId = conversations[0].id;
+            chatHistory = conversations[0].messages || [];
+        } else {
+            currentConversationId = null;
+            chatHistory = [];
+        }
+    }
+
+    function saveConversations() {
+        localStorage.setItem(convKey(), JSON.stringify(conversations));
+    }
+
+    function saveCurrentConversation() {
+        const conv = conversations.find(c => c.id === currentConversationId);
+        if (conv) {
+            conv.messages = chatHistory;
+            saveConversations();
+            updateHistorySidebar();
+        }
+    }
+
+    function updateConversationTitle(firstMessage) {
+        const conv = conversations.find(c => c.id === currentConversationId);
+        if (conv && conv.title === "Cuộc trò chuyện mới") {
+            conv.title = firstMessage.length > 40 ? firstMessage.slice(0, 40) + "…" : firstMessage;
+            saveConversations();
+            updateHistorySidebar();
+        }
+    }
+
     function createNewChat() {
         currentConversationId = Date.now().toString();
         chatHistory = [];
@@ -484,6 +744,49 @@
         saveConversations();
         renderChat();
         updateHistorySidebar();
+        document.getElementById("sidebar").classList.remove("collapsed");
+        if (window.innerWidth <= 768) document.getElementById("sidebar").classList.add("collapsed");
+    }
+
+    function switchConversation(id) {
+        const conv = conversations.find(c => c.id === id);
+        if (!conv) return;
+        currentConversationId = id;
+        chatHistory = conv.messages || [];
+        renderChat();
+        updateHistorySidebar();
+        if (window.innerWidth <= 768) document.getElementById("sidebar").classList.add("collapsed");
+    }
+
+    function deleteChat(id, event) {
+        event.stopPropagation();
+        conversations = conversations.filter(c => c.id !== id);
+        saveConversations();
+        if (currentConversationId === id) {
+            if (conversations.length > 0) {
+                currentConversationId = conversations[0].id;
+                chatHistory = conversations[0].messages || [];
+            } else {
+                currentConversationId = null;
+                chatHistory = [];
+            }
+            renderChat();
+        }
+        updateHistorySidebar();
+    }
+
+    function updateHistorySidebar() {
+        const container = document.getElementById("historyItems");
+        if (conversations.length === 0) {
+            container.innerHTML = `<div style="padding:10px;font-size:12.5px;color:var(--text-secondary);">Chưa có cuộc trò chuyện nào.</div>`;
+            return;
+        }
+        container.innerHTML = conversations.map(c => `
+            <div class="history-item ${c.id === currentConversationId ? "active" : ""}" onclick="switchConversation('${c.id}')">
+                <span class="title">${escapeHtml(c.title)}</span>
+                <button class="del-btn" onclick="deleteChat('${c.id}', event)">✕</button>
+            </div>
+        `).join("");
     }
 
     async function sendMessage() {
@@ -508,7 +811,6 @@
                 parts: [{ text: m.text }]
             }));
 
-            // Gọi qua Worker — KHÔNG có API key nào ở đây.
             const response = await fetch(`${BACKEND_URL}/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -557,6 +859,17 @@
         if (typing) typing.remove();
     }
 
+    function scrollToBottom() {
+        const container = document.getElementById("chatContainer");
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function renderChat() {
         const inner = document.getElementById("chatInner");
 
@@ -582,72 +895,8 @@
                 <div class="message-body">${escapeHtml(m.text)}</div>
             </div>
         `).join("");
+
         scrollToBottom();
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement("div");
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    function scrollToBottom() {
-        const container = document.getElementById("chatContainer");
-        container.scrollTop = container.scrollHeight;
-    }
-
-    /* ---------- LỊCH SỬ HỘI THOẠI (lưu local, không liên quan API key) ---------- */
-    function saveConversations() {
-        localStorage.setItem("conversations_9a5", JSON.stringify(conversations));
-    }
-    function loadConversations() {
-        const saved = localStorage.getItem("conversations_9a5");
-        conversations = saved ? JSON.parse(saved) : [];
-    }
-    function saveCurrentConversation() {
-        const conv = conversations.find(c => c.id === currentConversationId);
-        if (conv) {
-            conv.messages = chatHistory;
-            saveConversations();
-        }
-    }
-    function updateConversationTitle(firstMessage) {
-        const conv = conversations.find(c => c.id === currentConversationId);
-        if (conv && conv.title === "Cuộc trò chuyện mới") {
-            conv.title = firstMessage.slice(0, 40) + (firstMessage.length > 40 ? "..." : "");
-            saveConversations();
-            updateHistorySidebar();
-        }
-    }
-    function loadHistory() {
-        updateHistorySidebar();
-    }
-    function updateHistorySidebar() {
-        const container = document.getElementById("historyItems");
-        container.innerHTML = conversations.map(c => `
-            <div class="history-item ${c.id === currentConversationId ? 'active' : ''}" onclick="loadConversation('${c.id}')">
-                <span class="title">${escapeHtml(c.title)}</span>
-                <button class="del-btn" onclick="event.stopPropagation(); deleteConversation('${c.id}')">✕</button>
-            </div>
-        `).join("");
-    }
-    function loadConversation(id) {
-        const conv = conversations.find(c => c.id === id);
-        if (!conv) return;
-        currentConversationId = id;
-        chatHistory = conv.messages || [];
-        renderChat();
-        updateHistorySidebar();
-    }
-    function deleteConversation(id) {
-        conversations = conversations.filter(c => c.id !== id);
-        saveConversations();
-        if (currentConversationId === id) {
-            currentConversationId = null;
-            chatHistory = [];
-            renderChat();
-        }
-        updateHistorySidebar();
     }
 
     initializeApp();
