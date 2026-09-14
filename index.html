@@ -107,13 +107,13 @@
         gap: 8px;
     }
 
-    .api-key-status {
+    .status-line {
         font-size: 11px;
         color: var(--text-secondary);
         text-align:center;
     }
 
-    .api-key-btn {
+    .admin-btn {
         width: 100%;
         padding: 8px;
         background: transparent;
@@ -124,7 +124,7 @@
         font-size: 12px;
         transition: background .2s, color .2s;
     }
-    .api-key-btn:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
+    .admin-btn:hover { background: var(--bg-sidebar-hover); color: var(--text-primary); }
 
     /* ---------- MAIN ---------- */
     .main-content {
@@ -154,22 +154,10 @@
     }
     .toggle-btn:hover { background: var(--bg-sidebar-hover); }
 
-    .top-bar h1 {
-        font-size: 16px;
-        font-weight: 600;
-    }
-    .top-bar .subtitle {
-        font-size: 11px;
-        color: var(--text-secondary);
-        margin-top: 1px;
-    }
+    .top-bar h1 { font-size: 16px; font-weight: 600; }
+    .top-bar .subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
 
-    .chat-container {
-        flex: 1;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-    }
+    .chat-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
 
     .chat-inner {
         max-width: 780px;
@@ -179,27 +167,14 @@
         flex: 1;
     }
 
-    .message {
-        display: flex;
-        gap: 16px;
-        padding: 18px 0;
-        animation: fadeIn .25s ease-in;
-    }
-    @keyframes fadeIn {
-        from { opacity:0; transform: translateY(6px); }
-        to { opacity:1; transform: translateY(0); }
-    }
+    .message { display: flex; gap: 16px; padding: 18px 0; animation: fadeIn .25s ease-in; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
 
     .avatar {
-        width: 30px;
-        height: 30px;
-        min-width: 30px;
+        width: 30px; height: 30px; min-width: 30px;
         border-radius: 6px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size: 15px;
-        font-weight: bold;
+        display:flex; align-items:center; justify-content:center;
+        font-size: 15px; font-weight: bold;
     }
     .message.user .avatar { background: #5a5a5a; color:#fff; }
     .message.bot .avatar { background: var(--accent); color:#fff; }
@@ -213,56 +188,30 @@
         padding-top: 4px;
     }
 
-    .message.user .message-body { color: var(--text-primary); }
-    .message.bot .message-body { color: var(--text-primary); }
-
-    .typing-indicator {
-        display: flex;
-        gap: 5px;
-        padding-top: 8px;
-    }
+    .typing-indicator { display: flex; gap: 5px; padding-top: 8px; }
     .typing-indicator span {
-        width: 7px; height: 7px;
-        border-radius: 50%;
+        width: 7px; height: 7px; border-radius: 50%;
         background: var(--text-secondary);
         animation: typing 1.4s infinite;
     }
     .typing-indicator span:nth-child(2) { animation-delay: .2s; }
     .typing-indicator span:nth-child(3) { animation-delay: .4s; }
-    @keyframes typing {
-        0%,60%,100% { opacity:.3; transform: translateY(0); }
-        30% { opacity:1; transform: translateY(-6px); }
-    }
+    @keyframes typing { 0%,60%,100% { opacity:.3; transform: translateY(0); } 30% { opacity:1; transform: translateY(-6px); } }
 
     .empty-state {
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        height: 100%;
-        text-align:center;
-        gap: 10px;
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        height: 100%; text-align:center; gap: 10px;
     }
     .empty-state .logo {
-        width: 56px; height: 56px;
-        border-radius: 14px;
+        width: 56px; height: 56px; border-radius: 14px;
         background: var(--accent);
         display:flex; align-items:center; justify-content:center;
-        font-size: 22px;
-        font-weight:bold;
-        color:#fff;
-        margin-bottom: 8px;
+        font-size: 22px; font-weight:bold; color:#fff; margin-bottom: 8px;
     }
     .empty-state h2 { font-size: 22px; font-weight:600; }
     .empty-state p { color: var(--text-secondary); font-size: 14px; max-width: 320px; }
 
-    .suggestions {
-        display:flex;
-        gap: 10px;
-        margin-top: 20px;
-        flex-wrap: wrap;
-        justify-content:center;
-    }
+    .suggestions { display:flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content:center; }
     .suggestion-chip {
         padding: 10px 16px;
         background: var(--bg-input);
@@ -276,18 +225,11 @@
     .suggestion-chip:hover { background: var(--bg-sidebar-hover); }
 
     /* ---------- INPUT AREA ---------- */
-    .input-area {
-        padding: 16px 20px 22px;
-        display:flex;
-        justify-content:center;
-    }
+    .input-area { padding: 16px 20px 22px; display:flex; justify-content:center; }
 
     .input-wrapper {
-        max-width: 780px;
-        width: 100%;
-        display: flex;
-        align-items: flex-end;
-        gap: 10px;
+        max-width: 780px; width: 100%;
+        display: flex; align-items: flex-end; gap: 10px;
         background: var(--bg-input);
         border: 1px solid var(--border);
         border-radius: 26px;
@@ -295,50 +237,28 @@
     }
 
     #chatInput {
-        flex: 1;
-        background: transparent;
-        border: none;
-        outline: none;
-        color: var(--text-primary);
-        font-size: 15px;
-        font-family: inherit;
-        resize: none;
-        max-height: 160px;
-        line-height: 1.5;
-        padding: 6px 0;
+        flex: 1; background: transparent; border: none; outline: none;
+        color: var(--text-primary); font-size: 15px; font-family: inherit;
+        resize: none; max-height: 160px; line-height: 1.5; padding: 6px 0;
     }
     #chatInput::placeholder { color: var(--text-secondary); }
 
     #sendBtn {
-        width: 34px; height: 34px;
-        border-radius: 50%;
-        background: var(--accent);
-        border: none;
-        color: #fff;
-        cursor: pointer;
-        display:flex; align-items:center; justify-content:center;
-        font-size: 16px;
-        transition: background .2s, opacity .2s;
-        flex-shrink: 0;
+        width: 34px; height: 34px; border-radius: 50%;
+        background: var(--accent); border: none; color: #fff;
+        cursor: pointer; display:flex; align-items:center; justify-content:center;
+        font-size: 16px; transition: background .2s, opacity .2s; flex-shrink: 0;
     }
     #sendBtn:hover { background: var(--accent-hover); }
     #sendBtn:disabled { opacity: .4; cursor: not-allowed; }
 
-    .footer-note {
-        text-align:center;
-        font-size: 11px;
-        color: var(--text-secondary);
-        margin-top: 10px;
-    }
+    .footer-note { text-align:center; font-size: 11px; color: var(--text-secondary); margin-top: 10px; }
 
-    /* ---------- MODAL API KEY ---------- */
+    /* ---------- MODAL (dùng chung cho Admin) ---------- */
     .modal-overlay {
-        position: fixed;
-        top:0; left:0; right:0; bottom:0;
+        position: fixed; top:0; left:0; right:0; bottom:0;
         background: rgba(0,0,0,0.6);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex; align-items: center; justify-content: center;
         z-index: 100;
     }
     .modal-overlay.hidden { display: none; }
@@ -351,19 +271,15 @@
         max-width: 400px;
         width: 90%;
     }
-    .modal-box h3 {
-        font-size: 18px;
-        margin-bottom: 8px;
+    .modal-box h3 { font-size: 18px; margin-bottom: 8px; }
+    .modal-box p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; }
+    .modal-box label {
+        font-size: 12px; color: var(--text-secondary);
+        display:block; margin-bottom: 6px; margin-top: 12px;
     }
-    .modal-box p {
-        font-size: 13px;
-        color: var(--text-secondary);
-        margin-bottom: 16px;
-        line-height: 1.6;
-    }
-    .modal-box a { color: var(--accent); }
+    .modal-box label:first-of-type { margin-top: 0; }
 
-    #apiKeyInput {
+    #adminPassword, #adminGeminiKey, #backendUrlInput {
         width: 100%;
         padding: 12px 14px;
         background: var(--bg-input);
@@ -371,28 +287,23 @@
         border-radius: 10px;
         color: var(--text-primary);
         font-size: 14px;
-        margin-bottom: 14px;
         outline: none;
     }
-    #apiKeyInput:focus { border-color: var(--accent); }
+    #adminPassword:focus, #adminGeminiKey:focus, #backendUrlInput:focus { border-color: var(--accent); }
 
-    .modal-actions {
-        display: flex;
-        gap: 10px;
-    }
+    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
     .modal-btn {
-        flex: 1;
-        padding: 10px;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
+        flex: 1; padding: 10px; border-radius: 10px; border: none;
+        cursor: pointer; font-size: 14px; font-weight: 600;
     }
     .modal-btn.primary { background: var(--accent); color: #fff; }
     .modal-btn.primary:hover { background: var(--accent-hover); }
     .modal-btn.secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
     .modal-btn.secondary:hover { background: var(--bg-sidebar-hover); }
+
+    .admin-feedback { font-size: 12.5px; margin-top: 10px; min-height: 16px; }
+    .admin-feedback.ok { color: #6bdc9c; }
+    .admin-feedback.err { color: #ff6b6b; }
 
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -419,8 +330,8 @@
         <div class="history-title">LỊCH SỬ TRÒ CHUYỆN</div>
         <div class="history-items" id="historyItems"></div>
         <div class="sidebar-bottom">
-            <div class="api-key-status" id="apiKeyStatus">Chưa có API key</div>
-            <button class="api-key-btn" onclick="openApiKeyModal()">🔑 Cài đặt API key</button>
+            <div class="status-line" id="statusLine">Đang kết nối...</div>
+            <button class="admin-btn" onclick="openAdminModal()">⚙️ Quản trị (Admin)</button>
         </div>
     </div>
 
@@ -459,41 +370,57 @@
     </div>
 </div>
 
-<!-- Modal nhập API key -->
-<div class="modal-overlay" id="apiKeyModal">
+<!-- Modal Admin: gắn URL backend + API key Gemini (chỉ admin dùng) -->
+<div class="modal-overlay hidden" id="adminModal">
     <div class="modal-box">
-        <h3>🔑 Cài đặt API key</h3>
+        <h3>⚙️ Quản trị hệ thống</h3>
         <p>
-            Nhập API key của bạn để bắt đầu trò chuyện. Key chỉ được lưu trên trình duyệt của bạn (localStorage), không gửi lên bất kỳ máy chủ nào khác.
-            <br><br>
-            Chưa có key? Lấy miễn phí tại <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>.
+            Khu vực dành cho admin. Người dùng thường không cần và không nên vào đây.
+            API key Gemini được lưu <b>vĩnh viễn trên server (Cloudflare)</b>, không lưu ở trình duyệt người dùng.
         </p>
-        <input type="password" id="apiKeyInput" placeholder="Dán API key vào đây..." />
+
+        <label for="backendUrlInput">Địa chỉ Backend (Worker URL)</label>
+        <input type="text" id="backendUrlInput" placeholder="https://9a5-ai-backend.xxx.workers.dev" />
+
+        <label for="adminPassword">Mật khẩu Admin</label>
+        <input type="password" id="adminPassword" placeholder="Nhập mật khẩu admin..." />
+
+        <label for="adminGeminiKey">API key Gemini (chỉ nhập khi muốn gắn/đổi key)</label>
+        <input type="password" id="adminGeminiKey" placeholder="Dán API key Gemini vào đây..." />
+
+        <div class="admin-feedback" id="adminFeedback"></div>
+
         <div class="modal-actions">
-            <button class="modal-btn secondary" onclick="closeApiKeyModal()">Đóng</button>
-            <button class="modal-btn primary" onclick="saveApiKey()">Lưu key</button>
+            <button class="modal-btn secondary" onclick="closeAdminModal()">Đóng</button>
+            <button class="modal-btn primary" onclick="saveAdminSettings()">Lưu</button>
         </div>
     </div>
 </div>
 
 <script>
-    // KHÔNG hardcode API key trong source code — người dùng tự nhập và lưu trong trình duyệt của họ
-    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    /**
+     * QUAN TRỌNG:
+     * - File này KHÔNG chứa bất kỳ API key nào.
+     * - Mọi request AI đều đi qua BACKEND_URL (Cloudflare Worker), nơi key Gemini
+     *   được admin gắn và lưu vĩnh viễn ở phía server.
+     * - Người dùng thường chỉ cần địa chỉ BACKEND_URL đã được cấu hình sẵn bên dưới
+     *   (hoặc lưu 1 lần trong trình duyệt của họ) — họ không cần và không thấy key.
+     */
+
+    // Đổi giá trị này thành URL Worker thật của bạn sau khi deploy,
+    // để người dùng không phải tự nhập backend URL mỗi lần.
+    let BACKEND_URL = "https://9a5-ai-backend.YOUR-SUBDOMAIN.workers.dev";
 
     let chatHistory = [];
     let conversations = [];
     let currentConversationId = null;
-    let userApiKey = "";
 
     function initializeApp() {
-        loadApiKey();
+        loadBackendUrl();
         loadConversations();
         loadHistory();
         setupEventListeners();
-
-        if (!userApiKey) {
-            openApiKeyModal();
-        }
+        checkBackendStatus();
     }
 
     function setupEventListeners() {
@@ -508,35 +435,89 @@
             input.style.height = "auto";
             input.style.height = Math.min(input.scrollHeight, 160) + "px";
         });
-
-        document.getElementById("apiKeyInput").addEventListener("keydown", (e) => {
-            if (e.key === "Enter") saveApiKey();
-        });
     }
 
-    /* ---------- API KEY ---------- */
-    function openApiKeyModal() {
-        document.getElementById("apiKeyInput").value = userApiKey;
-        document.getElementById("apiKeyModal").classList.remove("hidden");
+    /* ---------- BACKEND URL (không phải secret, chỉ là địa chỉ API) ---------- */
+    function loadBackendUrl() {
+        const saved = localStorage.getItem("backend_url_9a5");
+        if (saved) BACKEND_URL = saved;
     }
-    function closeApiKeyModal() {
-        document.getElementById("apiKeyModal").classList.add("hidden");
+
+    async function checkBackendStatus() {
+        const el = document.getElementById("statusLine");
+        try {
+            // Gọi thử 1 request rỗng để kiểm tra kết nối (sẽ báo thiếu contents, vẫn coi là "kết nối được")
+            const resp = await fetch(`${BACKEND_URL}/api/chat`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [] }),
+            });
+            if (resp.status === 503) {
+                el.textContent = "⚠️ Admin chưa gắn API key";
+            } else {
+                el.textContent = "✅ Hệ thống sẵn sàng";
+            }
+        } catch {
+            el.textContent = "❌ Không kết nối được backend";
+        }
     }
-    function saveApiKey() {
-        const val = document.getElementById("apiKeyInput").value.trim();
-        if (!val) return;
-        userApiKey = val;
-        localStorage.setItem("user_api_key_9a5", val);
-        updateApiKeyStatus();
-        closeApiKeyModal();
+
+    /* ---------- ADMIN MODAL ---------- */
+    function openAdminModal() {
+        document.getElementById("backendUrlInput").value = BACKEND_URL;
+        document.getElementById("adminPassword").value = "";
+        document.getElementById("adminGeminiKey").value = "";
+        document.getElementById("adminFeedback").textContent = "";
+        document.getElementById("adminModal").classList.remove("hidden");
     }
-    function loadApiKey() {
-        userApiKey = localStorage.getItem("user_api_key_9a5") || "";
-        updateApiKeyStatus();
+    function closeAdminModal() {
+        document.getElementById("adminModal").classList.add("hidden");
     }
-    function updateApiKeyStatus() {
-        const el = document.getElementById("apiKeyStatus");
-        el.textContent = userApiKey ? "✅ Đã kết nối API key" : "⚠️ Chưa có API key";
+
+    async function saveAdminSettings() {
+        const feedback = document.getElementById("adminFeedback");
+        const backendUrl = document.getElementById("backendUrlInput").value.trim().replace(/\/$/, "");
+        const password = document.getElementById("adminPassword").value.trim();
+        const apiKey = document.getElementById("adminGeminiKey").value.trim();
+
+        if (backendUrl) {
+            BACKEND_URL = backendUrl;
+            localStorage.setItem("backend_url_9a5", backendUrl);
+        }
+
+        // Nếu admin không nhập key mới, chỉ lưu backend URL rồi thôi.
+        if (!apiKey) {
+            feedback.textContent = "Đã lưu địa chỉ backend.";
+            feedback.className = "admin-feedback ok";
+            checkBackendStatus();
+            return;
+        }
+
+        if (!password) {
+            feedback.textContent = "Vui lòng nhập mật khẩu admin để gắn API key.";
+            feedback.className = "admin-feedback err";
+            return;
+        }
+
+        feedback.textContent = "Đang lưu...";
+        feedback.className = "admin-feedback";
+
+        try {
+            const resp = await fetch(`${BACKEND_URL}/admin/set-key`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password, apiKey }),
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.error || "Có lỗi xảy ra.");
+
+            feedback.textContent = "✅ Đã lưu API key vĩnh viễn trên server.";
+            feedback.className = "admin-feedback ok";
+            checkBackendStatus();
+        } catch (err) {
+            feedback.textContent = "❌ " + err.message;
+            feedback.className = "admin-feedback err";
+        }
     }
 
     function toggleSidebar() {
@@ -568,11 +549,6 @@
         const message = input.value.trim();
         if (!message) return;
 
-        if (!userApiKey) {
-            openApiKeyModal();
-            return;
-        }
-
         if (!currentConversationId) createNewChat();
 
         addMessage("user", message);
@@ -581,7 +557,6 @@
         input.focus();
 
         showTypingIndicator();
-
         const sendBtn = document.getElementById("sendBtn");
         sendBtn.disabled = true;
 
@@ -591,25 +566,18 @@
                 parts: [{ text: m.text }]
             }));
 
-            const response = await fetch(`${API_URL}?key=${userApiKey}`, {
+            // Gọi qua Worker — KHÔNG có API key nào ở đây.
+            const response = await fetch(`${BACKEND_URL}/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents })
+                body: JSON.stringify({ contents }),
             });
 
-            if (!response.ok) {
-                if (response.status === 400 || response.status === 403) {
-                    throw new Error("API key không hợp lệ. Vui lòng kiểm tra lại.");
-                }
-                throw new Error(`Lỗi API: ${response.status}`);
-            }
-
             const data = await response.json();
-            const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text
-                || "Xin lỗi, mình chưa thể trả lời câu này.";
+            if (!response.ok) throw new Error(data.error || `Lỗi API: ${response.status}`);
 
             removeTypingIndicator();
-            addMessage("bot", botResponse);
+            addMessage("bot", data.text);
             updateConversationTitle(message);
 
         } catch (error) {
@@ -666,14 +634,19 @@
             return;
         }
 
-        inner.innerHTML = chatHistory.map(msg => `
-            <div class="message ${msg.sender}">
-                <div class="avatar">${msg.sender === 'user' ? '🧑' : 'AI'}</div>
-                <div class="message-body">${escapeHtml(msg.text)}</div>
+        inner.innerHTML = chatHistory.map(m => `
+            <div class="message ${m.sender}">
+                <div class="avatar">${m.sender === "user" ? "Bạn" : "AI"}</div>
+                <div class="message-body">${escapeHtml(m.text)}</div>
             </div>
         `).join("");
-
         scrollToBottom();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     function scrollToBottom() {
@@ -681,53 +654,14 @@
         container.scrollTop = container.scrollHeight;
     }
 
-    function escapeHtml(text) {
-        const map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' };
-        return text.replace(/[&<>"']/g, m => map[m]);
+    /* ---------- LỊCH SỬ HỘI THOẠI (lưu local, không liên quan API key) ---------- */
+    function saveConversations() {
+        localStorage.setItem("conversations_9a5", JSON.stringify(conversations));
     }
-
-    function updateConversationTitle(message) {
-        const conv = conversations.find(c => c.id === currentConversationId);
-        if (conv && conv.title === "Cuộc trò chuyện mới") {
-            conv.title = message.substring(0, 32) + (message.length > 32 ? "..." : "");
-            saveConversations();
-            updateHistorySidebar();
-        }
+    function loadConversations() {
+        const saved = localStorage.getItem("conversations_9a5");
+        conversations = saved ? JSON.parse(saved) : [];
     }
-
-    function updateHistorySidebar() {
-        const historyItems = document.getElementById("historyItems");
-        historyItems.innerHTML = conversations.map(conv => `
-            <div class="history-item ${conv.id === currentConversationId ? 'active' : ''}" onclick="loadConversation('${conv.id}')">
-                <span class="title">${escapeHtml(conv.title)}</span>
-                <button class="del-btn" onclick="event.stopPropagation(); deleteConversation('${conv.id}')">✕</button>
-            </div>
-        `).join("");
-    }
-
-    function loadConversation(id) {
-        const conv = conversations.find(c => c.id === id);
-        if (conv) {
-            currentConversationId = id;
-            chatHistory = conv.messages || [];
-            renderChat();
-            updateHistorySidebar();
-        }
-    }
-
-    function deleteConversation(id) {
-        conversations = conversations.filter(c => c.id !== id);
-        saveConversations();
-        if (id === currentConversationId) {
-            if (conversations.length > 0) {
-                loadConversation(conversations[0].id);
-            } else {
-                createNewChat();
-            }
-        }
-        updateHistorySidebar();
-    }
-
     function saveCurrentConversation() {
         const conv = conversations.find(c => c.id === currentConversationId);
         if (conv) {
@@ -735,24 +669,42 @@
             saveConversations();
         }
     }
-
-    function saveConversations() {
-        localStorage.setItem("conversations_9a5", JSON.stringify(conversations));
-    }
-
-    function loadConversations() {
-        const saved = localStorage.getItem("conversations_9a5");
-        conversations = saved ? JSON.parse(saved) : [];
-    }
-
-    function loadHistory() {
-        if (conversations.length > 0) {
-            currentConversationId = conversations[0].id;
-            chatHistory = conversations[0].messages || [];
-        } else {
-            createNewChat();
+    function updateConversationTitle(firstMessage) {
+        const conv = conversations.find(c => c.id === currentConversationId);
+        if (conv && conv.title === "Cuộc trò chuyện mới") {
+            conv.title = firstMessage.slice(0, 40) + (firstMessage.length > 40 ? "..." : "");
+            saveConversations();
+            updateHistorySidebar();
         }
+    }
+    function loadHistory() {
+        updateHistorySidebar();
+    }
+    function updateHistorySidebar() {
+        const container = document.getElementById("historyItems");
+        container.innerHTML = conversations.map(c => `
+            <div class="history-item ${c.id === currentConversationId ? 'active' : ''}" onclick="loadConversation('${c.id}')">
+                <span class="title">${escapeHtml(c.title)}</span>
+                <button class="del-btn" onclick="event.stopPropagation(); deleteConversation('${c.id}')">✕</button>
+            </div>
+        `).join("");
+    }
+    function loadConversation(id) {
+        const conv = conversations.find(c => c.id === id);
+        if (!conv) return;
+        currentConversationId = id;
+        chatHistory = conv.messages || [];
         renderChat();
+        updateHistorySidebar();
+    }
+    function deleteConversation(id) {
+        conversations = conversations.filter(c => c.id !== id);
+        saveConversations();
+        if (currentConversationId === id) {
+            currentConversationId = null;
+            chatHistory = [];
+            renderChat();
+        }
         updateHistorySidebar();
     }
 
