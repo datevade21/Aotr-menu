@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cat Hub</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#e07b39">
 <style>
   :root {
     --bg: #fdf6e3;
@@ -111,14 +115,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script>
-  // ⚠️ THAY THẾ bằng config Firebase của bạn (lấy trong Firebase Console > Project Settings)
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyBhcXgKRnQpdmOcTjj2RfsJx5u4PS57P_0",
+    authDomain: "kknsnsjs.firebaseapp.com",
+    projectId: "kknsnsjs",
+    storageBucket: "kknsnsjs.firebasestorage.app",
+    messagingSenderId: "1084408639659",
+    appId: "1:1084408639659:web:78b83e04adb1d59e3787ee"
   };
 
   firebase.initializeApp(firebaseConfig);
@@ -174,6 +177,10 @@
   keyInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') checkKey();
   });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
+  }
 </script>
 </body>
 </html>
