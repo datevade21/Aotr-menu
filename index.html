@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Discord Controller Panel</title>
+<title>Cat Hub — Discord Controller</title>
 <style>
   :root {
     --ink-deep: #12071d; --ink-mid: #250b31; --plum: #671343; --ember: #ff4d7d; --gold: #ffe0b2; --mist: #eddcf5;
@@ -15,16 +15,24 @@
   #scene { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
   #sky { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 45% at 68% 62%, rgba(255, 120, 150, 0.4) 0%, transparent 60%), linear-gradient(180deg, #12071d 0%, #250b31 100%); }
   #app-workspace { position: relative; z-index: 10; min-height: 100vh; display: flex; flex-direction: column; }
+  
   .navbar { background: var(--glass-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
-  .brand-title { font-size: 1.1rem; color: #fff; font-weight: 700; }
+  .brand-title { font-size: 1.2rem; color: #fff; font-weight: 800; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
+  .brand-title::before { content: '🐱'; font-size: 1.3rem; }
   .user-badge { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.3); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--glass-border); }
+  
+  .server-bar { background: rgba(255, 77, 125, 0.12); border-bottom: 1px solid var(--glass-border-focus); padding: 12px 32px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .server-bar label { font-size: 0.8rem; font-weight: 700; color: var(--gold); }
+
   .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
   .field label { font-size: 0.75rem; text-transform: uppercase; color: rgba(237, 220, 245, 0.7); }
   .input { background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-border); border-radius: 6px; padding: 10px 14px; color: #fff; outline: none; }
   .input:focus { border-color: var(--glass-border-focus); }
+  
   .btn { background: linear-gradient(135deg, var(--plum), var(--ember)); border: none; color: #fff; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; }
   .btn-secondary { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); }
   .btn-danger { background: rgba(255, 82, 82, 0.2); border: 1px solid rgba(255, 82, 82, 0.4); color: #ff8a8a; }
+  
   .grid-container { max-width: 1350px; margin: 0 auto; padding: 28px; width: 100%; display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
   .col-6 { grid-column: span 6; } .col-12 { grid-column: span 12; }
   .card-panel { background: var(--glass-bg); backdrop-filter: blur(14px); border: 1px solid var(--glass-border); border-radius: 12px; padding: 24px; }
@@ -32,6 +40,7 @@
   .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .worker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
   .worker-item { background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+  
   #auth-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(18, 7, 29, 0.9); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; padding: 20px; }
   .auth-card { background: var(--glass-bg); border: 1px solid var(--glass-border); width: 100%; max-width: 400px; border-radius: 14px; padding: 32px; }
   .auth-tabs { display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 24px; }
@@ -53,31 +62,37 @@
     <form id="form-login" onsubmit="handleAuth(event, 'login')">
       <div class="field"><label>Tên đăng nhập</label><input type="text" id="login-user" class="input" required></div>
       <div class="field"><label>Mật khẩu</label><input type="password" id="login-pass" class="input" required></div>
-      <button type="submit" class="btn" style="width: 100%; margin-top: 12px;">ĐĂNG NHẬP PANEL</button>
+      <button type="submit" class="btn" style="width: 100%; margin-top: 12px;">ĐĂNG NHẬP CAT HUB</button>
     </form>
     <form id="form-register" onsubmit="handleAuth(event, 'register')" style="display: none;">
       <div class="field"><label>Tên tài khoản mới</label><input type="text" id="reg-user" class="input" required></div>
       <div class="field"><label>Mật khẩu</label><input type="password" id="reg-pass" class="input" required></div>
-      <button type="submit" class="btn" style="width: 100%; margin-top: 12px;">ĐĂNG KÝ TÀI KHOẢN</button>
+      <button type="submit" class="btn" style="width: 100%; margin-top: 12px;">TẠO TÀI KHOẢN MỚI</button>
     </form>
   </div>
 </div>
 
 <div id="app-workspace">
   <nav class="navbar">
-    <div class="brand-title">DISCORD CLOUD CONTROLLER</div>
+    <div class="brand-title">CAT HUB</div>
     <div class="user-badge">
       <span id="display-user-name">---</span>
       <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.75rem;" onclick="logout()">Thoát</button>
     </div>
   </nav>
 
+  <div class="server-bar">
+    <label>🌐 CLOUDFLARE LINK:</label>
+    <input type="text" id="server-url-input" class="input" style="flex: 1; min-width: 250px; padding: 6px 12px;" placeholder="https://xxx.trycloudflare.com">
+    <button class="btn" style="padding: 6px 16px; font-size: 0.8rem;" onclick="updateServerUrl()">CẬP NHẬT</button>
+  </div>
+
   <main class="grid-container">
     <section class="card-panel col-6">
       <div class="card-header">TREO DISCORD RPC (CUSTOM STATUS)</div>
       <form onsubmit="createWorker(event, 'RPC')">
         <div class="field"><label>User Token</label><input type="password" id="rpc-token" class="input" required></div>
-        <div class="field"><label>Tên Game/App</label><input type="text" id="rpc-name" class="input" placeholder="Visual Studio Code" required></div>
+        <div class="field"><label>Tên App / Game</label><input type="text" id="rpc-name" class="input" placeholder="Visual Studio Code" required></div>
         <div class="row-2">
           <div class="field"><label>Details</label><input type="text" id="rpc-details" class="input"></div>
           <div class="field"><label>State</label><input type="text" id="rpc-state" class="input"></div>
@@ -101,15 +116,33 @@
     </section>
 
     <section class="card-panel col-12">
-      <div class="card-header">DANH SÁCH WORKER CỦA BẠN</div>
+      <div class="card-header">DANH SÁCH WORKER ĐANG CHẠY</div>
       <div id="worker-list" class="worker-grid"></div>
     </section>
   </main>
 </div>
 
 <script>
-  // ĐIỀN LINK RENDER CỦA BẠN VÀO ĐÂY (Thay thế link bên dưới)
-  const API_URL = 'https://my-discord-bot-node.onrender.com';
+  // =========================================================================
+  // 🔽 DÁN LINK CLOUDFLARE TỪ TERMUX VÀO DÒNG DƯỚI ĐÂY 🔽
+  // =========================================================================
+  const CLOUD_URL = "https://permit-decorative-doctors-cheaper.trycloudflare.com";
+  // =========================================================================
+
+  let API_URL = localStorage.getItem('app_server_url') || CLOUD_URL;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('server-url-input');
+    if (input) input.value = API_URL;
+  });
+
+  function updateServerUrl() {
+    let url = document.getElementById('server-url-input').value.trim();
+    if (url.endsWith('/')) url = url.slice(0, -1);
+    API_URL = url;
+    localStorage.setItem('app_server_url', url);
+    alert('Cat Hub đã cập nhật Link Cloudflare mới!');
+  }
 
   let activeUser = localStorage.getItem('app_active_user') || null;
   function getUsersDB() { return JSON.parse(localStorage.getItem('app_users_db') || '{}'); }
@@ -130,7 +163,7 @@
       if (db[u]) return alert('Tài khoản đã tồn tại!');
       db[u] = { password: p };
       localStorage.setItem('app_users_db', JSON.stringify(db));
-      alert('Tạo tài khoản thành công!');
+      alert('Tạo tài khoản Cat Hub thành công!');
       switchAuthTab('login');
       return;
     }
@@ -166,6 +199,10 @@
 
   async function createWorker(e, type) {
     e.preventDefault();
+    if (!API_URL || API_URL.includes('your-cloudflare-url')) {
+      return alert('Vui lòng dán Link Cloudflare ở đầu file script hoặc thanh nhập giao diện!');
+    }
+
     const list = getWorkers();
     const worker = { id: Date.now(), type, userOwner: activeUser };
 
@@ -196,17 +233,19 @@
         e.target.reset();
         alert(data.message);
       } else { alert('Lỗi: ' + data.message); }
-    } catch (err) { alert('Không thể kết nối đến Render Backend!'); }
+    } catch (err) { alert('Cat Hub không thể kết nối đến Cloudflare Server! Hãy kiểm tra Termux.'); }
   }
 
   async function deleteWorker(id) {
-    try {
-      await fetch(`${API_URL}/api/worker/stop`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
-      });
-    } catch (err) {}
+    if (API_URL) {
+      try {
+        await fetch(`${API_URL}/api/worker/stop`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id })
+        });
+      } catch (err) {}
+    }
     const list = getWorkers().filter(w => w.id !== id);
     saveWorkers(list);
     renderWorkers();
@@ -228,7 +267,7 @@
           <b style="color:var(--status-active);">ONLINE — ${w.type}</b>
           <div style="margin-top:8px;">${w.type === 'RPC' ? 'App: ' + w.name : 'Channel: ' + w.channelId}</div>
         </div>
-        <button class="btn btn-danger" onclick="deleteWorker(${w.id})">Tắt & Xóa Worker</button>
+        <button class="btn btn-danger" onclick="deleteWorker(${w.id})">Tắt Worker</button>
       `;
       container.appendChild(card);
     });
