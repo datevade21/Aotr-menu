@@ -20,14 +20,12 @@
   .brand-title { font-size: 1.2rem; color: #fff; font-weight: 800; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
   .brand-title::before { content: '🐱'; font-size: 1.3rem; }
   .user-badge { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.3); padding: 6px 16px; border-radius: 20px; border: 1px solid var(--glass-border); }
-  
-  .server-bar { background: rgba(255, 77, 125, 0.12); border-bottom: 1px solid var(--glass-border-focus); padding: 12px 32px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .server-bar label { font-size: 0.8rem; font-weight: 700; color: var(--gold); }
 
   .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
   .field label { font-size: 0.75rem; text-transform: uppercase; color: rgba(237, 220, 245, 0.7); }
   .input { background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-border); border-radius: 6px; padding: 10px 14px; color: #fff; outline: none; }
   .input:focus { border-color: var(--glass-border-focus); }
+  input[type="file"] { padding: 6px 10px; font-size: 0.8rem; }
   
   .btn { background: linear-gradient(135deg, var(--plum), var(--ember)); border: none; color: #fff; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; }
   .btn-secondary { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-border); }
@@ -41,6 +39,9 @@
   .worker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
   .worker-item { background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
   
+  .time-counter { font-size: 0.85rem; color: var(--gold); background: rgba(0, 0, 0, 0.4); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 6px; }
+  .preview-img { width: 32px; height: 32px; border-radius: 4px; object-fit: cover; border: 1px solid var(--glass-border); }
+
   #auth-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(18, 7, 29, 0.9); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; padding: 20px; }
   .auth-card { background: var(--glass-bg); border: 1px solid var(--glass-border); width: 100%; max-width: 400px; border-radius: 14px; padding: 32px; }
   .auth-tabs { display: flex; border-bottom: 1px solid var(--glass-border); margin-bottom: 24px; }
@@ -81,12 +82,6 @@
     </div>
   </nav>
 
-  <div class="server-bar">
-    <label>🌐 CLOUDFLARE LINK:</label>
-    <input type="text" id="server-url-input" class="input" style="flex: 1; min-width: 250px; padding: 6px 12px;" placeholder="https://xxx.trycloudflare.com">
-    <button class="btn" style="padding: 6px 16px; font-size: 0.8rem;" onclick="updateServerUrl()">CẬP NHẬT</button>
-  </div>
-
   <main class="grid-container">
     <section class="card-panel col-6">
       <div class="card-header">TREO DISCORD RPC (CUSTOM STATUS)</div>
@@ -97,7 +92,17 @@
           <div class="field"><label>Details</label><input type="text" id="rpc-details" class="input"></div>
           <div class="field"><label>State</label><input type="text" id="rpc-state" class="input"></div>
         </div>
-        <button type="submit" class="btn" style="width: 100%;">KÍCH HOẠT RPC</button>
+        <div class="row-2">
+          <div class="field">
+            <label>Ảnh Lớn 1 (Large Image)</label>
+            <input type="file" id="rpc-img1" class="input" accept="image/*">
+          </div>
+          <div class="field">
+            <label>Ảnh Nhỏ 2 (Small Image)</label>
+            <input type="file" id="rpc-img2" class="input" accept="image/*">
+          </div>
+        </div>
+        <button type="submit" class="btn" style="width: 100%; margin-top: 6px;">KÍCH HOẠT RPC</button>
       </form>
     </section>
 
@@ -111,7 +116,7 @@
           <div class="field"><label>Tắt Mic</label><select id="voice-mute" class="input"><option value="true">Có</option><option value="false">Không</option></select></div>
           <div class="field"><label>Tắt Tai Nghe</label><select id="voice-deaf" class="input"><option value="true">Có</option><option value="false">Không</option></select></div>
         </div>
-        <button type="submit" class="btn" style="width: 100%;">KÍCH HOẠT VOICE</button>
+        <button type="submit" class="btn" style="width: 100%; margin-top: 6px;">KÍCH HOẠT VOICE</button>
       </form>
     </section>
 
@@ -124,27 +129,15 @@
 
 <script>
   // =========================================================================
-  // 🔽 DÁN LINK CLOUDFLARE TỪ TERMUX VÀO DÒNG DƯỚI ĐÂY 🔽
+  // 🔽 DÁN LINK CLOUDFLARE TỪ TERMUX VÀO DÒNG DƯỚI ĐÂY LÀ XONG 🔽
   // =========================================================================
   const CLOUD_URL = "https://permit-decorative-doctors-cheaper.trycloudflare.com";
   // =========================================================================
 
-  let API_URL = localStorage.getItem('app_server_url') || CLOUD_URL;
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('server-url-input');
-    if (input) input.value = API_URL;
-  });
-
-  function updateServerUrl() {
-    let url = document.getElementById('server-url-input').value.trim();
-    if (url.endsWith('/')) url = url.slice(0, -1);
-    API_URL = url;
-    localStorage.setItem('app_server_url', url);
-    alert('Cat Hub đã cập nhật Link Cloudflare mới!');
-  }
-
+  let API_URL = CLOUD_URL.endsWith('/') ? CLOUD_URL.slice(0, -1) : CLOUD_URL;
   let activeUser = localStorage.getItem('app_active_user') || null;
+  let timerInterval = null;
+
   function getUsersDB() { return JSON.parse(localStorage.getItem('app_users_db') || '{}'); }
 
   function switchAuthTab(type) {
@@ -187,30 +180,54 @@
     const overlay = document.getElementById('auth-overlay');
     if (!activeUser) {
       overlay.style.display = 'flex';
+      if (timerInterval) clearInterval(timerInterval);
     } else {
       overlay.style.display = 'none';
       document.getElementById('display-user-name').innerText = activeUser;
       renderWorkers();
+      startGlobalTimer();
     }
   }
 
   function getWorkers() { return JSON.parse(localStorage.getItem(`workers_${activeUser}`) || '[]'); }
   function saveWorkers(data) { localStorage.setItem(`workers_${activeUser}`, JSON.stringify(data)); }
 
+  // Chuyển file ảnh sang dạng Base64
+  function fileToBase64(file) {
+    return new Promise((resolve) => {
+      if (!file) return resolve(null);
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  }
+
   async function createWorker(e, type) {
     e.preventDefault();
     if (!API_URL || API_URL.includes('your-cloudflare-url')) {
-      return alert('Vui lòng dán Link Cloudflare ở đầu file script hoặc thanh nhập giao diện!');
+      return alert('Vui lòng thay Link Cloudflare ở dòng đầu tiên của thẻ <script>!');
     }
 
     const list = getWorkers();
-    const worker = { id: Date.now(), type, userOwner: activeUser };
+    const worker = { 
+      id: Date.now(), 
+      type, 
+      userOwner: activeUser,
+      startTime: Date.now() // Lưu thời điểm kích hoạt
+    };
 
     if (type === 'RPC') {
       worker.token = document.getElementById('rpc-token').value.trim();
       worker.name = document.getElementById('rpc-name').value.trim();
       worker.details = document.getElementById('rpc-details').value.trim();
       worker.state = document.getElementById('rpc-state').value.trim();
+
+      const file1 = document.getElementById('rpc-img1').files[0];
+      const file2 = document.getElementById('rpc-img2').files[0];
+
+      worker.largeImage = await fileToBase64(file1);
+      worker.smallImage = await fileToBase64(file2);
     } else {
       worker.token = document.getElementById('voice-token').value.trim();
       worker.guildId = document.getElementById('voice-guild').value.trim();
@@ -251,6 +268,26 @@
     renderWorkers();
   }
 
+  function formatUptime(startTime) {
+    if (!startTime) return '00:00:00';
+    const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
+    const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(totalSeconds % 60).padStart(2, '0');
+    return `${hrs}:${mins}:${secs}`;
+  }
+
+  function startGlobalTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      const list = getWorkers();
+      list.forEach(w => {
+        const el = document.getElementById(`uptime-${w.id}`);
+        if (el) el.innerText = formatUptime(w.startTime);
+      });
+    }, 1000);
+  }
+
   function renderWorkers() {
     const container = document.getElementById('worker-list');
     const list = getWorkers();
@@ -262,10 +299,19 @@
     list.forEach(w => {
       const card = document.createElement('div');
       card.className = 'worker-item';
+      
+      let imagesPreview = '';
+      if (w.type === 'RPC') {
+        if (w.largeImage) imagesPreview += `<img src="${w.largeImage}" class="preview-img" title="Ảnh lớn"> `;
+        if (w.smallImage) imagesPreview += `<img src="${w.smallImage}" class="preview-img" title="Ảnh nhỏ">`;
+      }
+
       card.innerHTML = `
         <div>
           <b style="color:var(--status-active);">ONLINE — ${w.type}</b>
           <div style="margin-top:8px;">${w.type === 'RPC' ? 'App: ' + w.name : 'Channel: ' + w.channelId}</div>
+          ${imagesPreview ? `<div style="margin-top:8px; display:flex; gap:6px;">${imagesPreview}</div>` : ''}
+          <div class="time-counter">⏱️ Đã treo: <span id="uptime-${w.id}">${formatUptime(w.startTime)}</span></div>
         </div>
         <button class="btn btn-danger" onclick="deleteWorker(${w.id})">Tắt Worker</button>
       `;
