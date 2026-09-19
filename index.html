@@ -3,184 +3,618 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cat Hub</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#e07b39">
+<title>Ngưỡng Cửa Hoa Anh Đào — Discord Controller</title>
 <style>
-  :root {
-    --bg: #fdf6e3;
-    --card: #ffffff;
-    --accent: #e07b39;
-    --text: #2b2b2b;
-    --muted: #8a8a8a;
-    --error: #d64545;
-    --success: #2e9e5b;
+  :root{
+    --ink-deep:#170a24;
+    --ink-mid:#3a1140;
+    --plum:#7a1f52;
+    --ember:#ff5c8a;
+    --gold:#ffd9a0;
+    --mist:#e8d9f0;
+    --water:#1b0e2e;
+    --glass: rgba(23, 10, 36, 0.75);
+    --glass-border: rgba(255, 185, 205, 0.25);
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #1c1a17;
-      --card: #2a2723;
-      --text: #f2ece2;
-      --muted: #a89f91;
-    }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    background:var(--ink-deep);
+    overflow-x:hidden;
+    font-family: 'Georgia', 'Noto Serif', serif;
+    color: var(--mist);
   }
-  :root[data-theme="dark"] {
-    --bg: #1c1a17;
-    --card: #2a2723;
-    --text: #f2ece2;
-    --muted: #a89f91;
+
+  #scene{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index: 1;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
+
+  #sky{
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(ellipse 70% 45% at 68% 62%, rgba(255,120,150,0.55) 0%, rgba(255,120,150,0) 60%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(122,31,82,0.65) 0%, rgba(58,17,64,0) 65%),
+      linear-gradient(180deg, #170a24 0%, #2c1038 32%, #4a1548 58%, #7a1f52 80%, #170a24 100%);
+  }
+
+  #stars{
+    position:absolute;
+    inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 15%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 25% 8%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1.5px 1.5px at 40% 20%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 60% 5%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 78% 12%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 90% 22%, rgba(255,255,255,0.6), transparent);
+    opacity:0.85;
+    animation: twinkle 5s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{
+    from{opacity:0.55;}
+    to{opacity:1;}
+  }
+
+  #moon{
+    position:absolute;
+    left:50%;
+    top:44%;
+    transform:translate(-50%,-50%);
+    width:min(46vw, 420px);
+    height:min(46vw, 420px);
+    border-radius:50%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,225,190,0.95) 0%, rgba(255,150,170,0.55) 35%, rgba(255,90,140,0.18) 60%, rgba(255,90,140,0) 75%);
+    filter: blur(2px);
+  }
+
+  #torii-wrap{
+    position:absolute;
+    left:50%;
+    bottom:38%;
+    transform:translateX(-50%);
+    width:min(56vw, 520px);
+  }
+  #torii-wrap svg{
+    width:100%;
+    height:auto;
+    display:block;
+    filter: drop-shadow(0 0 18px rgba(255,180,200,0.65)) drop-shadow(0 0 45px rgba(255,120,160,0.35));
+  }
+
+  #water{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:38%;
+    background: linear-gradient(180deg, rgba(122,31,82,0.5) 0%, var(--water) 100%);
+    overflow:hidden;
+  }
+  #torii-reflect{
+    position:absolute;
+    left:50%;
+    top:0;
+    transform:translateX(-50%) scaleY(-1);
+    width:min(56vw, 520px);
+    opacity:0.28;
+    filter: blur(1.5px);
+    mix-blend-mode: screen;
+  }
+  #torii-reflect svg{ width:100%; height:auto; display:block; }
+  #water-fade{ position:absolute; inset:0; background: linear-gradient(180deg, transparent 0%, var(--ink-deep) 100%); opacity:0.6; }
+  #petal-canvas{ position:absolute; inset:0; pointer-events:none; }
+
+  /* Interface Overlay */
+  #app-layer {
+    position: relative;
+    z-index: 10;
     min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+    flex-direction: column;
   }
-  .card {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 32px 24px;
-    max-width: 420px;
+
+  /* Top Auth Bar */
+  .navbar {
     width: 100%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    padding: 15px 30px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .auth-controls input {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--glass-border);
+    color: var(--mist);
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-right: 8px;
+    outline: none;
+  }
+  .btn {
+    background: linear-gradient(135deg, var(--plum), var(--ember));
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn-danger { background: linear-gradient(135deg, #8b0000, #ff4d4d); }
+  .btn-secondary { background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); }
+
+  /* Main Workspace */
+  .main-container {
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .panel {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  .panel h2 {
+    color: var(--gold);
+    font-weight: 400;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 8px;
+    font-size: 1.3rem;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--mist);
+    margin-bottom: 4px;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--glass-border);
+    color: var(--mist);
+    padding: 8px 12px;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  /* Accounts List */
+  .account-card {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+  }
+  .status-badge.active { background: rgba(0,255,128,0.2); color: #80ffea; }
+  .status-badge.stopped { background: rgba(255,0,0,0.2); color: #ff8080; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  #auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(23, 10, 36, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .auth-box {
+    background: var(--ink-mid);
+    border: 1px solid var(--glass-border);
+    padding: 40px;
+    border-radius: 8px;
+    width: 320px;
     text-align: center;
   }
-  h1 {
-    margin: 0 0 4px;
-    font-size: 28px;
-    color: var(--accent);
-  }
-  p.sub {
-    color: var(--muted);
-    margin: 0 0 24px;
-    font-size: 14px;
-  }
-  input[type="text"] {
-    width: 100%;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 2px solid #e0d8c8;
-    font-size: 16px;
-    margin-bottom: 16px;
-    outline: none;
-    background: transparent;
-    color: var(--text);
-  }
-  input[type="text"]:focus { border-color: var(--accent); }
-  button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 12px;
-    background: var(--accent);
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  button:disabled { opacity: 0.6; cursor: not-allowed; }
-  .msg { margin-top: 14px; font-size: 14px; min-height: 20px; }
-  .msg.error { color: var(--error); }
-  .msg.success { color: var(--success); }
-  .content-box {
-    margin-top: 20px;
-    padding: 18px;
-    border-radius: 14px;
-    background: rgba(224,123,57,0.1);
-    text-align: left;
-    white-space: pre-wrap;
-    line-height: 1.5;
-    display: none;
+
+  @media (max-width: 900px) {
+    .main-container { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🐾 Cat Hub</h1>
-    <p class="sub">Nhập mã key để mở nội dung</p>
-    <input type="text" id="keyInput" placeholder="Nhập key tại đây...">
-    <button id="submitBtn">Mở khoá</button>
-    <div class="msg" id="msg"></div>
-    <div class="content-box" id="contentBox"></div>
+
+<div id="scene">
+  <div id="sky"></div>
+  <div id="stars"></div>
+  <div id="moon"></div>
+  <div id="torii-reflect">
+    <svg viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#3a0b26" stroke-width="16" stroke-linecap="round">
+        <path d="M40,120 L360,120"/><path d="M20,150 L380,150"/><path d="M90,150 L90,420"/><path d="M310,150 L310,420"/>
+      </g>
+    </svg>
+  </div>
+  <div id="torii-wrap">
+    <svg viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tgrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffe9ee"/><stop offset="100%" stop-color="#ff6f9c"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#tgrad)" stroke-width="16" stroke-linecap="round">
+        <path d="M40,120 L360,120"/><path d="M20,150 L380,150"/><path d="M90,150 L90,420"/><path d="M310,150 L310,420"/>
+      </g>
+    </svg>
+  </div>
+  <div id="water"><div id="water-fade"></div></div>
+  <canvas id="petal-canvas"></canvas>
+</div>
+
+<div id="auth-gate">
+  <div class="auth-box">
+    <h2 style="color:var(--gold); margin-bottom: 20px;">ĐĂNG NHẬP SYS</h2>
+    <div class="form-group">
+      <input type="text" id="login-user" placeholder="Tên tài khoản">
+    </div>
+    <div class="form-group">
+      <input type="password" id="login-pass" placeholder="Mật khẩu">
+    </div>
+    <button class="btn" style="width: 100%; margin-top: 10px;" onclick="authenticate()">XÁC NHẬN</button>
+  </div>
+</div>
+
+<div id="app-layer">
+  <div class="navbar">
+    <div class="brand">NGƯỠNG CỬA HOA ANH ĐÀO — DISCORD ENGINE</div>
+    <div id="user-info">
+      <span id="current-user-display" style="margin-right: 15px; color: var(--gold);"></span>
+      <button class="btn btn-secondary" onclick="logout()">Đăng xuất</button>
+    </div>
   </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <div class="main-container">
+    <!-- Khu vực 1: Treo Rich Presence (RPC) -->
+    <div class="panel">
+      <h2>KHU VỰC 1: QUẢN LÝ DISCORD RPC</h2>
+      <div class="form-group">
+        <label>Discord Token</label>
+        <input type="password" id="rpc-token" placeholder="Token Discord">
+      </div>
+      <div class="form-group">
+        <label>Tên Ứng Dụng (Application Name)</label>
+        <input type="text" id="rpc-name" placeholder="Visual Studio Code">
+      </div>
+      <div class="form-group">
+        <label>Chi Tiết (Details)</label>
+        <input type="text" id="rpc-details" placeholder="Đang lập trình...">
+      </div>
+      <div class="form-group">
+        <label>Trạng Thái (State)</label>
+        <input type="text" id="rpc-state" placeholder="Tối ưu hệ thống">
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Large Image Key / URL</label>
+          <input type="text" id="rpc-large-img" placeholder="https://i.imgur.com/...">
+        </div>
+        <div class="form-group">
+          <label>Small Image Key / URL</label>
+          <input type="text" id="rpc-small-img" placeholder="https://i.imgur.com/...">
+        </div>
+      </div>
+      <button class="btn" onclick="addRpcWorker()">Thêm Token & Treo RPC</button>
+    </div>
+
+    <!-- Khu vực 2: Treo Voice Discord -->
+    <div class="panel">
+      <h2>KHU VỰC 2: QUẢN LÝ VOICE DISCORD</h2>
+      <div class="form-group">
+        <label>Discord Token</label>
+        <input type="password" id="voice-token" placeholder="Token Discord">
+      </div>
+      <div class="form-group">
+        <label>Guild ID (ID Server)</label>
+        <input type="text" id="voice-guild" placeholder="102938475610293847">
+      </div>
+      <div class="form-group">
+        <label>Channel ID (ID Kênh Voice)</label>
+        <input type="text" id="voice-channel" placeholder="987654321098765432">
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Tắt Mic (Mute)</label>
+          <select id="voice-mute">
+            <option value="true">Bật</option>
+            <option value="false">Tắt</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tắt Tai Nghe (Deaf)</label>
+          <select id="voice-deaf">
+            <option value="true">Bật</option>
+            <option value="false">Tắt</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="addVoiceWorker()">Thêm Token & Treo Voice</button>
+    </div>
+
+    <!-- Khu vực Danh Sách Token Đang Chạy -->
+    <div class="panel" style="grid-column: span 2;">
+      <h2>DANH SÁCH ACCOUNTS HOẠT ĐỘNG LIÊN TỤC</h2>
+      <div id="workers-list"></div>
+    </div>
+  </div>
+</div>
+
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBhcXgKRnQpdmOcTjj2RfsJx5u4PS57P_0",
-    authDomain: "kknsnsjs.firebaseapp.com",
-    projectId: "kknsnsjs",
-    storageBucket: "kknsnsjs.firebasestorage.app",
-    messagingSenderId: "1084408639659",
-    appId: "1:1084408639659:web:78b83e04adb1d59e3787ee"
-  };
+  // Session / Storage Handler
+  let currentUser = localStorage.getItem('active_user') || null;
+  let workers = JSON.parse(localStorage.getItem('discord_workers') || '[]');
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  function saveWorkers() {
+    localStorage.setItem('discord_workers', JSON.stringify(workers));
+  }
 
-  const keyInput = document.getElementById('keyInput');
-  const submitBtn = document.getElementById('submitBtn');
-  const msg = document.getElementById('msg');
-  const contentBox = document.getElementById('contentBox');
+  function checkAuth() {
+    const gate = document.getElementById('auth-gate');
+    const display = document.getElementById('current-user-display');
+    if (!currentUser) {
+      gate.style.display = 'flex';
+    } else {
+      gate.style.display = 'none';
+      display.innerText = "Tài khoản: " + currentUser;
+    }
+  }
 
-  async function checkKey() {
-    const key = keyInput.value.trim();
-    if (!key) {
-      msg.textContent = "Vui lòng nhập key.";
-      msg.className = "msg error";
+  function authenticate() {
+    const u = document.getElementById('login-user').value.trim();
+    const p = document.getElementById('login-pass').value.trim();
+    if (u && p) {
+      currentUser = u;
+      localStorage.setItem('active_user', u);
+      checkAuth();
+      renderWorkers();
+    } else {
+      alert('Vui lòng điền tên đăng nhập và mật khẩu.');
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('active_user');
+    currentUser = null;
+    checkAuth();
+  }
+
+  // Worker Handlers
+  function addRpcWorker() {
+    const token = document.getElementById('rpc-token').value.trim();
+    if (!token) return alert("Thiếu Token!");
+    
+    const worker = {
+      id: Date.now(),
+      type: 'RPC',
+      token: token,
+      status: 'RUNNING',
+      name: document.getElementById('rpc-name').value || 'Discord RPC',
+      details: document.getElementById('rpc-details').value || '',
+      state: document.getElementById('rpc-state').value || '',
+      largeImg: document.getElementById('rpc-large-img').value || '',
+      smallImg: document.getElementById('rpc-small-img').value || ''
+    };
+    
+    workers.push(worker);
+    saveWorkers();
+    renderWorkers();
+  }
+
+  function addVoiceWorker() {
+    const token = document.getElementById('voice-token').value.trim();
+    const guild = document.getElementById('voice-guild').value.trim();
+    const channel = document.getElementById('voice-channel').value.trim();
+    if (!token || !guild || !channel) return alert("Thiếu Token, Guild ID hoặc Channel ID!");
+
+    const worker = {
+      id: Date.now(),
+      type: 'VOICE',
+      token: token,
+      status: 'RUNNING',
+      guildId: guild,
+      channelId: channel,
+      mute: document.getElementById('voice-mute').value === 'true',
+      deaf: document.getElementById('voice-deaf').value === 'true'
+    };
+
+    workers.push(worker);
+    saveWorkers();
+    renderWorkers();
+  }
+
+  function toggleWorker(id) {
+    const w = workers.find(x => x.id === id);
+    if (w) {
+      w.status = w.status === 'RUNNING' ? 'STOPPED' : 'RUNNING';
+      saveWorkers();
+      renderWorkers();
+    }
+  }
+
+  function removeWorker(id) {
+    workers = workers.filter(x => x.id !== id);
+    saveWorkers();
+    renderWorkers();
+  }
+
+  function renderWorkers() {
+    const container = document.getElementById('workers-list');
+    container.innerHTML = '';
+
+    if (workers.length === 0) {
+      container.innerHTML = '<div style="color:rgba(255,255,255,0.4)">Chưa có token nào đang chạy.</div>';
       return;
     }
 
-    submitBtn.disabled = true;
-    msg.textContent = "Đang kiểm tra...";
-    msg.className = "msg";
+    workers.forEach(w => {
+      const card = document.createElement('div');
+      card.className = 'account-card';
+      
+      const maskedToken = w.token.substring(0, 10) + '...';
+      const isRunning = w.status === 'RUNNING';
 
-    try {
-      const doc = await db.collection('keys').doc(key).get();
-
-      if (!doc.exists) {
-        msg.textContent = "❌ Key không tồn tại.";
-        msg.className = "msg error";
-        contentBox.style.display = "none";
+      let detailsHtml = '';
+      if (w.type === 'RPC') {
+        detailsHtml = `<div><strong>[RPC]</strong> App: ${w.name} | State: ${w.state}</div>`;
       } else {
-        const data = doc.data();
-        if (data.active === false) {
-          msg.textContent = "❌ Key đã bị vô hiệu hoá.";
-          msg.className = "msg error";
-          contentBox.style.display = "none";
-        } else {
-          msg.textContent = "✅ Mở khoá thành công!";
-          msg.className = "msg success";
-          contentBox.textContent = data.content || "(Admin chưa set nội dung cho key này)";
-          contentBox.style.display = "block";
-        }
+        detailsHtml = `<div><strong>[VOICE]</strong> Guild: ${w.guildId} | Channel: ${w.channelId}</div>`;
       }
-    } catch (err) {
-      msg.textContent = "Lỗi kết nối, thử lại sau.";
-      msg.className = "msg error";
-      console.error(err);
+
+      card.innerHTML = `
+        <div class="account-header">
+          <div>
+            <span class="status-badge ${isRunning ? 'active' : 'stopped'}">${w.status}</span>
+            <span style="margin-left: 8px; font-family: monospace;">Token: ${maskedToken}</span>
+          </div>
+          <div>
+            <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.8rem;" onclick="toggleWorker(${w.id})">
+              ${isRunning ? 'Tạm Ngừng' : 'Tiếp Tục'}
+            </button>
+            <button class="btn btn-danger" style="padding:4px 8px; font-size:0.8rem; margin-left: 4px;" onclick="removeWorker(${w.id})">
+              Hủy Token
+            </button>
+          </div>
+        </div>
+        ${detailsHtml}
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // Visuals Init
+  (function(){
+    const canvas = document.getElementById('petal-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, DPR;
+
+    function resize(){
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * DPR;
+      canvas.height = H * DPR;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const NUM_PETALS = W < 640 ? 30 : 60;
+    const petals = [];
+
+    function petalPath(p, s){
+      p.beginPath();
+      p.moveTo(0, -s);
+      p.bezierCurveTo(s*0.75, -s*0.55, s*0.85, s*0.35, s*0.12, s*0.75);
+      p.quadraticCurveTo(0, s*0.95, 0, s*1.0);
+      p.quadraticCurveTo(0, s*0.95, -s*0.12, s*0.75);
+      p.bezierCurveTo(-s*0.85, s*0.35, -s*0.75, -s*0.55, 0, -s);
+      p.closePath();
     }
 
-    submitBtn.disabled = false;
-  }
+    function makePetal(spawnTop){
+      return {
+        x: Math.random()*W,
+        y: spawnTop ? -20 - Math.random()*H*0.6 : Math.random()*H,
+        z: Math.random(),
+        size: 6 + Math.random()*9,
+        rot: Math.random()*Math.PI*2,
+        rotSpeed: (Math.random()-0.5) * 0.03,
+        swayAmp: 18 + Math.random()*36,
+        swaySpeed: 0.4 + Math.random()*0.6,
+        swayPhase: Math.random()*Math.PI*2,
+        fallSpeed: 0.35 + Math.random()*0.9,
+        flip: Math.random()*Math.PI*2,
+        flipSpeed: 0.02 + Math.random()*0.04,
+        hue: 335 + Math.random()*20,
+        light: 78 + Math.random()*14,
+      };
+    }
 
-  submitBtn.addEventListener('click', checkKey);
-  keyInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') checkKey();
-  });
+    for(let i=0;i<NUM_PETALS;i++) petals.push(makePetal(false));
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
-  }
+    let t = 0;
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      t += 1;
+      petals.sort((a,b)=>a.z-b.z);
+
+      for(const p of petals){
+        const depthScale = 0.5 + p.z*1.0;
+        p.y += p.fallSpeed * (0.6 + p.z*1.1) * 1.6;
+        p.x += Math.sin(t*0.01*p.swaySpeed + p.swayPhase) * (p.swayAmp*0.016);
+        p.rot += p.rotSpeed;
+        p.flip += p.flipSpeed;
+
+        if(p.y - p.size > H + 20){
+          Object.assign(p, makePetal(true));
+          p.y = -20;
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.scale(depthScale * (0.7+p.size/16), depthScale*Math.cos(p.flip)*(0.7+p.size/16));
+        ctx.globalAlpha = 0.35 + p.z*0.6;
+        const grad = ctx.createLinearGradient(0,-p.size,0,p.size);
+        grad.addColorStop(0, `hsl(${p.hue}, 85%, ${Math.min(p.light+10,95)}%)`);
+        grad.addColorStop(1, `hsl(${p.hue-8}, 80%, ${p.light-18}%)`);
+        ctx.fillStyle = grad;
+        petalPath(ctx, p.size);
+        ctx.fill();
+        ctx.restore();
+      }
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  // Boot
+  checkAuth();
+  renderWorkers();
 </script>
 </body>
 </html>
